@@ -133,13 +133,17 @@ if (!isset($permission)) dd('Access Denied...!');
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-password1">Project Name</label>
                             <div class="input-group">
-                            <input
-                                class="form-control"
-                                type="text"
-                                value=""
-                                placeholder="Enter the Project Name"
-                                id="projectName"
-                                name="projectName" />
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    value=""
+                                    placeholder="Enter the Project Name"
+                                    id="projectName"
+                                    name="projectName" />
+                                <input
+                                    type="hidden"
+                                    name="action"
+                                    value="create_project">
                             </div>
                         </div>
                         <div class="col form-password-toggle">
@@ -147,8 +151,8 @@ if (!isset($permission)) dd('Access Denied...!');
                             <div class="input-group">
                                 <select class="form-select" id="CreateUserID" aria-label="Default select example" name="UserID" required>
                                     <?php
-                                    foreach ($UserData as $UserName => $User) { ?>
-                                        <option value="<?= $User['ID'] ?>"><?= $User['UserName'] ?></option>
+                                    foreach ($UserData as $FullName => $User) { ?>
+                                        <option value="<?= $User['id'] ?>"><?= $User['FullName'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -167,7 +171,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" id="create-project">Create</button>
+                    <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
                 </div>
             </form>
         </div>
@@ -289,10 +293,10 @@ if (!isset($permission)) dd('Access Denied...!');
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/borrowed-books.js') ?>"></script>
+<script src="<?= asset('assets/forms-js/project.js') ?>"></script>
 
 <!-- Script for Search -->
-<script>
+<!-- <script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
             var searchTerm = $(this).val().toLowerCase();
@@ -340,9 +344,9 @@ require_once('../layouts/footer.php');
             filterAppointmentsByDate(selectedDate);
         });
     });
-</script>
+</script> -->
 <!-- Script for Borrowed History -->
-<script>
+<!-- <script>
     $(document).ready(function() {
         $('.view-history').on('click', function() {
 
@@ -358,4 +362,4 @@ require_once('../layouts/footer.php');
             isValid = false;
         });
     });
-</script>
+</script> -->

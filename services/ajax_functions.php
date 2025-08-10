@@ -115,108 +115,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
 
 
 
-// Create book
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_book') {
-
-//     try {
-//         $Title = $_POST['Title'];
-//         $Author = $_POST['Author'];
-//         $Category = $_POST['category'];
-//         $Quantity = $_POST['Quantity'];
-//         $ISBN = $_POST['ISBN'];
-
-//         $bookModel = new Book();
-//         $created =  $bookModel->createBook($Title, $Author, $Category, $ISBN, $Quantity);
-//         if ($created) {
-//             echo json_encode(['success' => true, 'message' => "Book Added successfully!"]);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to add book. May be book already added!']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle database connection errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
-// //Get Book by id
-// if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['book_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_book') {
-
-//     try {
-//         $book_id = $_GET['book_id'];
-//         $bookModel = new Book();
-//         $book = $bookModel->getBookById($book_id);
-//         if ($book) {
-//             echo json_encode(['success' => true, 'message' => "Book Selected Successfully !!", 'data' => $book]);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to select book. May be book is not exist!']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle database connection errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
-// // Update book
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_book') {
-
-//     try {
-//         $book_id = $_POST['BookID'];
-//         $Title = $_POST['Title'];
-//         $Author = $_POST['Author'];
-//         $Category = $_POST['category'];
-//         $Quantity = $_POST['Quantity'];
-//         $ISBN = $_POST['ISBN'];
-
-//         $bookModel = new book();
-//         $updated =  $bookModel->updateBook($book_id, $Title, $Author, $Category, $ISBN, $Quantity);
-//         if ($updated) {
-//             echo json_encode(['success' => true, 'message' => "Book updated successfully!"]);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to update Book. May be book is not  exist!']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle database connection errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
-// //Delete by book id
-// if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_book') {
-//     try {
-//         $BookID = $_GET['user_id'];
-
-//         $BookModel = new Book();
-
-
-//         $bookDeleted = $BookModel->deleteBookById($BookID);
-
-//         if ($bookDeleted) {
-//             echo json_encode(['success' => true, 'message' => ' book deleted successfully!']);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to Delete book.']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle database connection errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
-
 
 
 // Create Borrowed Book
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
     try {
-        $book_id = $_POST['BookID'];
         $user_id = $_POST['UserID'];
-        $borrow_date = $_POST['BorrowDate'];
-        $due_date = $_POST['DueDate'];
+        $project_name = $_POST['projectName'];
 
-        $bookborrowedModel = new BorrowedBooks();
-        $created =  $bookborrowedModel->createBorrowedBook($book_id, $user_id, $borrow_date, $due_date,);
+        $bookborrowedModel = new Logs();
+        $created =  $bookborrowedModel->createProject($user_id, $project_name);
         if ($created) {
-            echo json_encode(['success' => true, 'message' => "User Borrowed Book successfully!"]);
+            echo json_encode(['success' => true, 'message' => "New Project successfully Created"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'User Already Borrowed This Book!']);
         }

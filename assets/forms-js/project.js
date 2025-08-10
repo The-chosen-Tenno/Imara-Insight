@@ -28,7 +28,7 @@ $(document).ready(function () {
                 error: function (error) {
                     // Handle the error
                     console.error('Error submitting the form:', error);
-                    showAlert('Failed to update Borrowed Book!', 'danger');
+                    showAlert('Failed to create Project!', 'danger');
                 },
                 complete: function (response) {
                     // This will be executed regardless of success or error

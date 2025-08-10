@@ -19,13 +19,11 @@ class Logs extends BaseModel
     {
         $param = array(
             ':user_id' => $this->UserID,
-            ':book_id' => $this->BookID,
-            ':borrow_date' => $this->BorrowDate,
-            ':due_date' => $this->DueDate
+            ':project_name' => $this->ProjectName,
         );
 
-        return $this->pm->run("INSERT INTO " . $this->getTableName() . "(UserID, BookID, BorrowDate, DueDate) 
-                                VALUES(:user_id, :book_id, :borrow_date, :due_date)", 
+        return $this->pm->run("INSERT INTO " . $this->getTableName() . "(user_id, project_name) 
+                                VALUES(:user_id, :project_name)", 
                                 $param);
     }
 
@@ -52,23 +50,20 @@ class Logs extends BaseModel
     }
     
 
-    function createBorrowedBook($book_id, $user_id,$borrow_date,$due_date)
+    function createProject($user_id,$project_name)
     {
         // Create a new instance of the Book model
-        $bookModel = new BorrowedBooks();
+        $LogModel = new Logs();
         
         // Assign the provided values to the model's properties
-        $bookModel->UserID = $user_id;
-        $bookModel->BookID = $book_id;
-        $bookModel->BorrowDate = $borrow_date;
-        $bookModel->DueDate = $due_date;
-
+        $LogModel->UserID = $user_id;
+        $LogModel->ProjectName = $project_name;
         
         // Call the save method to insert the new book into the database
-        $bookModel->addNewRec();
+        $LogModel->addNewRec();
     
         // Return true if the book was successfully saved, otherwise return false
-        return $bookModel ? true : false; // Simplified the return
+        return $LogModel ? true : false; // Simplified the return
     }
 
     function updateBorrowedBook($borrowed_book_id,$book_id, $user_id,$borrow_date,$due_date, $return_date = null,$fine_status)
