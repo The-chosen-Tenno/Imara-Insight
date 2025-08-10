@@ -2,8 +2,7 @@
 require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
-require_once '../models/Books.php';
-require_once '../models/BorrowedBooks.php';
+require_once '../models/Logs.php';
 
 
 
@@ -117,96 +116,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
 
 
 // Create book
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_book') {
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_book') {
 
-    try {
-        $Title = $_POST['Title'];
-        $Author = $_POST['Author'];
-        $Category = $_POST['category'];
-        $Quantity = $_POST['Quantity'];
-        $ISBN = $_POST['ISBN'];
+//     try {
+//         $Title = $_POST['Title'];
+//         $Author = $_POST['Author'];
+//         $Category = $_POST['category'];
+//         $Quantity = $_POST['Quantity'];
+//         $ISBN = $_POST['ISBN'];
 
-        $bookModel = new Book();
-        $created =  $bookModel->createBook($Title, $Author, $Category, $ISBN, $Quantity);
-        if ($created) {
-            echo json_encode(['success' => true, 'message' => "Book Added successfully!"]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to add book. May be book already added!']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-//Get Book by id
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['book_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_book') {
+//         $bookModel = new Book();
+//         $created =  $bookModel->createBook($Title, $Author, $Category, $ISBN, $Quantity);
+//         if ($created) {
+//             echo json_encode(['success' => true, 'message' => "Book Added successfully!"]);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to add book. May be book already added!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle database connection errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+// //Get Book by id
+// if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['book_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_book') {
 
-    try {
-        $book_id = $_GET['book_id'];
-        $bookModel = new Book();
-        $book = $bookModel->getBookById($book_id);
-        if ($book) {
-            echo json_encode(['success' => true, 'message' => "Book Selected Successfully !!", 'data' => $book]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to select book. May be book is not exist!']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-// Update book
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_book') {
+//     try {
+//         $book_id = $_GET['book_id'];
+//         $bookModel = new Book();
+//         $book = $bookModel->getBookById($book_id);
+//         if ($book) {
+//             echo json_encode(['success' => true, 'message' => "Book Selected Successfully !!", 'data' => $book]);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to select book. May be book is not exist!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle database connection errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+// // Update book
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_book') {
 
-    try {
-        $book_id = $_POST['BookID'];
-        $Title = $_POST['Title'];
-        $Author = $_POST['Author'];
-        $Category = $_POST['category'];
-        $Quantity = $_POST['Quantity'];
-        $ISBN = $_POST['ISBN'];
+//     try {
+//         $book_id = $_POST['BookID'];
+//         $Title = $_POST['Title'];
+//         $Author = $_POST['Author'];
+//         $Category = $_POST['category'];
+//         $Quantity = $_POST['Quantity'];
+//         $ISBN = $_POST['ISBN'];
 
-        $bookModel = new book();
-        $updated =  $bookModel->updateBook($book_id, $Title, $Author, $Category, $ISBN, $Quantity);
-        if ($updated) {
-            echo json_encode(['success' => true, 'message' => "Book updated successfully!"]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update Book. May be book is not  exist!']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-//Delete by book id
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_book') {
-    try {
-        $BookID = $_GET['user_id'];
+//         $bookModel = new book();
+//         $updated =  $bookModel->updateBook($book_id, $Title, $Author, $Category, $ISBN, $Quantity);
+//         if ($updated) {
+//             echo json_encode(['success' => true, 'message' => "Book updated successfully!"]);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to update Book. May be book is not  exist!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle database connection errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+// //Delete by book id
+// if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_book') {
+//     try {
+//         $BookID = $_GET['user_id'];
 
-        $BookModel = new Book();
+//         $BookModel = new Book();
 
 
-        $bookDeleted = $BookModel->deleteBookById($BookID);
+//         $bookDeleted = $BookModel->deleteBookById($BookID);
 
-        if ($bookDeleted) {
-            echo json_encode(['success' => true, 'message' => ' book deleted successfully!']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to Delete book.']);
-        }
-    } catch (PDOException $e) {
-        // Handle database connection errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
+//         if ($bookDeleted) {
+//             echo json_encode(['success' => true, 'message' => ' book deleted successfully!']);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to Delete book.']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle database connection errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
 
 
 
 // Create Borrowed Book
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_borrowed_book') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
     try {
         $book_id = $_POST['BookID'];

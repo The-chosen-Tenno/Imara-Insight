@@ -3,14 +3,11 @@ require_once 'BaseModel.php';
 
 class Logs extends BaseModel
 {
-    public $BorrowedBookID;
+    public $ProjectID;
     public $UserID;
-    public $BookID;
-    public $BorrowDate;
-    public $DueDate;
-    public $ReturnDate;
-    public $Fine;
-    public $FineStatus;
+    public $ProjectName;
+    public $ProjectStatus;
+    public $LastUpdated;
 
 
     protected function getTableName()

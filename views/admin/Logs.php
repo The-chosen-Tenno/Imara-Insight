@@ -22,7 +22,7 @@ if (!isset($permission)) dd('Access Denied...!');
                 type="button"
                 class="btn btn-primary float-end add"
                 data-bs-toggle="modal"
-                data-bs-target="#add-borrowed-book">
+                data-bs-target="#add-project">
                 Add Project
             </button>
         <?php } ?>
@@ -78,7 +78,7 @@ if (!isset($permission)) dd('Access Denied...!');
                                 <?php if ($LD['status'] == 'finished'): ?>
                                     <span class="badge bg-success"><?= $LD['status'] ?? '' ?></span>
                                 <?php elseif ($LD['status'] == 'in_progress'): ?>
-                                    <span class="badge bg-secondary">In Progress</span>
+                                    <span class="badge bg-primary">In Progress</span>
                                 <?php elseif ($LD['status'] == 'idle'): ?>
                                     <span class="badge bg-dark"> <?= $LD['status'] ?? '' ?></span>
                                 <?php elseif ($LD['status'] == 'cancelled'): ?>
@@ -116,12 +116,12 @@ if (!isset($permission)) dd('Access Denied...!');
 <!-- / Content -->
 
 <!-- Modal -->
-<div class="modal fade" id="add-borrowed-book" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Add Book</h5>
+                    <h5 class="modal-title" id="modalCenterTitle">Add Project</h5>
                     <button
                         type="button"
                         class="btn-close"
@@ -131,18 +131,19 @@ if (!isset($permission)) dd('Access Denied...!');
                 <div class="modal-body">
                     <div class="row">
                         <div class="mb-3">
-                            <label class="form-label" for="basic-default-password1">Book Name</label>
+                            <label class="form-label" for="basic-default-password1">Project Name</label>
                             <div class="input-group">
-                                <select class="form-select" id="BookID" aria-label="Default select example" name="BookID" required>
-                                    <?php
-                                    foreach ($BookData as $BookName => $book) { ?>
-                                        <option value="<?= $book['BookID'] ?>"><?= $book['Title'] ?></option>
-                                    <?php } ?>
-                                </select>
+                            <input
+                                class="form-control"
+                                type="text"
+                                value=""
+                                placeholder="Enter the Project Name"
+                                id="projectName"
+                                name="projectName" />
                             </div>
                         </div>
                         <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">User ID</label>
+                            <label class="form-label" for="basic-default-password2">Assign To</label>
                             <div class="input-group">
                                 <select class="form-select" id="CreateUserID" aria-label="Default select example" name="UserID" required>
                                     <?php
@@ -152,32 +153,6 @@ if (!isset($permission)) dd('Access Denied...!');
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Borrow Date</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                value="<?php echo date('Y-m-d'); ?>"
-                                id="html5-date-input"
-                                name="BorrowDate" />
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Due Date</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                value="<?php echo date('Y-m-d', strtotime('+1 month')); ?>"
-                                id="html5-date-input"
-                                name="DueDate" />
-                        </div>
-                        <input
-                            type="hidden"
-                            name="action"
-                            value="create_borrowed_book">
                     </div>
                     <div class="mb-3 mt-3">
                         <div id="alert-container"></div>
@@ -192,7 +167,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" id="create">Create</button>
+                    <button type="button" class="btn btn-primary" id="create-project">Create</button>
                 </div>
             </form>
         </div>

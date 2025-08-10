@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
 
-    $('#create').on('click', function () {
+    $('#create-project').on('click', function () {
         var form = $('#create-form')[0] ?? null;
         if (!form) console.log('Something went wrong..');
 
@@ -19,7 +19,7 @@ $(document).ready(function () {
                 success: function (response) {
                     showAlert(response.message, response.success ? 'primary' : 'danger');
                     if (response.success) {
-                        $('#add-borrowed-book').modal('hide');
+                        $('#add-project').modal('hide');
                         setTimeout(function () {
                             location.reload();
                         }, 1000);
