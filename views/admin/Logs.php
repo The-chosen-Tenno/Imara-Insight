@@ -33,14 +33,14 @@ if (!isset($permission)) dd('Access Denied...!');
                 View Your Borrowed History</button>
         <?php } ?> -->
     </h4>
-    <!-- <div class="row m-3">
+    <div class="row m-3">
         <div class="col-6">
             <div class="d-flex align-items-center m-3">
                 <i class="bx bx-search fs-4 lh-0"></i>
                 <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" aria-label="Search..." />
             </div>
         </div>
-    </div> -->
+    </div>
 
 
 
@@ -96,7 +96,7 @@ if (!isset($permission)) dd('Access Denied...!');
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item edit-book-btn" data-bs-toggle="modal" data-bs-target="#edit-book-modal" data-id="<?= $BB['BorrowedBookID']; ?>"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                            <a class="dropdown-item edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i> Edit</a>
                                         </div>
                                     </div>
                                 </td>
@@ -115,7 +115,7 @@ if (!isset($permission)) dd('Access Denied...!');
 
 <!-- / Content -->
 
-<!-- Modal -->
+<!-- Create Modal -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -179,12 +179,12 @@ if (!isset($permission)) dd('Access Denied...!');
 </div>
 
 <!-- Udpate Modal -->
-<div class="modal fade" id="edit-book-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="edit-project-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Manage Borrowed Book</h5>
+                    <h5 class="modal-title" id="modalCenterTitle">Update Project</h5>
                     <button
                         type="button"
                         class="btn-close"
@@ -192,81 +192,42 @@ if (!isset($permission)) dd('Access Denied...!');
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row gy-2">
-                        <div class="col orm-password-toggle">
-                            <label class="form-label" for="basic-default-password1">Book ID</label>
+                    <div class="row gy-2 mb-3">
+                        <div class="col form-password-toggle">
+                            <label class="form-label">Project Name</label>
                             <div class="input-group">
                                 <input
-                                    type="number"
-                                    name="BookID"
-                                    min="1" step="1"
+                                    type="text"
+                                    name="ProjectName"
                                     required
                                     class="form-control"
-                                    id="BookID"
-                                    placeholder="Book ID" />
+                                    id="ProjectName"
+                                    placeholder="Project Name" />
+                                <input
+                                    type="hidden"
+                                    name="ProjectId"
+                                    required
+                                    id="ProjectId" />
+                                <input
+                                    type="hidden"
+                                    name="UserID"
+                                    required
+                                    id="UserID" />
                                 <input
                                     type="hidden"
                                     name="action"
-                                    value="update_borrowed_book">
-                                <input
-                                    type="hidden"
-                                    name="BorrowedBookID"
-                                    id="BorrowedBookID">
-                            </div>
-                        </div>
-                        <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">User ID</label>
-                            <div class="input-group">
-                                <input
-                                    type="number"
-                                    name="UserID"
-                                    min="1" step="1"
-                                    required
-                                    class="form-control"
-                                    id="UserID"
-                                    placeholder="User ID" />
+                                    value="update_project" />
                             </div>
                         </div>
                     </div>
                     <div class="row ">
                         <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Borrow Date</label>
-                            <input
-                                class="form-control BorrowDate"
-                                type="date"
-                                value="2021-06-18"
-                                id="BorrowDate"
-                                name="BorrowDate" />
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Due Date</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                value="2021-06-18"
-                                id="DueDate"
-                                name="DueDate" />
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Return Date</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                id="ReturnDate"
-                                name="ReturnDate" />
-                        </div>
-                    </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Fine Status</label>
-                            <select class="form-select" id="finestatus" aria-label="Default select example" name="FineStatus" required>
-                                <option value="No Fine">No Fine</option>
-                                <option value="Not Paid">Not Paid</option>
-                                <option value="Paid">Paid</option>
+                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
+                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="ProjectStatus" required>
+                                <option value="idle">Idle</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="finished">Finished</option>
+                                <option value="cancelled">Cancelled</option>
                             </select>
                         </div>
                     </div>
@@ -283,7 +244,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" id="update-borrowed-book">Update</button>
+                    <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
                 </div>
             </form>
         </div>
@@ -296,7 +257,7 @@ require_once('../layouts/footer.php');
 <script src="<?= asset('assets/forms-js/project.js') ?>"></script>
 
 <!-- Script for Search -->
-<!-- <script>
+<script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
             var searchTerm = $(this).val().toLowerCase();
@@ -344,7 +305,7 @@ require_once('../layouts/footer.php');
             filterAppointmentsByDate(selectedDate);
         });
     });
-</script> -->
+</script>
 <!-- Script for Borrowed History -->
 <!-- <script>
     $(document).ready(function() {

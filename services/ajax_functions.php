@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
 
 
 
-// Create Borrowed Book
+// Create New Project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
     try {
@@ -137,15 +137,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-//Get Borrowed Book by id
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['BorrowedBookID']) && isset($_GET['action']) &&  $_GET['action'] == 'get_borrowed_book') {
+//Get Project by id
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ProjectId']) && isset($_GET['action']) &&  $_GET['action'] == 'get_project') {
 
     try {
-        $borrowed_book_id = $_GET['BorrowedBookID'];
-        $bookModel = new BorrowedBooks();
-        $book = $bookModel->getBookById($borrowed_book_id);
-        if ($book) {
-            echo json_encode(['success' => true, 'message' => "Borrowed Book ID selected successfully!", 'data' => $book]);
+        $project_id = $_GET['ProjectId'];
+        $LogModel = new Logs();
+        $Log = $LogModel->getProjectById($project_id);
+        if ($Log) {
+            echo json_encode(['success' => true, 'message' => "Borrowed Book ID selected successfully!", 'data' => $Log]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error Selecting Borrowed Book ID']);
         }
@@ -156,19 +156,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['BorrowedBookID']) && is
     exit;
 }
 // Update Borrowed Book
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_borrowed_book') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
 
     try {
-        $borrowed_book_id = $_POST['BorrowedBookID'];
-        $book_id = $_POST['BookID'];
+        $project_id = $_POST['ProjectId'];
         $user_id = $_POST['UserID'];
-        $borrow_date = $_POST['BorrowDate'];
-        $due_date = $_POST['DueDate'];
-        $return_date = $_POST['ReturnDate'];
-        $fine_status = $_POST['FineStatus'];
+        $ProjectName = $_POST['ProjectName'];
+        $project_status = $_POST['ProjectStatus'];
 
-        $bookborrowedModel = new BorrowedBooks();
-        $updated =  $bookborrowedModel->updateBorrowedBook($borrowed_book_id, $book_id, $user_id, $borrow_date, $due_date, $return_date, $fine_status);
+        $LogModel = new Logs();
+        $updated =  $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "User Borrowed Book Updated successfully!"]);
         } else {

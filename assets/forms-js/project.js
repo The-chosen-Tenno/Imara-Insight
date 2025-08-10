@@ -43,9 +43,9 @@ $(document).ready(function () {
         }
     });
 
-    $('.edit-book-btn').on('click', async function () {
-        var BorrowedBookID = $(this).data('id');
-        await getBorrowedBookById(BorrowedBookID);
+    $('.edit-project-btn').on('click', async function () {
+        var projectId = $(this).data('id');
+        await getProjectById(projectId);
     })
 
     $('.delete-book-btn').on('click', async function () {
@@ -59,7 +59,7 @@ $(document).ready(function () {
         await getBooksAndMember();
     })
 
-    $('#update-borrowed-book').on('click', function () {
+    $('#update-project').on('click', function () {
 
         // Get the form element
         var form = $('#update-form')[0];
@@ -82,7 +82,7 @@ $(document).ready(function () {
                 success: function (response) {
                     showAlert(response.message, response.success ? 'primary' : 'danger', 'edit-alert-container');
                     if (response.success) {
-                        $('#edit-book-modal').modal('hide');
+                        $('#edit-project-modal').modal('hide');
                         setTimeout(function () {
                             location.reload();
                         }, 1000);
@@ -104,7 +104,7 @@ $(document).ready(function () {
     });
 
 
-async function getBorrowedBookById(id) {
+async function getProjectById(id) {
     var url = $('#update-form').attr('action');
     $('#edit-additional-fields').empty();
 
@@ -113,8 +113,8 @@ async function getBorrowedBookById(id) {
         url: url,
         type: 'GET',
         data: {
-            BorrowedBookID: id,
-            action: 'get_borrowed_book'
+            ProjectId: id,
+            action: 'get_project'
         }, // Form data
         dataType: 'json',
         success: function (response) {
@@ -122,23 +122,16 @@ async function getBorrowedBookById(id) {
 
             showAlert(response.message, response.success ? 'primary' : 'danger');
             if (response.success) {
-                var BorrowedBookID = response.data.BorrowedBookID;
-                var BookID = response.data.BookID;
-                var UserID = response.data.UserID;
-                var BorrowDate = response.data.BorrowDate;
-                var DueDate = response.data.DueDate;
-                var ReturnDate = response.data.ReturnDate;
-                var finestatus = response.data.FineStatus;
+                var ProjectId = response.data.id;
+                var UserID = response.data.user_id;
+                var ProjectName = response.data.project_name;
+                var ProjectStatus = response.data.status;
    
 
-                $('#edit-book-modal #BorrowedBookID').val(BorrowedBookID);
-                $('#edit-book-modal #BookID').val(BookID);
-                $('#edit-book-modal #UserID').val(UserID);
-                $('#edit-book-modal #BorrowDate').val(BorrowDate);
-                $('#edit-book-modal #DueDate').val(DueDate);
-                $('#edit-book-modal #ReturnDate').val(ReturnDate);
-                $('#edit-book-modal #finestatus').val(finestatus);
-
+                $('#edit-project-modal #ProjectId').val(ProjectId);
+                $('#edit-project-modal #UserID').val(UserID);
+                $('#edit-project-modal #ProjectName').val(ProjectName);
+                $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
             }
                  else {
                     $('#edit-additional-fields').empty();
