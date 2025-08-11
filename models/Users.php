@@ -4,10 +4,9 @@ require_once 'BaseModel.php';
 
 class User extends BaseModel
 {
-    public $username;
-    public $firstname;
-    public $lastname;
-    public $permission;
+    public $user_name;
+    public $full_name;
+    public $role;
     private $email;
     private $password;
 
@@ -22,47 +21,46 @@ class User extends BaseModel
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
 
         $param = array(
-            ':username' => $this->username,
-            ':firstname' => $this->firstname,
-            ':lastname' => $this->lastname,
-            ':password' => $this->password,
-            ':role' => $this->permission,
+            ':full_name' => $this->full_name,
+            ':user_name' => $this->user_name,
             ':email' => $this->email,
+            ':password' => $this->password,
+            ':role' => $this->role,
 
         );
 
-        return $this->pm->run("INSERT INTO " . $this->getTableName() . "(UserName, FirstName ,LastName, Password, Role, Email) values(:username, :firstname , :lastname ,:password,:role,:email)", $param);
+        return $this->pm->run("INSERT INTO " . $this->getTableName() . "(full_name,user_name,password, role, email) values(:full_name,:user_name,:password,:role,:email)", $param);
     }
 
     protected function updateRec()
     {
-       $existingUser = $this->getUserByUsernameOrEmailWithId($this->username, $this->email, $this->id);
+       $existingUser = $this->getUserByUsernameOrEmailWithId($this->user_name, $this->email, $this->id);
         if ($existingUser) {
             return false; 
         }
 
 
         $param = array(
-            ':username' => $this->username,
+            ':user_name' => $this->user_name,
             ':email' => $this->email,
             ':id' => $this->id
         );
         return $this->pm->run(
             "UPDATE " . $this->getTableName() . " 
             SET 
-                UserName = :username,  
-                Email = :email
+                user_name = :user_name,  
+                email = :email
             WHERE ID = :id",
             $param
         );
     }
 
-    public function getUserByUsernameOrEmailWithId($username, $email, $excludeUserId = null)
+    public function getUserByUsernameOrEmailWithId($user_name, $email, $excludeUserId = null)
     {
-        $param = array(':username' => $username, ':email' => $email);
+        $param = array(':user_name' => $user_name, ':email' => $email);
 
         $query = "SELECT * FROM " . $this->getTableName() . " 
-                  WHERE (username = :username OR email = :email)";
+                  WHERE (user_name = :user_name OR email = :email)";
 
         if ($excludeUserId !== null) {
             $query .= " AND id != :excludeUserId";
@@ -74,14 +72,14 @@ class User extends BaseModel
         return $result; 
     }
 
-    public function getUserByUsernameOrEmail($username, $email)
+    public function getUserByUsernameOrEmail($user_name, $email)
     {
         $param = array(
-            ':username' => $username,
+            ':user_name' => $user_name,
             ':email' => $email
         );
 
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE username = :username OR email = :email";
+        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user_name = :user_name OR email = :email";
         $result = $this->pm->run($sql, $param);
 
         if (!empty($result)) { 
@@ -93,21 +91,20 @@ class User extends BaseModel
     }
 
 
-    function createUser($username, $firstname,$lastname,$email,$password, $permission)
+    function createUser($full_name, $user_name, $email, $password,$role) 
     {
         $userModel = new User();
 
-        $existingUser = $userModel->getUserByUsernameOrEmail($username, $email);
+        $existingUser = $userModel->getUserByUsernameOrEmail($user_name, $email);
         if ($existingUser) {
             return false; 
         }
 
         $user = new User();
-        $user->username = $username;
-        $user->firstname = $firstname;
-        $user->lastname = $lastname;
+        $user->full_name = $full_name;
+        $user->user_name = $user_name;
         $user->password = $password;
-        $user->permission = $permission;
+        $user->role = $role;
         $user->email = $email;
         $user->addNewRec();
 
@@ -118,18 +115,18 @@ class User extends BaseModel
         }
     }
 
-    function updateUser($id, $username, $email,)
+    function updateUser($id, $user_name, $email,)
     {
         $userModel = new User();
 
-        $existingUser = $userModel->getUserByUsernameOrEmailWithId($username, $email, $id);
+        $existingUser = $userModel->getUserByUsernameOrEmailWithId($user_name, $email, $id);
         if ($existingUser) {
             return false; 
         }
 
         $user = new User();
         $user->id = $id;
-        $user->username = $username;
+        $user->user_name = $user_name;
         $user->email = $email;
       
         $user->updateRec();
@@ -165,7 +162,7 @@ class User extends BaseModel
         $param = array(':id' => $id);
         return $this->pm->run(" SELECT *
             FROM " . $this->getTableName() . "
-            WHERE ID = :id
+            WHERE id = :id
         "
            , $param, true);
     }

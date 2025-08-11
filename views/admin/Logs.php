@@ -26,12 +26,6 @@ if (!isset($permission)) dd('Access Denied...!');
                 Add Project
             </button>
         <?php } ?>
-        <!-- <?php if ($permission == 'member') { ?>
-            <button
-                class="btn btn-primary float-end view-history"
-                data-id="<?= $username; ?>">
-                View Your Borrowed History</button>
-        <?php } ?> -->
     </h4>
     <div class="row m-3">
         <div class="col-6">
