@@ -100,13 +100,19 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                         </li>
                     <?php endif; ?>
                     <?php if (isset($permission)) : ?>
-                        <li class="menu-item <?= $currentFilename === "BorrowedBooks.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/Logs.php') ?>" class="menu-link">
+                        <li class="menu-item <?= $currentFilename === "logs.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/logs.php') ?>" class="menu-link">
                                 <i class='bx bxs-coin-stack'></i>
                                 <div data-i18n="Analytics">Logs</div>
                             </a>
                         </li>
                     <?php endif; ?>
+                    <!-- <li class="menu-item <?= $currentFilename === "personallogs.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/personallogs.php') ?>" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-user"></i>
+                                <div data-i18n="appointments">Personal Logs</div>
+                            </a>
+                        </li> -->
                 </ul>
             </aside>
             <!-- / Menu -->
