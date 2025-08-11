@@ -3,6 +3,7 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
+require_once '../models/ProjectImageModel.php';
 
 
 
@@ -177,25 +178,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
-
     try {
         $project_id = $_POST['project_id'];
         $user_id = $_POST['user_id'];
         $ProjectName = $_POST['project_name'];
         $project_status = $_POST['status'];
-        $projectImage = $_POST['project_images'];
 
         $LogModel = new Logs();
-        $updated =  $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
+        $updated = $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
+
+        $uploadedFiles = [];
+        if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
+            $uploadDir = __DIR__ . '/uploads/projects/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
+                $tmpName = $_FILES['project_images']['tmp_name'][$i];
+                $originalName = basename($_FILES['project_images']['name'][$i]);
+                $fileName = uniqid() . '_' . $originalName;
+                $targetFilePath = $uploadDir . $fileName;
+
+                $fileType = mime_content_type($tmpName);
+                if (strpos($fileType, 'image') === false) continue;
+
+                if (move_uploaded_file($tmpName, $targetFilePath)) {
+                    $uploadedFiles[] = $fileName;
+                }
+            }
+           $project_imageModel = new ProjectImageModel();
+            if (!empty($uploadedFiles)) {
+                $project_imageModel->saveProjectImages($project_id, $uploadedFiles);
+            }
+        }
+
         if ($updated) {
-            echo json_encode(['success' => true, 'message' => "Project updated successfully!"]);
+            echo json_encode(['success' => true, 'message' => 'Project updated successfully', 'uploaded_images' => $uploadedFiles]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update Borrowed Book!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to update project']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 dd('Access denied..!');
