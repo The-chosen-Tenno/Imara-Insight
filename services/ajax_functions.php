@@ -3,7 +3,6 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
-require_once '../models/ProjectImageModel.php';
 
 
 
@@ -113,10 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
     exit;
 }
 
-
-
-
-
 // Create New Project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
@@ -177,6 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+// update project user by admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
     try {
         $project_id = $_POST['project_id'];
@@ -223,5 +219,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-
 dd('Access denied..!');

@@ -39,6 +39,7 @@ if (!isset($permission)) dd('Access Denied...!');
                         <th>Assigned To</th>
                         <th>Project</th>
                         <th>Status</th>
+                        <th>Photos</th>
                         <th>Last Update</th>
                     </tr>
                 </thead>
@@ -64,6 +65,7 @@ if (!isset($permission)) dd('Access Denied...!');
                                     <span class="badge bg-danger"> <?= $LD['status'] ?? '' ?></span>
                                 <?php endif; ?>
                             </td>
+                            <td><a class="open-images btn rounded-pill btn-outline-primary" data-bs-toggle="modal" data-bs-target="#show-images" data-id="<?= $LD['id']; ?>">Show</a></td>
                             <td><?= date('Y-m-d  H:i', strtotime($LD['last_updated'])) ?></td>
                             <?php if ($permission == 'admin') { ?>
                                 <td>
@@ -211,7 +213,21 @@ if (!isset($permission)) dd('Access Denied...!');
     </div>
 </div>
 
+<div class="modal fade" id="show-images" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3 text-center">
+      <h5 class="modal-title mb-3" id="imageModalLabel">Image Gallery</h5>
+      <img id="modalImage" src="" alt="Gallery Image" class="img-fluid rounded" style="max-height: 400px;">
+      <div class="mt-3">
+        <button id="prevBtn" class="btn btn-secondary btn-sm me-2">Previous</button>
+        <button id="nextBtn" class="btn btn-secondary btn-sm">Next</button>
+      </div>
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 <?php
+
 require_once('../layouts/footer.php');
 ?>
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
