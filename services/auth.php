@@ -18,8 +18,8 @@ if ($user != null) {
     if ($correct) {
 
         $sm->setAttribute("userId", $user['id']);
-        $sm->setAttribute("fullName", $user['FullName']);
-        $sm->setAttribute("userName", $user['UserName']);
+        $sm->setAttribute("fullName", $user['full_name']);
+        $sm->setAttribute("userName", $user['user_name']);
         $sm->setAttribute("role", $user['role']);
 
         header('location: ../index.php');

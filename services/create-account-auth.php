@@ -16,7 +16,7 @@ try {
         $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
 
         try {
-            $sql = "INSERT INTO users (FullName, UserName, Email, Password) 
+            $sql = "INSERT INTO users (full_name, user_name, email, Password) 
                     VALUES (:FullName, :UserName, :Email, :Password)";
 
             $stmt = $pdo->prepare($sql);

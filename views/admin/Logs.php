@@ -62,7 +62,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <?php
                     $userNames = [];
                     foreach ($UserData as $user) {
-                        $userNames[$user['id']] = $user['FullName'];
+                        $userNames[$user['id']] = $user['full_name'];
                     }
                     // $userPhotos = [];
                     // foreach ($UserData as $user) {
@@ -71,7 +71,6 @@ if (!isset($permission)) dd('Access Denied...!');
                     foreach ($logsData as $LD) {
                     ?>
                         <tr>
-                            <!-- <td><img src="../../assets/uploads/<?= htmlspecialchars(!empty($userPhotos[$LD['user_id']]) ? $userPhotos[$LD['user_id']] : 'default.png') ?>" alt="User Photo" width="40" height="40" style="border-radius:50%; object-fit:cover;"></td> -->
                             <td><?= $userNames[$LD['user_id']] ?? '' ?></td>
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                             <td>
@@ -84,10 +83,8 @@ if (!isset($permission)) dd('Access Denied...!');
                                 <?php elseif ($LD['status'] == 'cancelled'): ?>
                                     <span class="badge bg-danger"> <?= $LD['status'] ?? '' ?></span>
                                 <?php endif; ?>
-
                             </td>
                             <td><?= date('Y-m-d  H:i', strtotime($LD['last_updated'])) ?></td>
-                            <!-- Dropdown  -->
                             <?php if ($permission == 'admin') { ?>
                                 <td>
 
@@ -106,16 +103,10 @@ if (!isset($permission)) dd('Access Denied...!');
             </table>
         </div>
     </div>
-    <!--/ Basic Bootstrap Table -->
-
     <hr class="my-5" />
 
 
 </div>
-
-<!-- / Content -->
-
-<!-- Create Modal -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -151,8 +142,8 @@ if (!isset($permission)) dd('Access Denied...!');
                             <div class="input-group">
                                 <select class="form-select" id="CreateUserID" aria-label="Default select example" name="UserID" required>
                                     <?php
-                                    foreach ($UserData as $FullName => $User) { ?>
-                                        <option value="<?= $User['id'] ?>"><?= $User['FullName'] ?></option>
+                                    foreach ($UserData as $full_name => $User) { ?>
+                                        <option value="<?= $User['id'] ?>"><?= $User['full_name'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -256,71 +247,35 @@ require_once('../layouts/footer.php');
 ?>
 <script src="<?= asset('assets/forms-js/project.js') ?>"></script>
 
-<!-- Script for Search -->
 <script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
             var searchTerm = $(this).val().toLowerCase();
-
-            // Loop through each row in the table body
             $("tbody tr").filter(function() {
-                // Toggle the visibility based on the search term
                 $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
             });
         });
-
-        // Initial setup for the date picker
         $('#datePicker').val(getFormattedDate(new Date()));
-
-        // Function to format date as YYYY-MM-DD
         function getFormattedDate(date) {
             var year = date.getFullYear();
             var month = (date.getMonth() + 1).toString().padStart(2, '0');
             var day = date.getDate().toString().padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-
-        // Function to update table rows based on the selected date
         function filterAppointmentsByDate(selectedDate) {
-            console.log("selectedDate Date:", selectedDate); // Log each appointment date for debugging
-
-
-            // Loop through each row in the table body
+            console.log("selectedDate Date:", selectedDate);
             $('tbody tr').each(function() {
                 var appointmentDate = $(this).find('.appointment_date').text().trim();
                 $(this).toggle(appointmentDate === selectedDate);
             });
         }
-
-        // Event handler for the "Filter" button
         $('#clear').on('click', function() {
             location.reload();
         });
-
-        // Event handler for date picker change
         $('#datePicker').on('change', function() {
-
             var selectedDate = $(this).val();
             alert(selectedDate);
             filterAppointmentsByDate(selectedDate);
         });
     });
 </script>
-<!-- Script for Borrowed History -->
-<!-- <script>
-    $(document).ready(function() {
-        $('.view-history').on('click', function() {
-
-            var username = '<?= $username ?>';
-
-            if ($('#searchInput').val() === username) {
-
-                $('#searchInput').val('').trigger('input');
-            } else {
-                $('#searchInput').val(username).trigger('input');
-            }
-
-            isValid = false;
-        });
-    });
-</script> -->

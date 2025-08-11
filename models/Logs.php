@@ -21,7 +21,6 @@ class Logs extends BaseModel
             ':user_id' => $this->UserID,
             ':project_name' => $this->ProjectName,
         );
-
         return $this->pm->run(
             "INSERT INTO " . $this->getTableName() . "(user_id, project_name) 
                                 VALUES(:user_id, :project_name)",
@@ -49,48 +48,27 @@ class Logs extends BaseModel
 
     function createProject($user_id, $project_name)
     {
-        // Create a new instance of the Book model
         $LogModel = new Logs();
-
-        // Assign the provided values to the model's properties
         $LogModel->UserID = $user_id;
         $LogModel->ProjectName = $project_name;
-
-        // Call the save method to insert the new book into the database
         $LogModel->addNewRec();
-
-        // Return true if the book was successfully saved, otherwise return false
-        return $LogModel ? true : false; // Simplified the return
+        return $LogModel ? true : false;
     }
 
     function updateProject($project_id, $user_id, $ProjectName, $project_status)
     {
-        // Initialize the Book model
-        $LogModel = new Logs();
-
-        // Retrieve the book by BookID
-        $existingProject = $LogModel->getProjectById($project_id);
-
-
         $project = new Logs();
         $project->ProjectID = $project_id;
         $project->UserID = $user_id;
         $project->ProjectName = $ProjectName;
         $project->ProjectStatus = $project_status;
-        $fine = 0;
-
         $project->updateRec();
 
         if ($project) {
-            return $project; // User created successfully
+            return $project;
         } else {
-            return false; // User creation failed (likely due to database error)
+            return false;
         }
-
-        // Save the changes
-        // $updated = $existingBook->updateRec(); // Assuming save method exists
-
-        // return $updated ? true : false;
     }
 
     public function getProjectById($project_id)
@@ -102,7 +80,7 @@ class Logs extends BaseModel
     public function getByUserId($userId)
     {
         $param = array(':user_id' => $userId);
-        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE UserID = :user_id", $param, true);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id", $param, true);
     }
 
     public function getByBookId($bookId)
