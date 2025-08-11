@@ -133,21 +133,11 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                     placeholder="Enter the Project Name"
                                     id="project_name"
                                     name="project_name" />
+                                <input type="text" name="user_id" value="<?= $loginUserDetails['id'] ?>" hidden />">
                                 <input
                                     type="hidden"
                                     name="action"
                                     value="create_project">
-                            </div>
-                        </div>
-                        <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">Assign To</label>
-                            <div class="input-group">
-                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
-                                    <?php
-                                    foreach ($UserData as $full_name => $user) { ?>
-                                        <option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
-                                    <?php } ?>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -208,7 +198,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                 <input
                                     type="hidden"
                                     name="action"
-                                    value="update_project" />
+                                    value="update_project_user" />
                             </div>
                         </div>
                     </div>
@@ -223,21 +213,32 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3 mt-3">
-                        <div id="alert-container"></div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div id="additional-fields">
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="projectImages" class="form-label">Project Images</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="projectImages"
+                                name="project_images[]"
+                                accept="image/*"
+                                multiple />
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <div id="alert-container"></div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <div id="additional-fields">
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
+                    </div>
             </form>
         </div>
     </div>
