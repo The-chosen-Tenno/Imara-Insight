@@ -4,135 +4,116 @@ include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
 
 $projectLogs = new Logs();
-$logsData = $projectLogs->getAll();
+$logsData = $projectLogs->getByUserId($userId); 
+
+
 $userDetails = new User();
+$loginUserDetails = $userDetails->getById($userId);
 $UserData = $userDetails->getAll();
 
-if (!isset($permission)) dd('Access Denied...!');
+if (!isset($permission) || $permission !== 'user') {
+    dd('Access Denied...!');
+}
 ?>
 <!-- Content wrapper -->
 <div class="content-wrapper">
-    <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
 
-        <div class="col-lg-8 mb-4 order-0">
+        <!-- User Info Card -->
+        <div class="col-lg-12 mb-4">
             <div class="card">
-                <div class="d-flex align-items-end row">
-                    <div class="col-sm-7">
+                <div class="row align-items-center">
+                    <div class="col-sm-8">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Welcome <?= $fullName ?> </h5>
-                            <?php if ($permission == 'user') { ?>
-                                <div class="card-title ">Your ID <?= $userId ?> </div>
-                            <?php } ?>
+                            <h5 class="card-title text-primary">
+                                Welcome <?= htmlspecialchars($loginUserDetails['full_name']) ?>
+                            </h5>
+                            <p><strong>User ID:</strong> <?= htmlspecialchars($loginUserDetails['id']) ?></p>
+                            <p><strong>Email:</strong> <?= htmlspecialchars($loginUserDetails['email']) ?></p>
+                            <p>
+                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#edit-user-modal">
+                                    Edit My Profile
+                                </button>
+                            </p>
                         </div>
                     </div>
-                    <div class="col-sm-5 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
-                            <img
-                                src="<?= url('assets/img/illustrations/man-with-laptop-light.png') ?>"
-                                height="140"
-                                alt="View Badge User"
-                                data-app-dark-img="illustrations/man-with-laptop-dark.png"
-                                data-app-light-img="illustrations/man-with-laptop-light.png" />
+                    <div class="col-sm-4 text-center">
+                        <div class="card-body">
+                            <img src="<?= !empty($loginUserDetails['photo']) 
+                                    ? url('uploads/' . $loginUserDetails['photo']) 
+                                    : url('assets/img/illustrations/man-with-laptop-light.png') ?>" 
+                                 height="140" class="rounded-circle" alt="User Photo" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- / Content -->
-</div>
 
-<!-- Content -->
-
-<div class="container-xxl flex-grow-1 container-p-y">
-
-
-    <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span> Project Logs
-        <?php if ($permission == 'admin') { ?>
-            <button
-                type="button"
-                class="btn btn-primary float-end add"
-                data-bs-toggle="modal"
-                data-bs-target="#add-project">
+        <!-- Project Logs -->
+        <h4 class="fw-bold py-3 mb-4">
+            My Projects
+            <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-project">
                 Add Project
             </button>
-        <?php } ?>
-    </h4>
-    <div class="row m-3">
-        <div class="col-6">
-            <div class="d-flex align-items-center m-3">
-                <i class="bx bx-search fs-4 lh-0"></i>
-                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" aria-label="Search..." />
+        </h4>
+
+        <!-- Search -->
+        <div class="row m-3">
+            <div class="col-6">
+                <div class="d-flex align-items-center m-3">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                    <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" />
+                </div>
             </div>
         </div>
-    </div>
 
-
-
-    <!-- Basic Bootstrap Table -->
-    <div class="card">
-        <h5 class="card-header"></h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <!-- <th>Portrait</th> -->
-                        <th>Assigned To</th>
-                        <th>Project</th>
-                        <th>Status</th>
-                        <th>Last Update</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    <?php
-                    $userNames = [];
-                    foreach ($UserData as $user) {
-                        $userNames[$user['id']] = $user['full_name'];
-                    }
-                    // $userPhotos = [];
-                    // foreach ($UserData as $user) {
-                    //     $userPhotos[$user['id']] = $user['photo'];
-                    // }
-                    foreach ($logsData as $LD) {
-                    ?>
+        <!-- Projects Table -->
+        <div class="card">
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td><?= $userNames[$LD['user_id']] ?? '' ?></td>
-                            <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
-                            <td>
-                                <?php if ($LD['status'] == 'finished'): ?>
-                                    <span class="badge bg-success"><?= $LD['status'] ?? '' ?></span>
-                                <?php elseif ($LD['status'] == 'in_progress'): ?>
-                                    <span class="badge bg-primary">In Progress</span>
-                                <?php elseif ($LD['status'] == 'idle'): ?>
-                                    <span class="badge bg-dark"> <?= $LD['status'] ?? '' ?></span>
-                                <?php elseif ($LD['status'] == 'cancelled'): ?>
-                                    <span class="badge bg-danger"> <?= $LD['status'] ?? '' ?></span>
-                                <?php endif; ?>
-                            </td>
-                            <td><?= date('Y-m-d  H:i', strtotime($LD['last_updated'])) ?></td>
-                            <?php if ($permission == 'admin') { ?>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <th>Last Update</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($logsData as $LD) { ?>
+                            <tr>
+                                <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                                 <td>
-
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                        </div>
-                                    </div>
+                                    <?php if ($LD['status'] == 'finished'): ?>
+                                        <span class="badge bg-success"><?= $LD['status'] ?></span>
+                                    <?php elseif ($LD['status'] == 'in_progress'): ?>
+                                        <span class="badge bg-primary">In Progress</span>
+                                    <?php elseif ($LD['status'] == 'idle'): ?>
+                                        <span class="badge bg-dark"><?= $LD['status'] ?></span>
+                                    <?php elseif ($LD['status'] == 'cancelled'): ?>
+                                        <span class="badge bg-danger"><?= $LD['status'] ?></span>
+                                    <?php endif; ?>
                                 </td>
-                            <?php } ?>
+                                <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
+                                <td>
+                                    <a class="btn btn-sm btn-warning edit-project-btn" 
+                                       data-bs-toggle="modal" 
+                                       data-bs-target="#edit-project-modal"
+                                       data-id="<?= $LD['id']; ?>">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
                         <?php } ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
-    <hr class="my-5" />
-
-
 </div>
+
+
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -267,12 +248,10 @@ if (!isset($permission)) dd('Access Denied...!');
         </div>
     </div>
 </div>
-
 <?php
 require_once('../layouts/footer.php');
 ?>
 <script src="<?= asset('assets/forms-js/project.js') ?>"></script>
-
 <script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {
@@ -280,28 +259,6 @@ require_once('../layouts/footer.php');
             $("tbody tr").filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
             });
-        });
-        $('#datePicker').val(getFormattedDate(new Date()));
-        function getFormattedDate(date) {
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        function filterAppointmentsByDate(selectedDate) {
-            console.log("selectedDate Date:", selectedDate);
-            $('tbody tr').each(function() {
-                var appointmentDate = $(this).find('.appointment_date').text().trim();
-                $(this).toggle(appointmentDate === selectedDate);
-            });
-        }
-        $('#clear').on('click', function() {
-            location.reload();
-        });
-        $('#datePicker').on('change', function() {
-            var selectedDate = $(this).val();
-            alert(selectedDate);
-            filterAppointmentsByDate(selectedDate);
         });
     });
 </script>

@@ -80,13 +80,7 @@ class Logs extends BaseModel
     public function getByUserId($userId)
     {
         $param = array(':user_id' => $userId);
-        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id", $param, true);
-    }
-
-    public function getByBookId($bookId)
-    {
-        $param = array(':book_id' => $bookId);
-        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE BookID = :book_id", $param, true);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id", $param);
     }
 
     public function deleteRec($id)

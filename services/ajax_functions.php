@@ -11,15 +11,14 @@ require_once '../models/Logs.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
 
     try {
-        $username = $_POST['UserName'];
-        $firstname = $_POST['FirstName'];
-        $lastname = $_POST['LastName'];
-        $email = $_POST['Email'];
-        $password = $_POST['Password'];
-        $permission = $_POST['Role'];
+        $user_name = $_POST['user_name'];
+        $full_name = $_POST['full_name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $role = $_POST['role'];
 
         $userModel = new User();
-        $created =  $userModel->createUser($username, $firstname, $lastname, $email, $password, $permission,);
+        $created =  $userModel->createUser($full_name, $user_name, $email,  $password, $role);
         if ($created) {
             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
         } else {
