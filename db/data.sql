@@ -1,4 +1,3 @@
--- for login purpose
 CREATE ACCOUNT THAN UPDATE 
 
     UPDATE Users
@@ -6,25 +5,25 @@ CREATE ACCOUNT THAN UPDATE
     WHERE Email = 'your@example.com';
 AFTER DONE DISABLE create-account.php
 
+<<<<<<< HEAD
+INSERT INTO users (full_name, user_name, email, password, role)
+=======
 
 
 
 
 -- Insert dummy data into the Users table
 INSERT INTO users (full_name, user_name, email, password , role, photo)
+>>>>>>> e72ce541c5eeb83b3940a84e2d7754c87f7b821c
 VALUES
 ('admin', 'admin1', 'admin@example.com', SHA2('admin123', 256), 'admin'),
 ('user', 'user1', 'user@example.com', SHA2('user123', 256), 'user')
 
-
-
--- Insert dummy data into the project table
 INSERT INTO projects (user_id, project_name, status)
 VALUES
 (1, 'Website Redesign', 'in_progress'),
-(2, 'Mobile App Launch', 'idle'),
-(3, 'Backend API Development', 'finished'),
-(1, 'Marketing Campaign', 'in_progress');
+(2, 'Mobile App Launch', 'idle')
+
 
 
 
