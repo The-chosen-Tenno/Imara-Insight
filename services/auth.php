@@ -31,6 +31,6 @@ if ($user != null) {
 } else {
     $sm->setAttribute("error", 'Invalid username or password!');
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['HTTP_REFERER']);
 
 exit;
