@@ -3,6 +3,7 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
+require_once '../models/ProjectImageModel.php';
 
 
 
