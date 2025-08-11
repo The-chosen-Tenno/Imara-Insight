@@ -11,11 +11,10 @@ AFTER DONE DISABLE create-account.php
 
 
 -- Insert dummy data into the Users table
-INSERT INTO users (name, username, email, password_hash, role, photo)
+INSERT INTO users (full_name, user_name, email, password, role)
 VALUES
-('Alice Johnson', 'alicej', 'alice@example.com', SHA2('password123', 256), 'admin', 'uploads/1.png'),
-('Bob Smith', 'bobsmith', 'bob@example.com', SHA2('mypassword', 256), 'user', 'uploads/1.png'),
-('Charlie Lee', 'charlie', 'charlie@example.com', SHA2('charliepass', 256), 'user', 'uploads/1.png');
+('admin', 'admin1', 'admin@example.com', SHA2('admin123', 256), 'admin'),
+('user', 'user1', 'user@example.com', SHA2('user123', 256), 'user')
 
 
 
