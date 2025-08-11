@@ -3,6 +3,7 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
+require_once '../models/Images.php';
 
 
 
@@ -112,10 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
     exit;
 }
 
-
-
-
-
 // Create New Project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
@@ -176,6 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+// update project user by admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
 
     try {
@@ -191,6 +189,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => true, 'message' => "Project updated successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update Borrowed Book!']);
+        }
+    } catch (PDOException $e) {
+        // Handle database connection errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// get images by project id
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_images') {
+
+    try {
+        $project_id = $_GET['project_id'];
+        $ImageModel = new project_images();
+        $Image = $ImageModel->getImagebyProjectId($project_id);
+        if ($Image) {
+            echo json_encode(['success' => true, 'message' => "Images are Successfully retrieved!", 'data' => $Image]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error retrieved Images']);
         }
     } catch (PDOException $e) {
         // Handle database connection errors
