@@ -3,19 +3,14 @@ require_once('../layouts/header.php');
 include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
 
-$projectLogs = new Logs();
-$logsData = $projectLogs->getAll();
-$userDetails = new User();
-$UserData = $userDetails->getAll();
+$project_logs = new Logs();
+$logs_data = $project_logs->getAll();
+$user_details = new User();
+$user_data = $user_details->getAll();
 
 if (!isset($permission)) dd('Access Denied...!');
 ?>
-
-<!-- Content -->
-
 <div class="container-xxl flex-grow-1 container-p-y">
-
-
     <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span> Project Logs
         <?php if ($permission == 'admin') { ?>
             <button
@@ -26,12 +21,6 @@ if (!isset($permission)) dd('Access Denied...!');
                 Add Project
             </button>
         <?php } ?>
-        <!-- <?php if ($permission == 'member') { ?>
-            <button
-                class="btn btn-primary float-end view-history"
-                data-id="<?= $username; ?>">
-                View Your Borrowed History</button>
-        <?php } ?> -->
     </h4>
     <div class="row m-3">
         <div class="col-6">
@@ -41,17 +30,12 @@ if (!isset($permission)) dd('Access Denied...!');
             </div>
         </div>
     </div>
-
-
-
-    <!-- Basic Bootstrap Table -->
     <div class="card">
         <h5 class="card-header"></h5>
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
                     <tr>
-                        <!-- <th>Portrait</th> -->
                         <th>Assigned To</th>
                         <th>Project</th>
                         <th>Status</th>
@@ -60,18 +44,14 @@ if (!isset($permission)) dd('Access Denied...!');
                 </thead>
                 <tbody class="table-border-bottom-0">
                     <?php
-                    $userNames = [];
-                    foreach ($UserData as $user) {
-                        $userNames[$user['id']] = $user['full_name'];
+                    $user_names = [];
+                    foreach ($user_data as $user) {
+                        $user_names[$user['id']] = $user['full_name'];
                     }
-                    // $userPhotos = [];
-                    // foreach ($UserData as $user) {
-                    //     $userPhotos[$user['id']] = $user['photo'];
-                    // }
-                    foreach ($logsData as $LD) {
+                    foreach ($logs_data as $LD) {
                     ?>
                         <tr>
-                            <td><?= $userNames[$LD['user_id']] ?? '' ?></td>
+                            <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                             <td>
                                 <?php if ($LD['status'] == 'finished'): ?>
@@ -87,15 +67,7 @@ if (!isset($permission)) dd('Access Denied...!');
                             <td><?= date('Y-m-d  H:i', strtotime($LD['last_updated'])) ?></td>
                             <?php if ($permission == 'admin') { ?>
                                 <td>
-
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                        </div>
-                                    </div>
+                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
                                 </td>
                             <?php } ?>
                         <?php } ?>
@@ -104,7 +76,6 @@ if (!isset($permission)) dd('Access Denied...!');
         </div>
     </div>
     <hr class="my-5" />
-
 
 </div>
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
@@ -129,8 +100,8 @@ if (!isset($permission)) dd('Access Denied...!');
                                     type="text"
                                     value=""
                                     placeholder="Enter the Project Name"
-                                    id="projectName"
-                                    name="projectName" />
+                                    id="project_name"
+                                    name="project_name" />
                                 <input
                                     type="hidden"
                                     name="action"
@@ -140,10 +111,10 @@ if (!isset($permission)) dd('Access Denied...!');
                         <div class="col form-password-toggle">
                             <label class="form-label" for="basic-default-password2">Assign To</label>
                             <div class="input-group">
-                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="UserID" required>
+                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
                                     <?php
-                                    foreach ($UserData as $full_name => $User) { ?>
-                                        <option value="<?= $User['id'] ?>"><?= $User['full_name'] ?></option>
+                                    foreach ($user_data as $full_name => $user) { ?>
+                                        <option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -154,7 +125,6 @@ if (!isset($permission)) dd('Access Denied...!');
                     </div>
                     <div class="mb-3 mt-3">
                         <div id="additional-fields">
-
                         </div>
                     </div>
                 </div>
@@ -169,7 +139,6 @@ if (!isset($permission)) dd('Access Denied...!');
     </div>
 </div>
 
-<!-- Udpate Modal -->
 <div class="modal fade" id="edit-project-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -189,19 +158,19 @@ if (!isset($permission)) dd('Access Denied...!');
                             <div class="input-group">
                                 <input
                                     type="text"
-                                    name="ProjectName"
+                                    name="project_name"
                                     required
                                     class="form-control"
                                     id="ProjectName"
                                     placeholder="Project Name" />
                                 <input
                                     type="hidden"
-                                    name="ProjectId"
+                                    name="project_id"
                                     required
                                     id="ProjectId" />
                                 <input
                                     type="hidden"
-                                    name="UserID"
+                                    name="user_id"
                                     required
                                     id="UserID" />
                                 <input
@@ -214,7 +183,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <div class="row ">
                         <div class="mb-3">
                             <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
-                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="ProjectStatus" required>
+                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
                                 <option value="idle">Idle</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="finished">Finished</option>
@@ -245,7 +214,7 @@ if (!isset($permission)) dd('Access Denied...!');
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/project.js') ?>"></script>
+<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
 
 <script>
     $(document).ready(function() {
@@ -256,12 +225,14 @@ require_once('../layouts/footer.php');
             });
         });
         $('#datePicker').val(getFormattedDate(new Date()));
+
         function getFormattedDate(date) {
             var year = date.getFullYear();
             var month = (date.getMonth() + 1).toString().padStart(2, '0');
             var day = date.getDate().toString().padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
+
         function filterAppointmentsByDate(selectedDate) {
             console.log("selectedDate Date:", selectedDate);
             $('tbody tr').each(function() {

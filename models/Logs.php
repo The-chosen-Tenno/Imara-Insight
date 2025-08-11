@@ -55,13 +55,13 @@ class Logs extends BaseModel
         return $LogModel ? true : false;
     }
 
-    function updateProject($project_id, $user_id, $ProjectName, $project_status)
+    function updateProject($project_id, $user_id, $project_name, $status)
     {
         $project = new Logs();
         $project->ProjectID = $project_id;
         $project->UserID = $user_id;
-        $project->ProjectName = $ProjectName;
-        $project->ProjectStatus = $project_status;
+        $project->ProjectName = $project_name;
+        $project->ProjectStatus = $status;
         $project->updateRec();
 
         if ($project) {

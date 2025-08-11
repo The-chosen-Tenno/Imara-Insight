@@ -17,7 +17,7 @@ CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     project_name VARCHAR(150) NOT NULL,
-    status ENUM('finished', 'idle', 'in_progress') DEFAULT 'in_progress',
+    status ENUM('finished', 'idle', 'in_progress', 'cancelled') DEFAULT 'in_progress',
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
