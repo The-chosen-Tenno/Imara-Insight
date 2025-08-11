@@ -158,10 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id']) && isset(
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
 
     try {
-        $project_id = $_POST['ProjectId'];
-        $user_id = $_POST['UserID'];
-        $ProjectName = $_POST['ProjectName'];
-        $project_status = $_POST['ProjectStatus'];
+        $project_id = $_POST['project_id'];
+        $user_id = $_POST['user_id'];
+        $ProjectName = $_POST['project_name'];
+        $project_status = $_POST['status'];
 
         $LogModel = new Logs();
         $updated =  $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
