@@ -36,14 +36,11 @@ class User extends BaseModel
 
     protected function updateRec()
     {
-        // Check if the new username or email already exists (excluding the current user's record)
-        $existingUser = $this->getUserByUsernameOrEmailWithId($this->username, $this->email, $this->id);
+       $existingUser = $this->getUserByUsernameOrEmailWithId($this->username, $this->email, $this->id);
         if ($existingUser) {
-            // Handle the error (return an appropriate message or throw an exception)
-            return false; // Or throw an exception with a specific error message
+            return false; 
         }
 
-        // Hash the password if it is being updated
 
         $param = array(
             ':username' => $this->username,
@@ -74,7 +71,7 @@ class User extends BaseModel
 
         $result = $this->pm->run($query, $param);
 
-        return $result; // Return the user if found, or false if not found
+        return $result; 
     }
 
     public function getUserByUsernameOrEmail($username, $email)
@@ -87,8 +84,8 @@ class User extends BaseModel
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE username = :username OR email = :email";
         $result = $this->pm->run($sql, $param);
 
-        if (!empty($result)) {  // Check if the array is not empty
-            $user = $result[0]; // Assuming the first row contains the user data
+        if (!empty($result)) { 
+            $user = $result[0];
             return $user;
         } else {
             return null;
@@ -100,11 +97,9 @@ class User extends BaseModel
     {
         $userModel = new User();
 
-        // Check if username or email already exists
         $existingUser = $userModel->getUserByUsernameOrEmail($username, $email);
         if ($existingUser) {
-            // Handle the error (return an appropriate message or throw an exception)
-            return false; // Or throw an exception with a specific error message
+            return false; 
         }
 
         $user = new User();
@@ -117,9 +112,9 @@ class User extends BaseModel
         $user->addNewRec();
 
         if ($user) {
-            return $user; // User created successfully
+            return $user; 
         } else {
-            return false; // User creation failed (likely due to database error)
+            return false; 
         }
     }
 
@@ -127,11 +122,9 @@ class User extends BaseModel
     {
         $userModel = new User();
 
-        // Check if username or email already exists
         $existingUser = $userModel->getUserByUsernameOrEmailWithId($username, $email, $id);
         if ($existingUser) {
-            // Handle the error (return an appropriate message or throw an exception)
-            return false; // Or throw an exception with a specific error message
+            return false; 
         }
 
         $user = new User();
@@ -142,9 +135,9 @@ class User extends BaseModel
         $user->updateRec();
 
         if ($user) {
-            return true; // User udapted successfully
+            return true; 
         } else {
-            return false; // User update failed (likely due to database error)
+            return false; 
         }
     }
 
@@ -154,9 +147,9 @@ class User extends BaseModel
         $user->deleteRec($id);
 
         if ($user) {
-            return true; // User udapted successfully
+            return true; 
         } else {
-            return false; // User update failed (likely due to database error)
+            return false; 
         }
     }
 
