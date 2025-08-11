@@ -4,16 +4,17 @@ include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
 
 $projectLogs = new Logs();
-$logsData = $projectLogs->getByUserId($userId); 
+$logsData = $projectLogs->getByUserId($userId);
 
 
 $userDetails = new User();
 $loginUserDetails = $userDetails->getById($userId);
 $UserData = $userDetails->getAll();
 
-if (!isset($permission) || $permission !== 'user') {
-    dd('Access Denied...!');
+if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) {
+    dd('Access Denied...');
 }
+
 ?>
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -39,10 +40,10 @@ if (!isset($permission) || $permission !== 'user') {
                     </div>
                     <div class="col-sm-4 text-center">
                         <div class="card-body">
-                            <img src="<?= !empty($loginUserDetails['photo']) 
-                                    ? url('uploads/' . $loginUserDetails['photo']) 
-                                    : url('assets/img/illustrations/man-with-laptop-light.png') ?>" 
-                                 height="140" class="rounded-circle" alt="User Photo" />
+                            <img src="<?= !empty($loginUserDetails['photo'])
+                                            ? url('uploads/' . $loginUserDetails['photo'])
+                                            : url('assets/img/illustrations/man-with-laptop-light.png') ?>"
+                                height="140" class="rounded-circle" alt="User Photo" />
                         </div>
                     </div>
                 </div>
@@ -96,12 +97,7 @@ if (!isset($permission) || $permission !== 'user') {
                                 </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
-                                    <a class="btn btn-sm btn-warning edit-project-btn" 
-                                       data-bs-toggle="modal" 
-                                       data-bs-target="#edit-project-modal"
-                                       data-id="<?= $LD['id']; ?>">
-                                        Edit
-                                    </a>
+                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -112,7 +108,6 @@ if (!isset($permission) || $permission !== 'user') {
 
     </div>
 </div>
-
 
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -136,8 +131,8 @@ if (!isset($permission) || $permission !== 'user') {
                                     type="text"
                                     value=""
                                     placeholder="Enter the Project Name"
-                                    id="projectName"
-                                    name="projectName" />
+                                    id="project_name"
+                                    name="project_name" />
                                 <input
                                     type="hidden"
                                     name="action"
@@ -147,10 +142,10 @@ if (!isset($permission) || $permission !== 'user') {
                         <div class="col form-password-toggle">
                             <label class="form-label" for="basic-default-password2">Assign To</label>
                             <div class="input-group">
-                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="UserID" required>
+                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
                                     <?php
-                                    foreach ($UserData as $full_name => $User) { ?>
-                                        <option value="<?= $User['id'] ?>"><?= $User['full_name'] ?></option>
+                                    foreach ($UserData as $full_name => $user) { ?>
+                                        <option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -161,7 +156,6 @@ if (!isset($permission) || $permission !== 'user') {
                     </div>
                     <div class="mb-3 mt-3">
                         <div id="additional-fields">
-
                         </div>
                     </div>
                 </div>
@@ -176,7 +170,7 @@ if (!isset($permission) || $permission !== 'user') {
     </div>
 </div>
 
-<!-- Udpate Modal -->
+
 <div class="modal fade" id="edit-project-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -196,19 +190,19 @@ if (!isset($permission) || $permission !== 'user') {
                             <div class="input-group">
                                 <input
                                     type="text"
-                                    name="ProjectName"
+                                    name="project_name"
                                     required
                                     class="form-control"
                                     id="ProjectName"
                                     placeholder="Project Name" />
                                 <input
                                     type="hidden"
-                                    name="ProjectId"
+                                    name="project_id"
                                     required
                                     id="ProjectId" />
                                 <input
                                     type="hidden"
-                                    name="UserID"
+                                    name="user_id"
                                     required
                                     id="UserID" />
                                 <input
@@ -221,7 +215,7 @@ if (!isset($permission) || $permission !== 'user') {
                     <div class="row ">
                         <div class="mb-3">
                             <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
-                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="ProjectStatus" required>
+                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
                                 <option value="idle">Idle</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="finished">Finished</option>
@@ -248,10 +242,11 @@ if (!isset($permission) || $permission !== 'user') {
         </div>
     </div>
 </div>
+
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/project.js') ?>"></script>
+<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
 <script>
     $(document).ready(function() {
         $("#searchInput").on("input", function() {

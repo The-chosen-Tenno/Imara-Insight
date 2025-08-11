@@ -113,6 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
 }
 
 
+
+
+
 // Create New Project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
 
@@ -128,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => false, 'message' => 'User Already Borrowed This Book!']);
         }
     } catch (PDOException $e) {
+        // Handle database connection errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
@@ -137,8 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id']) && isset(
 
     try {
         $project_id = $_GET['project_id'];
-        $log_model = new Logs();
-        $Log = $log_model->getProjectById($project_id);
+        $LogModel = new Logs();
+        $Log = $LogModel->getProjectById($project_id);
         if ($Log) {
             echo json_encode(['success' => true, 'message' => "Borrowed Book ID selected successfully!", 'data' => $Log]);
         } else {
@@ -150,23 +154,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id']) && isset(
     }
     exit;
 }
-// Update Project
+// Update Borrowed Book
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
 
     try {
-        $project_id = $_POST['project_id'];
-        $user_id = $_POST['user_id'];
-        $project_name = $_POST['project_name'];
-        $status = $_POST['status'];
+        $project_id = $_POST['ProjectId'];
+        $user_id = $_POST['UserID'];
+        $ProjectName = $_POST['ProjectName'];
+        $project_status = $_POST['ProjectStatus'];
 
         $LogModel = new Logs();
-        $updated =  $LogModel->updateProject($project_id, $user_id, $project_name, $status);
+        $updated =  $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "User Borrowed Book Updated successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update Borrowed Book!']);
         }
     } catch (PDOException $e) {
+        // Handle database connection errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
