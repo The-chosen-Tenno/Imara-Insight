@@ -107,12 +107,12 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                             </a>
                         </li>
                     <?php endif; ?>
-                    <!-- <li class="menu-item <?= $currentFilename === "personallogs.php" ? 'active' : '' ?> ">
+                 <li class="menu-item <?= $currentFilename === "personallogs.php" ? 'active' : '' ?> ">
                             <a href="<?= url('views/admin/personallogs.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user"></i>
                                 <div data-i18n="appointments">Personal Logs</div>
                             </a>
-                        </li> -->
+                        </li>
                 </ul>
             </aside>
             <!-- / Menu -->
