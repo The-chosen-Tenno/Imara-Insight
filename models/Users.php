@@ -90,7 +90,6 @@ class User extends BaseModel
         }
     }
 
-
     function createUser($full_name, $user_name, $email, $password,$role) 
     {
         $userModel = new User();
@@ -165,5 +164,10 @@ class User extends BaseModel
             WHERE id = :id
         "
            , $param, true);
+    }
+
+    public function getUserbyStatus()
+    {
+       return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE status = 'pending'", [], true);
     }
 }
