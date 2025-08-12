@@ -16,7 +16,6 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
 ?>
 
 <!DOCTYPE html>
-<!-- beautify ignore:start -->
 <html
     lang="en"
     class="light-style layout-menu-fixed"
@@ -35,36 +34,22 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
 
     <meta name="description" content="" />
     <meta name="domain" content="<?= current_domain() ?>" />
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
 
-    <!-- Fonts -->
+    <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet" />
 
-    <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="<?= asset('assets/vendor/fonts/boxicons.css') ?>" />
-
-    <!-- Core CSS -->
     <link rel="stylesheet" href="<?= asset('assets/vendor/css/core.css') ?>" class="template-customizer-core-css" />
     <link rel="stylesheet" href="<?= asset('assets/vendor/css/theme-default.css') ?>" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="<?= asset('assets/css/demo.css') ?>" />
-
-    <!-- Vendors CSS -->
     <link rel="stylesheet" href="<?= asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
-
     <link rel="stylesheet" href="<?= asset('assets/vendor/libs/apex-charts/apex-charts.css') ?>" />
 
-    <!-- Page CSS -->
-
-    <!-- Helpers -->
     <script src="<?= asset('assets/vendor/js/helpers.js') ?>"></script>
-
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="<?= asset('assets/js/config.js') ?>"></script>
 </head>
 
@@ -72,13 +57,11 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
-            <!-- Menu -->
-
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="index.html" class="app-brand-link">
                         <span class="app-brand-logo demo">
-
+                            <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" style="width: 35px; height: 35px;">
                         </span>
                         <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize">Imara-Insight</span>
                     </a>
@@ -107,12 +90,6 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                             </a>
                         </li>
                     <?php endif; ?>
-                 <li class="menu-item <?= $currentFilename === "profile.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/profile.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-user"></i>
-                                <div data-i18n="appointments">Personal Logs</div>
-                            </a>
-                        </li>
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -128,14 +105,8 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
-
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-
-
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-
-
-                            <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
@@ -144,7 +115,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="<?= url('views/admin/profile.php') ?>">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
@@ -158,8 +129,6 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                             </div>
                                         </a>
                                     </li>
-
-
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>

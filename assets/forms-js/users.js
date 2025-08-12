@@ -122,18 +122,16 @@ $(document).ready(function () {
 
                 showAlert(response.message, response.success ? 'primary' : 'danger');
                 if (response.success) {
-                    var user_id = response.data.ID;
-                    var username = response.data.UserName;
-                    var email = response.data.Email;
+                    var user_id = response.data.id;
+                    var username = response.data.user_name;
+                    var email = response.data.email;
 
 
 
                     $('#edit-user-modal #user_id').val(user_id);
                     $('#edit-user-modal #user_name').val(username);
                     $('#edit-user-modal #email').val(email);
-                    if (permission === 'doctor') {
-
-
+                    if (role === 'admin') {
                     } else {
                         $('#edit-additional-fields').empty();
                     }
