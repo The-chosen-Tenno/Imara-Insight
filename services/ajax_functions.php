@@ -6,8 +6,6 @@ require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 
 
-
-
 //create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
 
@@ -204,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $uploadedFiles[] = $fileName;
                 }
             }
-           $project_imageModel = new ProjectImageModel();
+            $project_imageModel = new ProjectImageModel();
             if (!empty($uploadedFiles)) {
                 $project_imageModel->saveProjectImages($project_id, $uploadedFiles);
             }
@@ -214,6 +212,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => true, 'message' => 'Project updated successfully', 'uploaded_images' => $uploadedFiles]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update project']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+
+// Get Images By Project ID 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_POST['action']) && $_POST['action'] === 'get_images') {
+    try {
+        $project_id = $_POST['project_id'];
+        $ImageModel = new ProjectImageModel();
+        $retrieved = $ImageModel->getImagebyProjectId($project_id);
+        if ($retrieved) {
+            echo json_encode(['success' => true, 'message' => 'Images retrieved successfully', 'retrieved_images' => $uploadedFiles]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed retrieved Images']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);

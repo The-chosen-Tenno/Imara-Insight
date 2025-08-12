@@ -27,5 +27,5 @@ class ProjectImageModel extends BaseModel
             $this->pm->run($sql, $params);
         }
     }
-    
+    function getImagebyProjectId($project_id) {}
 }
