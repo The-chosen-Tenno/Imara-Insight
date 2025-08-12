@@ -19,37 +19,6 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-
-        <!-- User Info Card -->
-        <div class="col-lg-12 mb-4">
-            <div class="card">
-                <div class="row align-items-center">
-                    <div class="col-sm-8">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary">
-                                Welcome <?= htmlspecialchars($loginUserDetails['full_name']) ?>
-                            </h5>
-                            <p><strong>User ID:</strong> <?= htmlspecialchars($loginUserDetails['id']) ?></p>
-                            <p><strong>Email:</strong> <?= htmlspecialchars($loginUserDetails['email']) ?></p>
-                            <p>
-                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#edit-user-modal">
-                                    Edit My Profile
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 text-center">
-                        <div class="card-body">
-                            <img src="<?= !empty($loginUserDetails['photo'])
-                                            ? url('uploads/' . $loginUserDetails['photo'])
-                                            : url('assets/img/illustrations/man-with-laptop-light.png') ?>"
-                                height="140" class="rounded-circle" alt="User Photo" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Project Logs -->
         <h4 class="fw-bold py-3 mb-4">
             My Projects

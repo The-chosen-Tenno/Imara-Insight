@@ -293,8 +293,6 @@ if ($permission != 'admin') dd('Access Denied...!');
     </div>
 </div>
 
-
-
 <?php
 require_once('../layouts/footer.php');
 ?>
