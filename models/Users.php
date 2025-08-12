@@ -34,9 +34,9 @@ class User extends BaseModel
 
     protected function updateRec()
     {
-       $existingUser = $this->getUserByUsernameOrEmailWithId($this->user_name, $this->email, $this->id);
+        $existingUser = $this->getUserByUsernameOrEmailWithId($this->user_name, $this->email, $this->id);
         if ($existingUser) {
-            return false; 
+            return false;
         }
 
 
@@ -69,7 +69,7 @@ class User extends BaseModel
 
         $result = $this->pm->run($query, $param);
 
-        return $result; 
+        return $result;
     }
 
     public function getUserByUsernameOrEmail($user_name, $email)
@@ -82,7 +82,7 @@ class User extends BaseModel
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user_name = :user_name OR email = :email";
         $result = $this->pm->run($sql, $param);
 
-        if (!empty($result)) { 
+        if (!empty($result)) {
             $user = $result[0];
             return $user;
         } else {
@@ -90,13 +90,13 @@ class User extends BaseModel
         }
     }
 
-    function createUser($full_name, $user_name, $email, $password,$role) 
+    function createUser($full_name, $user_name, $email, $password, $role)
     {
         $userModel = new User();
 
         $existingUser = $userModel->getUserByUsernameOrEmail($user_name, $email);
         if ($existingUser) {
-            return false; 
+            return false;
         }
 
         $user = new User();
@@ -108,9 +108,9 @@ class User extends BaseModel
         $user->addNewRec();
 
         if ($user) {
-            return $user; 
+            return $user;
         } else {
-            return false; 
+            return false;
         }
     }
 
@@ -120,20 +120,20 @@ class User extends BaseModel
 
         $existingUser = $userModel->getUserByUsernameOrEmailWithId($user_name, $email, $id);
         if ($existingUser) {
-            return false; 
+            return false;
         }
 
         $user = new User();
         $user->id = $id;
         $user->user_name = $user_name;
         $user->email = $email;
-      
+
         $user->updateRec();
 
         if ($user) {
-            return true; 
+            return true;
         } else {
-            return false; 
+            return false;
         }
     }
 
@@ -143,9 +143,9 @@ class User extends BaseModel
         $user->deleteRec($id);
 
         if ($user) {
-            return true; 
+            return true;
         } else {
-            return false; 
+            return false;
         }
     }
 
@@ -159,15 +159,23 @@ class User extends BaseModel
     public function getUserById($id)
     {
         $param = array(':id' => $id);
-        return $this->pm->run(" SELECT *
+        return $this->pm->run(
+            " SELECT *
             FROM " . $this->getTableName() . "
             WHERE id = :id
-        "
-           , $param, true);
+        ",
+            $param,
+            true
+        );
     }
 
-    public function getUserbyStatus()
+    public function getUserbyStatus($status = 'pending')
     {
-       return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE status = 'pending'", [], true);
+        $query = "SELECT * FROM " . $this->getTableName() . " WHERE status = :status";
+        $param = [':status' => $status];
+
+        $result = $this->pm->run($query, $param);
+
+        return $result;
     }
 }
