@@ -1,0 +1,98 @@
+/* General Page Style */
+body {
+    background: linear-gradient(135deg, #f8f9fa, #eef1f5);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Card Design */
+.card {
+    border-radius: 16px;
+    border: none;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Project Title */
+.card-header h5 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Badges Styling */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.45em 0.75em;
+    border-radius: 8px;
+}
+
+/* Image Cards */
+.card-img-top {
+    border-radius: 12px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card-img-top:hover {
+    transform: scale(1.05);
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    animation: modalFade 0.3s ease;
+}
+
+@keyframes modalFade {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Image */
+#modalImageView {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 10px;
+    padding: 0.45rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Download Button Special Effect */
+#downloadImage {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    border: none;
+    color: white;
+    font-weight: 500;
+}
+
+#downloadImage:hover {
+    background: linear-gradient(135deg, #1cc88a, #4e73df);
+}
+
+/* Smooth Hover for Navigation Buttons */
+#prevImage, #nextImage {
+    background-color: rgba(0,0,0,0.05);
+}
+
+#prevImage:hover, #nextImage:hover {
+    background-color: rgba(0,0,0,0.15);
+}

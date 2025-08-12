@@ -27,5 +27,9 @@ class ProjectImageModel extends BaseModel
             $this->pm->run($sql, $params);
         }
     }
-    function getImagebyProjectId($project_id) {}
+    function getImagebyProjectId($project_id) {
+        $sql = "SELECT * FROM project_images WHERE project_id = :project_id";
+        $params = [':project_id' => $project_id];
+        return $this->pm->run($sql, $params);
+    }
 }
