@@ -94,7 +94,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> ">
                             <a href="<?= url('views/admin/dashboard.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-user"></i>
+                                <i class="menu-icon tf-icons bx bx-home-alt"></i>
                                 <div data-i18n="appointments">Dashboard</div>
                             </a>
                         </li>
@@ -107,8 +107,8 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                             </a>
                         </li>
                     <?php endif; ?>
-                 <li class="menu-item <?= $currentFilename === "personallogs.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/personallogs.php') ?>" class="menu-link">
+                 <li class="menu-item <?= $currentFilename === "profile.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/profile.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user"></i>
                                 <div data-i18n="appointments">Personal Logs</div>
                             </a>
