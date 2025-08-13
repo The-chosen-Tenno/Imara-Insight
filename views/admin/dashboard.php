@@ -184,30 +184,33 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     </div>
                     <div class="row">
                         <div class="mb-3">
-                            <label for="projectImages" class="form-label">Project Images</label>
-                            <input
-                                type="file"
-                                class="form-control"
-                                id="projectImages"
-                                name="project_images[]"
-                                accept="image/*"
-                                multiple />
+                            <label for="projectImagesTitle" class="form-label">Project Image Title</label>
+                            <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
                         </div>
-                        <div class="mb-3 mt-3">
-                            <div id="alert-container"></div>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <div id="additional-fields">
-
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="projectImagesDescription" class="form-label">Project Images Description</label>
+                                <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
                             </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Close
-                        </button>
-                        <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
-                    </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="projectImages" class="form-label">Project Images</label>
+                                    <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                                    <div class="mb-3 mt-3">
+                                        <div id="alert-container"></div>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <div id="additional-fields">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
+                                </div>
             </form>
         </div>
     </div>

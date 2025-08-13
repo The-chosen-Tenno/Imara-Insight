@@ -211,12 +211,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $logsModel = new Logs();
         $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $project_status);
 
-        $uploadedFiles = [];
+        // Prepare arrays for titles and descriptions
+        $titles = $_POST['project_images_title'] ?? [];
+        $descriptions = $_POST['project_images_description'] ?? [];
+
+        $uploadedData = [];
         if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
             $uploadDir = __DIR__ . '/uploads/projects/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
+
             for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
                 $tmpName = $_FILES['project_images']['tmp_name'][$i];
                 $originalName = basename($_FILES['project_images']['name'][$i]);
@@ -227,17 +232,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 if (strpos($fileType, 'image') === false) continue;
 
                 if (move_uploaded_file($tmpName, $targetFilePath)) {
-                    $uploadedFiles[] = $fileName;
+                    $uploadedData[] = [
+                        'file' => $fileName,
+                        'title' => $titles[$i] ?? '',
+                        'description' => $descriptions[$i] ?? ''
+                    ];
                 }
             }
+
             $projectImageModel = new ProjectImageModel();
-            if (!empty($uploadedFiles)) {
-                $projectImageModel->saveProjectImages($project_id, $uploadedFiles);
+            if (!empty($uploadedData)) {
+                $projectImageModel->saveProjectImages($project_id, $uploadedData);
             }
         }
 
         if ($updated) {
-            echo json_encode(['success' => true, 'message' => 'Project updated successfully', 'uploaded_images' => $uploadedFiles]);
+            echo json_encode(['success' => true, 'message' => 'Project updated successfully', 'uploaded_images' => $uploadedData]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update project']);
         }

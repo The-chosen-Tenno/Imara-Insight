@@ -67,7 +67,8 @@ if (!isset($permission)) dd('Access Denied...!');
                             </td>
                             <td>
                                 <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
-                                    class="btn rounded-pill btn-outline-primary">
+                                    class="btn rounded-pill btn-outline-primary"
+                                    target="_blank">
                                     Show
                                 </a>
                             </td>
