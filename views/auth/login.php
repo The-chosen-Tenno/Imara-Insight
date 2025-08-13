@@ -7,8 +7,9 @@ require_once('../../config.php');
 <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-            <!-- Register -->
-            <div class="card">
+
+            <!-- Login Card -->
+            <div id="login-card" class="card">
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
@@ -20,7 +21,7 @@ require_once('../../config.php');
                     <h4 class="mb-2">Welcome to Imara-Insight</h4>
                     <p class="mb-4">Please sign-in to your account</p>
 
-                    <form id="formAuthentication" class="mb-3" action="<?= ('../../services/auth.php') ?>" method="POST">
+                    <form id="formAuthentication" class="mb-3" method="POST" action="../../services/auth.php">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input
@@ -29,6 +30,7 @@ require_once('../../config.php');
                                 id="email"
                                 name="Email"
                                 placeholder="Enter your email"
+                                required
                                 autofocus />
                         </div>
                         <div class="mb-3 form-password-toggle">
@@ -42,78 +44,43 @@ require_once('../../config.php');
                                     class="form-control"
                                     name="Password"
                                     placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    required
                                     aria-describedby="password" />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
-                            <div class="mb-3" id="password-error">
-                            </div>
+                            <div class="mb-3" id="password-error"></div>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary d-grid w-100" type="submit" id="create">Sign in</button>
+                            <button type="button" id="login" class="btn btn-primary d-grid w-100">Sign in</button>
                         </div>
                     </form>
 
                     <p class="text-center">
                         <span>New on our platform?</span>
-                        <a href="../admin/books.php">
-                            <span>Explore as Guest</span>
+                        <a href="../auth/create-account.php">
+                            <span>CREATE</span>
                         </a>
-                    </p>
-                    <p class="text-center">
-                        <span>Disable after creating first account</span>
-                        <a href="../auth/create-account.php">CREATE</a>
-                        <span></span>
                     </p>
                 </div>
             </div>
-            <!-- /Register -->
-        </div>
+            
+
+            <div id="pending-message" class="card text-center" style="display: none;">
+                <div class="card-body">
+                    <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
+                    <h4 class="mb-2">Access Denied</h4>
+                    <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
+                </div>
+                <div class="mb-3">
+                    <button type="button" id="back-home" class="btn btn-primary d-grid w-100">Back To The Home Page</button>
+                </div>
+            </div>
+       </div>
     </div>
 </div>
-<!-- / Content -->
+
 
 <?php
 require_once('../layouts/login_footer.php');
 ?>
 <script src="../../assets/forms-js/login.js"></script>
-
-<script>
-    $(document).ready(function() {
-        $("#formAuthentication").on("submit", function(event) {
-            // Prevent form from submitting
-            event.preventDefault();
-
-            // Clear previous error messages
-            $(".error-message").remove();
-
-            // Get form values
-            const email = $("#email").val().trim();
-            const password = $("#password").val().trim();
-            let isValid = true;
-
-            // Email validation
-            if (email === "") {
-                $("#email").after('<span class="error-message" style="color: red;">Type Email!</span>');
-                isValid = false;
-            } else {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    $("#email").after('<span class="error-message" style="color: red;">Enter a valid Email!</span>');
-                    isValid = false;
-                }
-            }
-
-            // Password validation
-            if (password === "") {
-                $("#password-error").after('<span class="error-message" style="color: red;">Enter Password!</span>');
-                isValid = false;
-            }
-
-            // If all validations pass, submit the form
-            if (isValid) {
-                // Now, submit the form
-                this.submit();
-            }
-        });
-    });
-</script>

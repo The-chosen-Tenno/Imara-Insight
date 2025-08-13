@@ -1,42 +1,50 @@
 $(document).ready(function () {
     $('#login').on('click', function () {
-        var form = $('#formAuthentication')[0]; // Get the form element
+        var form = $('#formAuthentication')[0];
 
         if (!form) {
-            console.log('Fill ..');
+            console.log('Form not found!');
             return;
-        } else {
-            var url = $('#formAuthentication').attr('action');
-            if (form.checkValidity()) { // Only submit if the form is valid
-                var formData = new FormData(form); // Prepare form data
-
-                $.ajax({
-                    url: url, // Target URL (ajax_functions.php)
-                    type: 'POST',
-                    data: formData,
-                    contentType: false, // Don't set content type
-                    processData: false, // Don't process the data
-                    dataType: 'json', // Expect JSON response
-                    success: function (response) {
-                        showAlert(response.message, response.success ? 'primary' : 'danger');
-                        if (response.success) {
-                            setTimeout(function () {
-                                location.reload(); // Reload page after 1 second
-                            }, 5000);
-                        }
-                    },
-                    error: function (error) {
-                        // Handle any errors in the request
-                        console.error('Error submitting the form:', error);
-                        showAlert('Something went wrong..!', 'danger');
-                    },
-                    complete: function (response) {
-                        console.log('Request complete:', response); // Log the request completion
-                    }
-                });
-            } else {
-                form.reportValidity(); // Show form validation errors if invalid
-            }
         }
+
+        if (form.checkValidity()) {
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: $('#formAuthentication').attr('action'),
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+
+                    if (response.success) {
+                        // Redirect to index.php on successful login
+                        window.location.href = "../../index.php";
+                    } else if (response.message === 'pending') {
+                        // Pending approval
+                        $('#login-card').hide();
+                        $('#pending-message').show();
+                    } else {
+                        // Any other error
+                        alert(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', xhr.responseText);
+                    alert('Something went wrong!');
+                }
+            });
+        } else {
+            form.reportValidity();
+        }
+    });
+});
+
+$(document).ready(function () {
+    $('#back-home').on('click', function() {
+        location.reload(); // Refreshes the current page
     });
 });
