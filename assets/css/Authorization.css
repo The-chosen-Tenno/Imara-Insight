@@ -1,0 +1,23 @@
+    .user-photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #0d6efd;
+        background-color: #f8f9fa;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title.custom-title {
+        font-size: 1.3rem;
+        line-height: 1.1;
+    }
+
+    .dl-custom dt {
+        font-weight: 600;
+    }
+
+    .dl-custom dd {
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+    }

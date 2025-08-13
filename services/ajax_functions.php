@@ -5,10 +5,8 @@ require_once '../models/Users.php';
 require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 
-
-//create user
+// Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
-
     try {
         $user_name = $_POST['user_name'];
         $full_name = $_POST['full_name'];
@@ -17,51 +15,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $role = $_POST['role'];
 
         $userModel = new User();
-        $created =  $userModel->createUser($full_name, $user_name, $email,  $password, $role);
+        $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
         if ($created) {
             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to create user. May be user already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to create user. User may already exist!']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-//Get user by id
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_user') {
 
+// Get user by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user') {
     try {
         $user_id = $_GET['user_id'];
         $userModel = new User();
         $user = $userModel->getUserById($user_id);
         if ($user) {
-            echo json_encode(['success' => true, 'message' => "User selected successfully!", 'data' => $user]);
+            echo json_encode(['success' => true, 'message' => "User retrieved successfully!", 'data' => $user]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'User not Found']);
+            echo json_encode(['success' => false, 'message' => 'User not found']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-//update user
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
 
+// Update user
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
     try {
         $username = $_POST['UserName'] ?? '';
         $email = $_POST['Email'] ?? '';
-
         $id = $_POST['ID'];
 
-        // Validate inputs
+        // Validate required fields
         if (empty($username) || empty($email)) {
-            echo json_encode(['success' => false, 'message' => 'Required fields are missing!']);
+            echo json_encode(['success' => false, 'message' => 'Required fields missing!']);
             exit;
         }
-
 
         // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -70,25 +66,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $userModel = new User();
-        $updated =  $userModel->updateUser($id, $username, $email);
+        $updated = $userModel->updateUser($id, $username, $email);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "User updated successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update user. May be user already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to update user. User may already exist!']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-//Delete by user id
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GET['action']) && $_GET['action'] == 'delete_user') {
+
+// Delete user by ID
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
     try {
         $ID = $_GET['user_id'];
-
         $userModel = new User();
 
+        // Uncomment if admin check needed for doctor deletion
         // if ($permission == 'admin') {
         //     $userDeleted = $userModel->deleteUser($ID);
         //     if ($userDeleted === false) {
@@ -96,91 +93,123 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id']) && isset($_GE
         //         exit;
         //     }
         // }
-        // Proceed to delete the user if doctor deletion was successful or not needed
         $userDeleted = $userModel->deleteUser($ID);
-
         if ($userDeleted) {
             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
 
-// Create New Project
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
+// Accept user registration
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
+    try {
+        $id = $_POST['user_id'];
+        $userModel = new User();
+        $accepted = $userModel->acceptUser($id);
+        if ($accepted) {
+            echo json_encode(['success' => true, 'message' => "User accepted successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
 
+// Decline user registration
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'decline_user') {
+    try {
+        $id = $_POST['user_id'];
+        $userModel = new User();
+        $declined = $userModel->declineUser($id);
+        if ($declined) {
+            echo json_encode(['success' => true, 'message' => "User accepted successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// Create new project
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_project') {
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
 
-        $bookborrowedModel = new Logs();
-        $created =  $bookborrowedModel->createProject($user_id, $project_name);
+        $logsModel = new Logs();
+        $created = $logsModel->createProject($user_id, $project_name);
         if ($created) {
-            echo json_encode(['success' => true, 'message' => "New Project successfully Created"]);
+            echo json_encode(['success' => true, 'message' => "New project created successfully"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'some error occurred']);
+            echo json_encode(['success' => false, 'message' => 'Some error occurred']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-//Get Project by id
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id']) && isset($_GET['action']) &&  $_GET['action'] == 'get_project') {
 
+// Get project by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['action']) && $_GET['action'] == 'get_project') {
     try {
         $project_id = $_GET['project_id'];
-        $LogModel = new Logs();
-        $Log = $LogModel->getProjectById($project_id);
-        if ($Log) {
-            echo json_encode(['success' => true, 'message' => "Project selected successfully!", 'data' => $Log]);
+        $logsModel = new Logs();
+        $project = $logsModel->getProjectById($project_id);
+        if ($project) {
+            echo json_encode(['success' => true, 'message' => "Project retrieved successfully!", 'data' => $project]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error Selecting Project ID']);
+            echo json_encode(['success' => false, 'message' => 'Error selecting project ID']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 // Update project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
-
     try {
         $project_id = $_POST['project_id'];
         $user_id = $_POST['user_id'];
-        $ProjectName = $_POST['project_name'];
+        $projectName = $_POST['project_name'];
         $project_status = $_POST['status'];
 
-        $LogModel = new Logs();
-        $updated =  $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
+        $logsModel = new Logs();
+        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $project_status);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "Project updated successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'project not found or update failed!']);
+            echo json_encode(['success' => false, 'message' => 'Project not found or update failed!']);
         }
     } catch (PDOException $e) {
-        // Handle database connection errors
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-// update project user by admin
+
+// Update project user and upload images (admin)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
     try {
         $project_id = $_POST['project_id'];
         $user_id = $_POST['user_id'];
-        $ProjectName = $_POST['project_name'];
+        $projectName = $_POST['project_name'];
         $project_status = $_POST['status'];
 
-        $LogModel = new Logs();
-        $updated = $LogModel->updateProject($project_id, $user_id, $ProjectName, $project_status);
+        $logsModel = new Logs();
+        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $project_status);
 
         $uploadedFiles = [];
         if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
@@ -188,7 +217,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
-
             for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
                 $tmpName = $_FILES['project_images']['tmp_name'][$i];
                 $originalName = basename($_FILES['project_images']['name'][$i]);
@@ -202,9 +230,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $uploadedFiles[] = $fileName;
                 }
             }
-            $project_imageModel = new ProjectImageModel();
+            $projectImageModel = new ProjectImageModel();
             if (!empty($uploadedFiles)) {
-                $project_imageModel->saveProjectImages($project_id, $uploadedFiles);
+                $projectImageModel->saveProjectImages($project_id, $uploadedFiles);
             }
         }
 
@@ -219,21 +247,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-
-// Get Images By Project ID 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_POST['action']) && $_POST['action'] === 'get_images') {
+// Get images by project ID (POST method)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'get_images') {
     try {
         $project_id = $_POST['project_id'];
-        $ImageModel = new ProjectImageModel();
-        $retrieved = $ImageModel->getImagebyProjectId($project_id);
+        $imageModel = new ProjectImageModel();
+        $retrieved = $imageModel->getImagebyProjectId($project_id);
         if ($retrieved) {
-            echo json_encode(['success' => true, 'message' => 'Images retrieved successfully', 'retrieved_images' => $uploadedFiles]);
+            echo json_encode(['success' => true, 'message' => 'Images retrieved successfully', 'retrieved_images' => $retrieved]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed retrieved Images']);
+            echo json_encode(['success' => false, 'message' => 'Failed to retrieve images']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 dd('Access denied..!');

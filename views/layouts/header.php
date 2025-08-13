@@ -47,6 +47,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
     <link rel="stylesheet" href="<?= asset('assets/vendor/css/theme-default.css') ?>" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="<?= asset('assets/css/demo.css') ?>" />
     <link rel="stylesheet" href="<?= asset('assets/css/style.css') ?>" />
+    <link rel="stylesheet" href="<?= asset('assets/css/authorization.css') ?>" />
 
 
     <!-- Vendors CSS -->
@@ -78,7 +79,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
-                    <?php if (($permission ==="admin")) : ?>
+                    <?php if (($permission === "admin")) : ?>
                         <li class="menu-item <?= $currentFilename === "Authorization.php" ? 'active' : '' ?> ">
                             <a href="<?= url('views/admin/Authorization.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user-check"></i>
@@ -99,6 +100,12 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                             <a href="<?= url('views/admin/logs.php') ?>" class="menu-link">
                                 <i class='bx bxs-coin-stack'></i>
                                 <div data-i18n="Analytics">Logs</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= $currentFilename === "leaveReq.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/leaveReq.php') ?>" class="menu-link">
+                                <i class='bx bxs-calendar-x'></i>
+                                <div data-i18n="Analytics">Leave Request</div>
                             </a>
                         </li>
                     <?php endif; ?>

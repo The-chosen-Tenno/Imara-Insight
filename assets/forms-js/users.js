@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    // Trigger change event on page load if doctor permission is selected by default
-
 
     $('#create').on('click', function () {
         var form = $('#create-form')[0]; // Get the form element
