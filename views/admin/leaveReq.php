@@ -21,7 +21,10 @@ if (!isset($permission)) dd('Access Denied...!');
                 <option value="other">Other</option>
             </select>
         </div>
-
+        <div class="mb-3" id="other_reason_div" style="display:none;">
+            <label for="other_reason" class="form-label d-block text-center">Specify Other Reason</label>
+            <input type="text" id="other_reason" name="other_reason" class="form-control" placeholder="Type your reason here">
+        </div>
         <div class="mb-3">
             <label for="date_off" class="form-label d-block text-center">Date(s) Off</label>
             <input type="date" id="date_off" name="date_off" class="form-control" required />
@@ -31,11 +34,25 @@ if (!isset($permission)) dd('Access Denied...!');
             <label for="reason" class="form-label d-block text-center">Explanation / Description</label>
             <textarea id="reason" name="reason" rows="5" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
         </div>
-
-        <button type="submit" class="btn btn-primary d-block mx-auto">Submit Request</button>
+        <input type="hidden" name="user_id" value="<?= $userId?>" >
+        <button type="submit" class="btn btn-primary d-block mx-auto sub-leave-req">Submit Request</button>
     </form>
 </div>
-
+<script src="<?= asset('assets/forms-js/leave.js') ?>"></script>
+<script>
+    const requestType = document.getElementById('request_type');
+    const otherDiv = document.getElementById('other_reason_div');
+    
+    requestType.addEventListener('change', () => {
+        if(requestType.value === 'other') {
+            otherDiv.style.display = 'block';
+            document.getElementById('other_reason').setAttribute('required', 'required');
+        } else {
+            otherDiv.style.display = 'none';
+            document.getElementById('other_reason').removeAttribute('required');
+        }
+    });
+</script>
 <?php
 require_once('../layouts/footer.php');
 ?>
