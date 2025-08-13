@@ -102,7 +102,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                     placeholder="Enter the Project Name"
                                     id="project_name"
                                     name="project_name" />
-                                <input type="text" name="user_id" value="<?= $loginUserDetails['id'] ?>" hidden />">
+                                <input type="text" name="user_id" value="<?= $loginUserDetails['id'] ?>" hidden />
                                 <input
                                     type="hidden"
                                     name="action"
