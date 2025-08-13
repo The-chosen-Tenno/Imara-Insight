@@ -5,9 +5,17 @@ include BASE_PATH . '/helpers/AppManager.php';
 
 $sm = AppManager::getSM();
 $username = $sm->getAttribute("userName");
+$role = $sm->getAttribute("role");
 
-if (isset($username)) {
-    header('location: views/admin/dashboard.php');
+if (!empty($username)) {
+    if ($role === "admin") {
+        header('Location: views/admin/Authorization.php');
+        exit;
+    } else {
+        header('Location: views/admin/dashboard.php');
+        exit;
+    }
 } else {
-    header('location: views/auth/login.php');
+    header('Location: views/auth/login.php');
+    exit;
 }
