@@ -4,7 +4,7 @@ require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
-
+require_once '../models/Leave.php';
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
     try {
@@ -274,4 +274,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
+// new leave request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
+    try {
+        $reason_type = $_POST['reason_type'];
+        $other_reason = $_POST['other_reason'];
+        $date_off = $_POST['date_off'];
+        $description = $_POST['description'];
+        $user_id = $_POST['user_id'];
+
+        $leaveModel = new Leave();
+        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $date_off, $description, $user_id);
+        if ($requested) {
+            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
 dd('Access denied..!');

@@ -37,8 +37,9 @@ CREATE TABLE leave_requests (
     user_id INT NOT NULL,
     reason_type VARCHAR(255) NOT NULL,
     other_reason VARCHAR(255),
-    date DATE NOT NULL,
+    date_off DATE NOT NULL,
     description TEXT NOT NULL,
+    status ENUM('approved', 'denied', 'pending') DEFAULT 'pending',
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

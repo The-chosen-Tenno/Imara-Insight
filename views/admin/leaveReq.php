@@ -12,8 +12,8 @@ if (!isset($permission)) dd('Access Denied...!');
         <p class="text-center mb-4">From sick days to personal time, we're here to make your leave easy!</p>
 
         <div class="mb-3">
-            <label for="request_type" class="form-label d-block text-center">Choose a request Reason</label>
-            <select id="request_type" name="request_type" class="form-select" required>
+            <label for="reason_type" class="form-label d-block text-center">Choose a request Reason</label>
+            <select id="reason_type" name="reason_type" class="form-select" required>
                 <option value="" disabled selected>-- Select Leave Type --</option>
                 <option value="sick">Sick Leave</option>
                 <option value="personal">Personal Leave</option>
@@ -31,8 +31,8 @@ if (!isset($permission)) dd('Access Denied...!');
         </div>
 
         <div class="mb-3">
-            <label for="reason" class="form-label d-block text-center">Explanation / Description</label>
-            <textarea id="reason" name="reason" rows="5" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
+            <label for="description" class="form-label d-block text-center">Explanation / Description</label>
+            <textarea id="description" name="description" rows="5" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
         </div>
         <input type="hidden" name="user_id" value="<?= $userId?>" >
         <button type="submit" class="btn btn-primary d-block mx-auto sub-leave-req">Submit Request</button>
@@ -40,16 +40,16 @@ if (!isset($permission)) dd('Access Denied...!');
 </div>
 <script src="<?= asset('assets/forms-js/leave.js') ?>"></script>
 <script>
-    const requestType = document.getElementById('request_type');
+    const requestType = document.getElementById('reason_type');
     const otherDiv = document.getElementById('other_reason_div');
     
     requestType.addEventListener('change', () => {
         if(requestType.value === 'other') {
             otherDiv.style.display = 'block';
-            document.getElementById('other_reason').setAttribute('required', 'required');
+            document.getElementById('other_reason_div').setAttribute('required', 'required');
         } else {
             otherDiv.style.display = 'none';
-            document.getElementById('other_reason').removeAttribute('required');
+            document.getElementById('other_reason_div').removeAttribute('required');
         }
     });
 </script>
