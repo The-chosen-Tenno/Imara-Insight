@@ -20,6 +20,12 @@ $user_data = $userDetails->getAll();
                     $full_name[$user['id']] = $user['full_name'];
                 }
                 ?>
+                                <?php
+                $user_photo = [];
+                foreach ($user_data as $photo) {
+                    $user_photo[$photo['id']] = $photo['photo'];
+                }
+                ?>
                 <?php foreach ($leave as $pending) : ?>
                     <div class="card shadow-sm border-0 mb-3" style="width: 100%;">
                         <div class="row g-3 align-items-center">
@@ -54,7 +60,7 @@ $user_data = $userDetails->getAll();
                             <div class="col-sm-4 text-center">
                                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
                                     <div class="user-photo">
-                                        <img src="<?= !empty($pending['photo']) ? url($pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
+                                        <img src="<?= !empty($user_photo[$pending['user_id']]) ? url($user_photo[$pending['user_id']]) : url('assets/img/illustrations/mine-strappen.png') ?>"
                                             alt="User Photo"
                                             style="width: 100%; height: 100%; object-fit: cover;" />
                                     </div>
