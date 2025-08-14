@@ -8,6 +8,7 @@ if (!isset($permission)) dd('Access Denied...!');
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
             <div class="card p-4">
+                <!-- Leave Request Form -->
                 <form id="leave-request-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="request_leave" />
                     <h2 class="fw-bold mb-4 text-center">Submit Leave Request</h2>
@@ -47,28 +48,18 @@ if (!isset($permission)) dd('Access Denied...!');
                         <button type="submit" class="btn btn-primary sub-leave-req">Submit Request</button>
                     </div>
                 </form>
+
+                <!-- Success / Message Div -->
+                <div id="leave-success-message" style="display:none; text-align:center; padding:20px;">
+                    <h3 class="text-success">Success!</h3>
+                    <h3 class="text-failed" style="display:none; color:red;">Failed!</h3>
+                    <p id="success-text"></p>
+                    <button id="request-again" class="btn btn-outline-primary mt-3">Request Again</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<?php
-require_once('../layouts/footer.php');
-?>
-<script>
-    const requestType = document.getElementById('reason_type');
-    const otherDiv = document.getElementById('other_reason_div');
 
-    requestType.addEventListener('change', () => {
-        if (requestType.value === 'other') {
-            otherDiv.style.display = 'block';
-            document.getElementById('other_reason').setAttribute('required', 'required');
-        } else {
-            otherDiv.style.display = 'none';
-            document.getElementById('other_reason').removeAttribute('required');
-        }
-    });
-</script>
+<?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/leave-request.js') ?>"></script>
-
-
-
