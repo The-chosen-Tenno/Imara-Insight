@@ -20,7 +20,7 @@ $user_data = $userDetails->getAll();
                     $full_name[$user['id']] = $user['full_name'];
                 }
                 ?>
-                                <?php
+                <?php
                 $user_photo = [];
                 foreach ($user_data as $photo) {
                     $user_photo[$photo['id']] = $photo['photo'];
@@ -32,7 +32,7 @@ $user_data = $userDetails->getAll();
                             <div class="col-sm-8">
                                 <div class="card-body py-2 px-3">
                                     <h2 class="card-title text-primary fw-bold mb-1 custom-title">
-                                       <?= htmlspecialchars($full_name[$pending['user_id']]) ?>
+                                        <?= htmlspecialchars($full_name[$pending['user_id']]) ?>
                                     </h2>
                                     <dl class="row mb-2 dl-custom">
                                         <dt class="col-sm-2">Fullname:</dt>
@@ -48,10 +48,15 @@ $user_data = $userDetails->getAll();
                                         <dd class="col-sm-10"><?= htmlspecialchars($pending['description']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
-                                        <button class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
+                                        <button
+                                            class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
+                                            data-id="<?= htmlspecialchars($pending['id']) ?>"
+                                            data-date="<?= htmlspecialchars($pending['date_off']) ?>">
                                             <i class='bx bx-check me-2'></i>Approve
                                         </button>
-                                        <button class="btn btn-sm btn-danger d-flex align-items-center deny-leave-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
+                                        <button class="btn btn-sm btn-danger d-flex align-items-center deny-leave-btn"
+                                            data-id="<?= htmlspecialchars($pending['id']) ?>"
+                                            data-date="<?= htmlspecialchars($pending['date_off']) ?>">
                                             <i class='bx bx-x me-2'></i>Deny
                                         </button>
                                     </div>
