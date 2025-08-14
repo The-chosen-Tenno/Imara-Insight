@@ -6,7 +6,30 @@ require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
 // Create user
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
+//     try {
+//         $user_name = $_POST['user_name'];
+//         $full_name = $_POST['full_name'];
+//         $email = $_POST['email'];
+//         $password = $_POST['password'];
+//         $role = $_POST['role'];
+
+//         $userModel = new User();
+//         $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
+//         if ($created) {
+//             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to create user. User may already exist!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle DB errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+
+// Create user
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
         $user_name = $_POST['user_name'];
         $full_name = $_POST['full_name'];
@@ -15,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $role = $_POST['role'];
 
         $userModel = new User();
-        $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
+        $created = $userModel->createUserByAdmin($full_name, $user_name, $email, $password, $role);
         if ($created) {
             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
         } else {
@@ -51,60 +74,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $username = $_POST['UserName'] ?? '';
         $email = $_POST['Email'] ?? '';
-        $id = $_POST['ID'];
+        $id = $_POST['ID'] ?? '';
 
-        // Validate required fields
         if (empty($username) || empty($email)) {
             echo json_encode(['success' => false, 'message' => 'Required fields missing!']);
             exit;
         }
 
-        // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(['success' => false, 'message' => 'Invalid email address']);
             exit;
         }
 
+        $photoPath = null;
+        if (!empty($_FILES['Photo']['name'])) {
+            $uploadDir = __DIR__ . '/../uploads/profileImage/';
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $fileName = time() . '_' . basename($_FILES['Photo']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['Photo']['tmp_name'], $targetFile)) {
+                $photoPath = 'uploads/profileImage/' . $fileName;
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
+                exit;
+            }
+        }
+
         $userModel = new User();
-        $updated = $userModel->updateUser($id, $username, $email);
+        $updated = $userModel->updateUser($id, $username, $email, $photoPath);
+
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "User updated successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to update user. User may already exist!']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
 
 // Delete user by ID
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
-    try {
-        $ID = $_GET['user_id'];
-        $userModel = new User();
+// if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
+//     try {
+//         $ID = $_GET['user_id'];
+//         $userModel = new User();
 
-        // Uncomment if admin check needed for doctor deletion
-        // if ($permission == 'admin') {
-        //     $userDeleted = $userModel->deleteUser($ID);
-        //     if ($userDeleted === false) {
-        //         echo json_encode(['success' => false, 'message' => 'Doctor has appointments and cannot be deleted.']);
-        //         exit;
-        //     }
-        // }
-        $userDeleted = $userModel->deleteUser($ID);
-        if ($userDeleted) {
-            echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
-        }
-    } catch (PDOException $e) {
-        // Handle DB errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
+//         // Uncomment if admin check needed for doctor deletion
+//         // if ($permission == 'admin') {
+//         //     $userDeleted = $userModel->deleteUser($ID);
+//         //     if ($userDeleted === false) {
+//         //         echo json_encode(['success' => false, 'message' => 'Doctor has appointments and cannot be deleted.']);
+//         //         exit;
+//         //     }
+//         // }
+//         $userDeleted = $userModel->deleteUser($ID);
+//         if ($userDeleted) {
+//             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle DB errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
 
 // Accept user registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
@@ -217,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $uploadedData = [];
         if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
-            $uploadDir = __DIR__ . '/uploads/projects/';
+            $uploadDir = __DIR__ . '/../uploads/projects/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
@@ -273,7 +312,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-
 // new leave request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
     try {
@@ -296,4 +334,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+
 dd('Access denied..!');
