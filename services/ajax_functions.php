@@ -5,31 +5,52 @@ require_once '../models/Users.php';
 require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
+header('Content-Type: application/json');
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
     try {
-        $user_name = $_POST['user_name'];
-        $full_name = $_POST['full_name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $role = $_POST['role'];
+        $user_name = $_POST['user_name'] ?? '';
+        $full_name = $_POST['full_name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $role = $_POST['role'] ?? '';
+
+        
+        if (empty($user_name) || empty($full_name) || empty($email) || empty($password)) {
+            echo json_encode(['success' => false, 'message' => 'All fields are required!']);
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid email format!']);
+            exit;
+        }
 
         $userModel = new User();
+
+        if ($userModel->emailExists($email)) {
+            echo json_encode(['success' => false, 'message' => 'Email is already registered!']);
+            exit;
+        }
+        if ($userModel->user_nameExists($user_name)) {
+            echo json_encode(['success' => false, 'message' => 'User Name is already registered!']);
+            exit;
+        }
+
         $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
         if ($created) {
             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to create user. User may already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to create user.']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
 
-// Get user by ID
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user') {
+// GET USER BY ID 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] === 'get_user') {
     try {
         $user_id = $_GET['user_id'];
         $userModel = new User();
@@ -40,44 +61,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['actio
             echo json_encode(['success' => false, 'message' => 'User not found']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
 
-// Update user
+//UPDATE USER
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
     try {
+        $id = $_POST['ID'] ?? '';
         $username = $_POST['UserName'] ?? '';
         $email = $_POST['Email'] ?? '';
-        $id = $_POST['ID'];
 
-        // Validate required fields
-        if (empty($username) || empty($email)) {
+        // Validation
+        if (empty($id) || empty($username) || empty($email)) {
             echo json_encode(['success' => false, 'message' => 'Required fields missing!']);
             exit;
         }
 
-        // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(['success' => false, 'message' => 'Invalid email address']);
             exit;
         }
 
         $userModel = new User();
+
+        // Check if email already exists for another user
+        if ($userModel->emailExists($email, $id)) {
+            echo json_encode(['success' => false, 'message' => 'Email is already used by another user!']);
+            exit;
+        }
+
+        if ($userModel->user_nameExists($user_name, $id)) {
+            echo json_encode(['success' => false, 'message' => 'Email is already used by another user!']);
+            exit;
+        }
+
+
         $updated = $userModel->updateUser($id, $username, $email);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "User updated successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update user. User may already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to update user.']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 
 // Delete user by ID
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
@@ -85,14 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action
         $ID = $_GET['user_id'];
         $userModel = new User();
 
-        // Uncomment if admin check needed for doctor deletion
-        // if ($permission == 'admin') {
-        //     $userDeleted = $userModel->deleteUser($ID);
-        //     if ($userDeleted === false) {
-        //         echo json_encode(['success' => false, 'message' => 'Doctor has appointments and cannot be deleted.']);
-        //         exit;
-        //     }
-        // }
         $userDeleted = $userModel->deleteUser($ID);
         if ($userDeleted) {
             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
@@ -100,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action
             echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;

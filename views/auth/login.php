@@ -3,21 +3,21 @@ require_once('../layouts/login_header.php');
 require_once('../../config.php');
 ?>
 
-<!-- Content -->
+
 <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
 
-            <!-- Login Card -->
+            
             <div id="login-card" class="card">
                 <div class="card-body">
-                    <!-- Logo -->
+                    
                     <div class="app-brand justify-content-center">
                         <a href="index.html" class="app-brand-link gap-2">
                             <span class="app-brand-text demo text-body fw-bolder">Imara Insight</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
+                    
                     <h4 class="mb-2">Welcome to Imara-Insight</h4>
                     <p class="mb-4">Please sign-in to your account</p>
 
@@ -58,7 +58,7 @@ require_once('../../config.php');
                     <p class="text-center">
                         <span>New on our platform?</span>
                         <a href="../auth/create-account.php">
-                            <span>CREATE</span>
+                            <span>Create</span>
                         </a>
                     </p>
                 </div>
@@ -72,7 +72,7 @@ require_once('../../config.php');
                     <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
                 </div>
                 <div class="mb-3">
-                    <button type="button" id="back-home" class="btn btn-primary d-grid w-100">Back To The Home Page</button>
+                <button type="button" id="back-home" class="btn btn-primary btn-sm">Back To The Login</button>
                 </div>
             </div>
        </div>

@@ -15,11 +15,14 @@ $user = $pm->run("SELECT * FROM users WHERE email = :Email", $param, true);
 
 if ($user != null) {
     if ($user['status'] !== 'confirmed') {
+
+        if(password_verify($password, $user['password'])){
         echo json_encode([
             "success" => false,
             "message" => "pending"
         ]);
         exit;
+        }
     }
 
     if (password_verify($password, $user['password'])) {
