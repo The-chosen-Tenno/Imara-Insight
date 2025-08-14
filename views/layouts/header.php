@@ -87,6 +87,12 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                 <div data-i18n="appointments">Authorization</div>
                             </a>
                         </li>
+                        <li class="menu-item <?= $currentFilename === "LeaveApprove.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/LeaveApprove.php') ?>" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                                <div data-i18n="appointments">Leave Approvals</div>
+                            </a>
+                        </li>
                     <?php endif; ?>
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> ">
@@ -99,14 +105,14 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "logs.php" ? 'active' : '' ?> ">
                             <a href="<?= url('views/admin/logs.php') ?>" class="menu-link">
-                                <i class='bx bxs-coin-stack'></i>
+                                <i class='menu-icon tf-icons bx bxs-coin-stack'></i>
                                 <div data-i18n="Analytics">Logs</div>
                             </a>
                         </li>
-                        <li class="menu-item <?= $currentFilename === "leaveReq.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/leaveReq.php') ?>" class="menu-link">
-                                <i class='bx bxs-calendar-x'></i>
-                                <div data-i18n="Analytics">Leave Request</div>
+                        <li class="menu-item <?= $currentFilename === "leaveRequest.php" ? 'active' : '' ?> ">
+                            <a href="<?= url('views/admin/leaveRequest.php') ?>" class="menu-link">
+                                <i class='menu-icon tf-icons bx bxs-calendar-x'></i>
+                                <div data-i18n="Analytics">Request Leave</div>
                             </a>
                         </li>
                     <?php endif; ?>

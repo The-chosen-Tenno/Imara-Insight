@@ -73,10 +73,11 @@ class Leave extends BaseModel
             ':description' => $this->description,
             ':user_id' => $this->user_id,
         ];
-        return $this->pm->run(
+        $result = $this->pm->run(
             "INSERT INTO " . $this->getTableName() . "(reason_type,other_reason,date_off, description, user_id) values(:reason_type,:other_reason,:date_off,:description,:user_id)",
             $param
         );
+        return  $result;
     }
 
     protected function updateRec()
@@ -155,7 +156,7 @@ class Leave extends BaseModel
         );
     }
 
-    public function getUserbyStatus($status = 'pending')
+    public function getLeavebyStatus($status = 'pending')
     {
         $query = "SELECT * FROM " . $this->getTableName() . " WHERE status = :status";
         $param = [':status' => $status];
