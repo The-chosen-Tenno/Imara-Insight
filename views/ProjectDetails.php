@@ -65,7 +65,7 @@ $last_updated  = safe_date($project['last_updated'] ?? null, 'F j, Y H:i');
 $assigned_name = $assigned['full_name'] ?? 'N/A';
 
 // Optional: build absolute image paths safely
-$uploadBaseRel = '../services/uploads/projects/';
+$uploadBaseRel = '../uploads/projects/';
 function build_img_src(string $base, string $file): string
 {
     $file = ltrim($file, '/\\');

@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $photoPath = null;
         if (!empty($_FILES['Photo']['name'])) {
-            $uploadDir = __DIR__ . '/../uploads/';
+            $uploadDir = __DIR__ . '/../uploads/profileImage/';
             if (!file_exists($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $targetFile = $uploadDir . $fileName;
 
             if (move_uploaded_file($_FILES['Photo']['tmp_name'], $targetFile)) {
-                $photoPath = 'uploads/' . $fileName;
+                $photoPath = 'uploads/profileImage/' . $fileName;
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
                 exit;
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $uploadedData = [];
         if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
-            $uploadDir = __DIR__ . '/uploads/projects/';
+            $uploadDir = __DIR__ . '/../uploads/projects/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
