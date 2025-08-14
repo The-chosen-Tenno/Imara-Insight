@@ -33,46 +33,8 @@ class User extends BaseModel
         return $this->addNewRec() ? true : false;
     }
 
-<<<<<<< HEAD
-    // ================= UPDATE USER =================
-    function updateUser($id, $user_name, $email)
-    {
-        if ($this->getUserByUsernameOrEmailWithId($user_name, $email, $id)) {
-            return false;
-        }
-
-        $this->id = $id;
-        $this->user_name = $user_name;
-        $this->email = $email;
-
-        return $this->updateRec() ? true : false;
-    }
 
     // ================= DELETE USER =================
-=======
-        function createUserByAdmin($full_name, $user_name, $email, $password, $role)
-    {
-        $userModel = new User();
-        $existingUser = $userModel->getUserByUsernameOrEmail($user_name, $email);
-        if ($existingUser) {
-            return false;
-        }
-        $user = new User();
-        $user->full_name = $full_name;
-        $user->user_name = $user_name;
-        $user->password = $password;
-        $user->role = $role;
-        $user->email = $email;
-        $user->status = 'confirmed';
-        $user->addNewRec();
-        if ($user) {
-            return $user;
-        } else {
-            return false;
-        }
-    }
-
->>>>>>> d0e34916d6428bf3f20b2ee27af66a41e11fbef9
     function updateUser($id, $user_name, $email, $photoPath = null)
     {
         $userModel = new User();
@@ -123,12 +85,8 @@ class User extends BaseModel
         ];
 
         return $this->pm->run(
-<<<<<<< HEAD
             "INSERT INTO " . $this->getTableName() . " (full_name,user_name,password,role,email) 
              VALUES (:full_name,:user_name,:password,:role,:email)",
-=======
-            "INSERT INTO " . $this->getTableName() . "(full_name,user_name,password, role, email,status) values(:full_name,:user_name,:password,:role,:email,:status)",
->>>>>>> d0e34916d6428bf3f20b2ee27af66a41e11fbef9
             $param
         );
     }
@@ -146,10 +104,10 @@ class User extends BaseModel
             "UPDATE " . $this->getTableName() . " SET user_name = :user_name, email = :email WHERE id = :id",
             $param
         );
-    }
+   
 
     // ================= STATUS =================
-        $fields = [
+     $fields = [
             'user_name = :user_name',
             'email = :email'
         ];
@@ -231,19 +189,6 @@ class User extends BaseModel
         }
 
         return false;
-    }
-
-
-
-    public function getUserByUsernameOrEmail($user_name, $email)
-    {
-        $param = [':user_name' => $user_name, ':email' => $email];
-        $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user_name = :user_name OR email = :email";
-        $result = $this->pm->run($sql, $param);
-        if (!empty($result)) {
-            return $result[0];
-        }
-        return null;
     }
 
     public function getUserById($id)
