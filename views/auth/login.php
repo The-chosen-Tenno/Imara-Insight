@@ -83,4 +83,4 @@ require_once('../../config.php');
 <?php
 require_once('../layouts/login_footer.php');
 ?>
-<script src="../../assets/forms-js/login.js"></script>
+<script src="<?= asset('assets/forms-js/login.js') ?>"></script>
