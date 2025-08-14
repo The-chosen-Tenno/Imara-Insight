@@ -8,17 +8,17 @@ $users = $userDetails->getUserbyStatus();
 
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span> Project Logs
-        <?php if ($permission == 'admin') { ?>
-            <button
-                type="button"
-                class="btn btn-primary float-end add"
-                data-bs-toggle="modal"
-                data-bs-target="#add-project">
-                Add Project
-            </button>
-        <?php } ?>
-    </h4>
+        <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span>
+            <?php if ($permission == 'admin') { ?>
+                <button
+                    type="button"
+                    class="btn btn-primary float-end mb-5"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createUser">
+                    Add New User
+                </button>
+            <?php } ?>
+        </h4>
         <div class="col-lg-12 mb-4">
             <?php if (!empty($users)) : ?>
                 <?php foreach ($users as $pending) : ?>
@@ -49,7 +49,7 @@ $users = $userDetails->getUserbyStatus();
                             <div class="col-sm-4 text-center">
                                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
                                     <div class="user-photo">
-                                        <img src="<?= !empty($pending['photo']) ? url('uploads/' . $pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
+                                        <img src="<?= !empty($pending['photo']) ? url($pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
                                             alt="User Photo"
                                             style="width: 100%; height: 100%; object-fit: cover;" />
                                     </div>
@@ -90,41 +90,29 @@ $users = $userDetails->getUserbyStatus();
                     <input
                         type="hidden"
                         name="action"
-                        value="create_user">
+                        value="admin_create_user">
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">User Name</label>
+                            <label for="fullName" class="form-label">Full Name</label>
                             <input
                                 type="text"
                                 required
-                                id="nameWithTitle"
-                                name="UserName"
+                                id="fullName"
+                                name="full_name"
                                 class="form-control"
-                                placeholder="Enter Name" />
+                                placeholder="Enter your Full Name" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">First Name</label>
+                            <label for="userName" class="form-label">User Name</label>
                             <input
                                 type="text"
                                 required
-                                id="nameWithTitle"
-                                name="FirstName"
+                                id="userName"
+                                name="user_name"
                                 class="form-control"
-                                placeholder="First Name" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">Last Name</label>
-                            <input
-                                type="text"
-                                required
-                                id="nameWithTitle"
-                                name="LastName"
-                                class="form-control"
-                                placeholder="last Name" />
+                                placeholder="Enter A User Name" />
                         </div>
                     </div>
                     <div class="row ">
@@ -133,7 +121,7 @@ $users = $userDetails->getUserbyStatus();
                             <input
                                 required
                                 type="text"
-                                name="Email"
+                                name="email"
                                 id="emailWithTitle"
                                 class="form-control"
                                 placeholder="xxxx@xxx.xx" />
@@ -148,7 +136,7 @@ $users = $userDetails->getUserbyStatus();
                                 <input
                                     type="password"
                                     required
-                                    name="Password"
+                                    name="password"
                                     class="form-control"
                                     id="passwordInput"
                                     placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
@@ -156,25 +144,11 @@ $users = $userDetails->getUserbyStatus();
                                 <span id="basic-default-password1" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
-                        <div class="col form-password-toggle">
-                            <label class="form-label" for="basic-default-password2">Confirm Password</label>
-                            <div class="input-group">
-                                <input
-                                    type="password"
-                                    required
-                                    name="confirm_password"
-                                    class="form-control"
-                                    id="confirmPasswordInput"
-                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                    aria-describedby="basic-default-password2" />
-                                <span id="basic-default-password2" class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                            </div>
-                        </div>
                     </div>
                     <div class="row ">
                         <div class="mb-3">
                             <label for="exampleFormControlSelect1" class="form-label">Role</label>
-                            <select class="form-select" id="permission" aria-label="Default select example" name="Role" required>
+                            <select class="form-select" id="permission" aria-label="Default select example" name="role" required>
                                 <option value="member">Member</option>
                                 <option value="admin">Admin</option>
                             </select>
@@ -203,5 +177,5 @@ $users = $userDetails->getUserbyStatus();
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/users.js') ?>"></script>
 <script src="<?= asset('assets/forms-js/auth.js') ?>"></script>
+<script src="<?= asset('assets/forms-js/users.js') ?>"></script>

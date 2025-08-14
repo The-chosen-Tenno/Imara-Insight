@@ -11,7 +11,7 @@ $user_data = $user_details->getAll();
 if (!isset($permission)) dd('Access Denied...!');
 ?>
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span> Project Logs
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> </span> Project Logs
         <?php if ($permission == 'admin') { ?>
             <button
                 type="button"
