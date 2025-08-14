@@ -9,6 +9,7 @@ class User extends BaseModel
     public $status;
     private $email;
     private $password;
+    public $photo;
 
     function getTableName()
     {
@@ -36,24 +37,34 @@ class User extends BaseModel
         }
     }
 
-    function updateUser($id, $user_name, $email)
+    function updateUser($id, $user_name, $email, $photoPath = null)
     {
         $userModel = new User();
-        $existingUser = $userModel->getUserByUsernameOrEmailWithId($user_name, $email, $id);
-        if ($existingUser) {
+        $oldUser = $userModel->getUserById($id);
+        if (!$oldUser) {
             return false;
         }
+
+        if ($user_name !== $oldUser['user_name'] || $email !== $oldUser['email']) {
+            $existingUser = $userModel->getUserByUsernameOrEmailWithId($user_name, $email, $id);
+            if ($existingUser) {
+                return false;
+            }
+        }
+
         $user = new User();
         $user->id = $id;
         $user->user_name = $user_name;
         $user->email = $email;
-        $user->updateRec();
-        if ($user) {
-            return true;
-        } else {
-            return false;
-        }
+
+        // If no new photo is provided, we pass null so updateRec won't touch the photo column
+        $user->photo = $photoPath !== null ? $photoPath : null;
+
+        $result = $user->updateRec();
+        return $result !== false;
     }
+
+
 
     function deleteUser($id)
     {
@@ -84,20 +95,27 @@ class User extends BaseModel
 
     protected function updateRec()
     {
-        $existingUser = $this->getUserByUsernameOrEmailWithId($this->user_name, $this->email, $this->id);
-        if ($existingUser) {
-            return false;
-        }
-        $param = [
-            ':user_name' => $this->user_name,
-            ':email' => $this->email,
-            ':id' => $this->id
+        $fields = [
+            'user_name = :user_name',
+            'email = :email'
         ];
-        return $this->pm->run(
-            "UPDATE " . $this->getTableName() . " SET user_name = :user_name, email = :email WHERE ID = :id",
-            $param
-        );
+
+        $param = [
+            ':id' => $this->id,
+            ':user_name' => $this->user_name,
+            ':email' => $this->email
+        ];
+
+        if ($this->photo !== null) {
+            $fields[] = 'photo = :photo';
+            $param[':photo'] = $this->photo;
+        }
+
+        $sql = "UPDATE " . $this->getTableName() . " SET " . implode(', ', $fields) . " WHERE id = :id";
+
+        return $this->pm->run($sql, $param);
     }
+
 
     function acceptUser($id)
     {
@@ -132,14 +150,29 @@ class User extends BaseModel
 
     public function getUserByUsernameOrEmailWithId($user_name, $email, $excludeUserId = null)
     {
-        $param = [':user_name' => $user_name, ':email' => $email];
-        $query = "SELECT * FROM " . $this->getTableName() . " WHERE (user_name = :user_name OR email = :email)";
+        $param = [
+            ':user_name' => $user_name,
+            ':email'     => $email
+        ];
+
+        $query = "SELECT * FROM " . $this->getTableName() . " 
+              WHERE (user_name = :user_name OR email = :email)";
+
         if ($excludeUserId !== null) {
             $query .= " AND id != :excludeUserId";
             $param[':excludeUserId'] = $excludeUserId;
         }
-        return $this->pm->run($query, $param);
+
+        $result = $this->pm->run($query, $param);
+
+        if (is_array($result) && count($result) > 0) {
+            return $result;
+        }
+
+        return false;
     }
+
+
 
     public function getUserByUsernameOrEmail($user_name, $email)
     {

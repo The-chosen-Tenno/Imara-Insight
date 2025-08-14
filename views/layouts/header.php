@@ -58,13 +58,14 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
     <script src="<?= asset('assets/js/config.js') ?>"></script>
 </head>
 
+
 <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
+                    <a href="<?= url('/views/admin/dashboard.php') ?>" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" style="width: 35px; height: 35px;">
                         </span>
