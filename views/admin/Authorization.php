@@ -4,6 +4,7 @@ include BASE_PATH . '/models/Users.php';
 
 $userDetails = new User();
 $users = $userDetails->getUserbyStatus();
+
 ?>
 
 <div class="content-wrapper">
