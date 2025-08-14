@@ -47,7 +47,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                     justify-content: center;
                 ">
                                 <img src="<?= !empty($loginUserDetails['photo'])
-                                                ? url( $loginUserDetails['photo'])
+                                                ? url('uploads/' . $loginUserDetails['photo'])
                                                 : url('assets/img/illustrations/mine-strappen.png') ?>"
                                     style="
                             width: 100%;
@@ -164,17 +164,6 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                 placeholder="xxxx@xxx.xx" />
                         </div>
                     </div>
-                    <div class="row ">
-                        <div class="col mb-3">
-                            <label for="profileImage" class="form-label">Profile Image</label>
-                            <input
-                                type="file"
-                                name="Photo"
-                                id="profileImage"
-                                class="form-control"
-                                 />
-                        </div>
-                    </div>
                     <div class="mb-3 mt-3">
                         <div id="edit-additional-fields">
                         </div>
@@ -194,4 +183,4 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/users.js')?>"></script>
+<script src="<?= asset('assets/forms-js/users.js') ?>"></script>

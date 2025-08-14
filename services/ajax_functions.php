@@ -84,6 +84,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             exit;
         }
 
+        $photoPath = null;
+        if (!empty($_FILES['Photo']['name'])) {
+            $uploadDir = __DIR__ . '/../uploads/profileImage/';
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $fileName = time() . '_' . basename($_FILES['Photo']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            if (move_uploaded_file($_FILES['Photo']['tmp_name'], $targetFile)) {
+                $photoPath = 'uploads/profileImage/' . $fileName;
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
+                exit;
+            }
+        }
+
         $userModel = new User();
 
         // Check if email already exists for another user
@@ -240,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $uploadedData = [];
         if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
-            $uploadDir = __DIR__ . '/uploads/projects/';
+            $uploadDir = __DIR__ . '/../uploads/projects/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
@@ -297,26 +315,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// new leave request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
-    try {
-        $reason_type = $_POST['reason_type'];
-        $other_reason = $_POST['other_reason'];
-        $date_off = $_POST['date_off'];
-        $description = $_POST['description'];
-        $user_id = $_POST['user_id'];
 
-        $leaveModel = new Leave();
-        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $date_off, $description, $user_id);
-        if ($requested) {
-            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
-        }
-    } catch (PDOException $e) {
-        // Handle DB errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
+
 dd('Access denied..!');

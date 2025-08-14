@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
 
     $('#create-project').on('click', function () {
@@ -162,7 +161,7 @@ async function getImageByProjectId(id) {
         complete: function (response) {
             console.log('Request complete:', response);
         }
-    });
+    });
 }
 
 

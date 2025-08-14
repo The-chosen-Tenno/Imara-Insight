@@ -1,40 +1,45 @@
 <?php
 require_once('../layouts/header.php');
+include BASE_PATH . '/models/Leave.php';
 include BASE_PATH . '/models/Users.php';
 
+$leaveDetails = new Leave();
+$leave = $leaveDetails->getLeavebyStatus();
+
 $userDetails = new User();
-$users = $userDetails->getUserbyStatus();
+$user_data = $userDetails->getAll();
 ?>
 
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4" id="borrowed-history"><span class="text-muted fw-light"> </span> Project Logs
-        <?php if ($permission == 'admin') { ?>
-            <button
-                type="button"
-                class="btn btn-primary float-end add"
-                data-bs-toggle="modal"
-                data-bs-target="#add-project">
-                Add Project
-            </button>
-        <?php } ?>
-    </h4>
         <div class="col-lg-12 mb-4">
-            <?php if (!empty($users)) : ?>
-                <?php foreach ($users as $pending) : ?>
+            <?php if (!empty($leave)) : ?>
+                <?php
+                $full_name = [];
+                foreach ($user_data as $user) {
+                    $full_name[$user['id']] = $user['full_name'];
+                }
+                ?>
+                <?php foreach ($leave as $pending) : ?>
                     <div class="card shadow-sm border-0 mb-3" style="width: 100%;">
                         <div class="row g-3 align-items-center">
                             <div class="col-sm-8">
                                 <div class="card-body py-2 px-3">
                                     <h2 class="card-title text-primary fw-bold mb-1 custom-title">
-                                        <?= htmlspecialchars($pending['user_name']) ?>
+                                       <?= htmlspecialchars($full_name[$pending['user_id']]) ?>
                                     </h2>
                                     <dl class="row mb-2 dl-custom">
                                         <dt class="col-sm-2">Fullname:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['full_name']) ?></dd>
+                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['user_id']) ?></dd>
 
-                                        <dt class="col-sm-2">Email:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['email']) ?></dd>
+                                        <dt class="col-sm-2">Date Off:</dt>
+                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['date_off']) ?></dd>
+
+                                        <dt class="col-sm-2">Reason:</dt>
+                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['reason_type']) ?></dd>
+
+                                        <dt class="col-sm-2">Description:</dt>
+                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['description']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
                                         <button class="btn btn-sm btn-success d-flex align-items-center accept-user-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
@@ -49,7 +54,7 @@ $users = $userDetails->getUserbyStatus();
                             <div class="col-sm-4 text-center">
                                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
                                     <div class="user-photo">
-                                        <img src="<?= !empty($pending['photo']) ? url($pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
+                                        <img src="<?= !empty($pending['photo']) ? url('uploads/' . $pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
                                             alt="User Photo"
                                             style="width: 100%; height: 100%; object-fit: cover;" />
                                     </div>
@@ -57,7 +62,8 @@ $users = $userDetails->getUserbyStatus();
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                <?php endforeach  ?>
+                
             <?php else : ?>
                 <div class="alert alert-success d-flex flex-column align-items-center justify-content-center text-center mx-auto"
                     style="width: 320px; height: 150px; border-radius: 8px; padding: 1.5rem;">

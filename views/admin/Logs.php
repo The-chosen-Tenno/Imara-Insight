@@ -236,7 +236,7 @@ if (!isset($permission)) dd('Access Denied...!');
 
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
+
 
 <script>
     $(document).ready(function() {
@@ -272,3 +272,4 @@ require_once('../layouts/footer.php');
         });
     });
 </script>
+<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
