@@ -7,7 +7,30 @@ require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
 header('Content-Type: application/json');
 // Create user
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
+//     try {
+//         $user_name = $_POST['user_name'];
+//         $full_name = $_POST['full_name'];
+//         $email = $_POST['email'];
+//         $password = $_POST['password'];
+//         $role = $_POST['role'];
+
+//         $userModel = new User();
+//         $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
+//         if ($created) {
+//             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to create user. User may already exist!']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle DB errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+
+// Create user
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
         $user_name = $_POST['user_name'] ?? '';
         $full_name = $_POST['full_name'] ?? '';
@@ -27,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $userModel = new User();
+<<<<<<< HEAD
 
         if ($userModel->emailExists($email)) {
             echo json_encode(['success' => false, 'message' => 'Email is already registered!']);
@@ -38,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
+=======
+        $created = $userModel->createUserByAdmin($full_name, $user_name, $email, $password, $role);
+>>>>>>> d0e34916d6428bf3f20b2ee27af66a41e11fbef9
         if ($created) {
             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
         } else {
@@ -130,11 +157,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
 // Delete user by ID
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
-    try {
-        $ID = $_GET['user_id'];
-        $userModel = new User();
+// if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
+//     try {
+//         $ID = $_GET['user_id'];
+//         $userModel = new User();
 
+<<<<<<< HEAD
         $userDeleted = $userModel->deleteUser($ID);
         if ($userDeleted) {
             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
@@ -146,6 +174,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action
     }
     exit;
 }
+=======
+//         // Uncomment if admin check needed for doctor deletion
+//         // if ($permission == 'admin') {
+//         //     $userDeleted = $userModel->deleteUser($ID);
+//         //     if ($userDeleted === false) {
+//         //         echo json_encode(['success' => false, 'message' => 'Doctor has appointments and cannot be deleted.']);
+//         //         exit;
+//         //     }
+//         // }
+//         $userDeleted = $userModel->deleteUser($ID);
+//         if ($userDeleted) {
+//             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
+//         } else {
+//             echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
+//         }
+//     } catch (PDOException $e) {
+//         // Handle DB errors
+//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+//     }
+//     exit;
+// }
+>>>>>>> d0e34916d6428bf3f20b2ee27af66a41e11fbef9
 
 // Accept user registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {

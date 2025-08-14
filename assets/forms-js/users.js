@@ -6,17 +6,6 @@ $(document).ready(function () {
             console.log('Something went wrong..');
             return;
         }
-        function validatePasswords(passwordId, confirmPasswordId) {
-            var password = document.getElementById(passwordId).value;
-            var confirmPassword = document.getElementById(confirmPasswordId).value;
-            return password === confirmPassword;
-        }
-
-        // Ensure passwords match if applicable
-        if (!validatePasswords('passwordInput', 'confirmPasswordInput')) {
-            showAlert('Passwords do not match..!', 'danger'); // Show alert if passwords don't match
-            return;
-        }
 
         var url = $('#create-form').attr('action');
         if (form.checkValidity()) { // Only submit if the form is valid
