@@ -8,6 +8,7 @@ class Leave extends BaseModel
     public $date_off;
     public $description;
     public $user_id;
+    public $status;
     function getTableName()
     {
         return 'leave_requests';
@@ -34,35 +35,10 @@ class Leave extends BaseModel
         }
     }
 
-    function updateUser($id, $user_name, $email)
+    function updateUser()
     {
-        $userModel = new User();
-        $existingUser = $userModel->getUserByUsernameOrEmailWithId($user_name, $email, $id);
-        if ($existingUser) {
-            return false;
-        }
-        $user = new User();
-        $user->id = $id;
-        $user->user_name = $user_name;
-        $user->email = $email;
-        $user->updateRec();
-        if ($user) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
-    function deleteUser($id)
-    {
-        $user = new User();
-        $user->deleteRec($id);
-        if ($user) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     protected function addNewRec()
     {
@@ -82,33 +58,20 @@ class Leave extends BaseModel
 
     protected function updateRec()
     {
-        $existingUser = $this->getUserByUsernameOrEmailWithId($this->user_name, $this->email, $this->id);
-        if ($existingUser) {
-            return false;
-        }
-        $param = [
-            ':user_name' => $this->user_name,
-            ':email' => $this->email,
-            ':id' => $this->id
-        ];
-        return $this->pm->run(
-            "UPDATE " . $this->getTableName() . " SET user_name = :user_name, email = :email WHERE ID = :id",
-            $param
-        );
     }
 
-    function acceptUser($id)
+    function approveLeave($id)
     {
-        $user = new User();
-        $user->id = $id;
-        $user->status = 'confirmed';
-        $result = $user->updateStatus();
+        $leave = new Leave();
+        $leave->id = $id;
+        $leave->status = 'approved';
+        $result = $leave->updateStatus();
         return $result !== false;
     }
 
     function declineUser($id)
     {
-        $user = new User();
+        $user = new Leave();
         $user->id = $id;
         $user->status = 'declined';
         $result = $user->updateStatus();
@@ -123,7 +86,7 @@ class Leave extends BaseModel
         ];
 
         return $this->pm->run(
-            "UPDATE " . $this->getTableName() . " SET status = :status WHERE ID = :id",
+            "UPDATE " . $this->getTableName() . " SET status = :status WHERE id = :id",
             $param
         );
     }

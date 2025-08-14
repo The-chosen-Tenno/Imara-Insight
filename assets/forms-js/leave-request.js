@@ -56,14 +56,12 @@ $(document).ready(function () {
 
     $(document).on('click', '.approve-leave-btn', async function () {
         var user_id = $(this).data('id');
-        var date_off = $(this).data('date');
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
             data: {
                 user_id: user_id,
                 action: 'approve_user',
-                date_off: date_off
             },
             dataType: 'json',
             success: function (response) {
@@ -88,15 +86,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.deny-leave-btn', async function () {
-        var user_id = $(this).data('id');
-        var date_off = $(this).data('date');
+        var id = $(this).data('id');
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
             data: {
-                user_id: user_id,
+                id: id,
                 action: 'decline_user',
-                date_off: date_off
             },
             dataType: 'json',
             success: function (response) {

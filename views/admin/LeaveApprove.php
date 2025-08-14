@@ -51,12 +51,10 @@ $user_data = $userDetails->getAll();
                                         <button
                                             class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
                                             data-id="<?= htmlspecialchars($pending['id']) ?>"
-                                            data-date="<?= htmlspecialchars($pending['date_off']) ?>">
                                             <i class='bx bx-check me-2'></i>Approve
                                         </button>
                                         <button class="btn btn-sm btn-danger d-flex align-items-center deny-leave-btn"
                                             data-id="<?= htmlspecialchars($pending['id']) ?>"
-                                            data-date="<?= htmlspecialchars($pending['date_off']) ?>">
                                             <i class='bx bx-x me-2'></i>Deny
                                         </button>
                                     </div>
