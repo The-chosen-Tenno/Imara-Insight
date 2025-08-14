@@ -1,7 +1,6 @@
-
 $(document).ready(function () {
 
-    $('#sub-leave-req').on('click', function () {
+    $('#create-project').on('click', function () {
         var form = $('#create-form')[0] ?? null;
         if (!form) console.log('Something went wrong..');
 
@@ -162,7 +161,7 @@ async function getImageByProjectId(id) {
         complete: function (response) {
             console.log('Request complete:', response);
         }
-    });
+    });
 }
 
 

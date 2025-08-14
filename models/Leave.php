@@ -156,7 +156,7 @@ class Leave extends BaseModel
         );
     }
 
-    public function getUserbyStatus($status = 'pending')
+    public function getLeavebyStatus($status = 'pending')
     {
         $query = "SELECT * FROM " . $this->getTableName() . " WHERE status = :status";
         $param = [':status' => $status];
