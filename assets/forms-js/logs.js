@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
 
-    $('#create-project').on('click', function () {
+    $('#sub-leave-req').on('click', function () {
         var form = $('#create-form')[0] ?? null;
         if (!form) console.log('Something went wrong..');
 
