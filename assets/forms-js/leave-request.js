@@ -55,13 +55,13 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.approve-leave-btn', async function () {
-        var user_id = $(this).data('id');
+        var id = $(this).data('id');
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
             data: {
-                user_id: user_id,
-                action: 'approve_user',
+                id: id,
+                action: 'approve_leave',
             },
             dataType: 'json',
             success: function (response) {
@@ -92,7 +92,7 @@ $(document).ready(function () {
             type: 'POST',
             data: {
                 id: id,
-                action: 'decline_user',
+                action: 'deny_leave',
             },
             dataType: 'json',
             success: function (response) {

@@ -284,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 // approve leave request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_user') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
     try {
         $id = $_POST['id'];
         $leaveModel = new Leave();
@@ -299,6 +299,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+
+// deny leave request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'deny_leave') {
+    try {
+        $id = $_POST['id'];
+        $leaveModel = new Leave();
+        $requested = $leaveModel->denyLeave($id);
+        if ($requested) {
+            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
 
 
 dd('Access denied..!');

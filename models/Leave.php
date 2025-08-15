@@ -69,11 +69,11 @@ class Leave extends BaseModel
         return $result !== false;
     }
 
-    function declineUser($id)
+    function denyLeave($id)
     {
         $user = new Leave();
         $user->id = $id;
-        $user->status = 'declined';
+        $user->status = 'denied';
         $result = $user->updateStatus();
         return $result !== false;
     }
