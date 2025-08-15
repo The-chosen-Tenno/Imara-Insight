@@ -50,7 +50,7 @@ $users = $userDetails->getUserbyStatus();
                             <div class="col-sm-4 text-center">
                                 <div class="card-body p-0 d-flex justify-content-center align-items-center">
                                     <div class="user-photo">
-                                        <img src="<?= !empty($pending['photo']) ? url($pending['photo']) : url('assets/img/illustrations/mine-strappen.png') ?>"
+                                        <img src="<?= !empty($pending['photo']) ? url($pending['photo']) : url('assets/img/illustrations/default-profile-picture.png') ?>"
                                             alt="User Photo"
                                             style="width: 100%; height: 100%; object-fit: cover;" />
                                     </div>

@@ -21,6 +21,7 @@ if ($user != null) {
         $sm->setAttribute("fullName", $user['full_name']);
         $sm->setAttribute("userName", $user['user_name']);
         $sm->setAttribute("role", $user['role']);
+        $sm->setAttribute("userPhoto", $user['photo']);
 
         header('location: ../index.php');
         echo 'Login confirmed';
