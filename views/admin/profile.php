@@ -48,7 +48,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                 ">
                                 <img src="<?= !empty($loginUserDetails['photo'])
                                                 ? url( $loginUserDetails['photo'])
-                                                : url('assets/img/illustrations/mine-strappen.png') ?>"
+                                                : url('assets/img/illustrations/default-profile-picture.png') ?>"
                                     style="
                             width: 100%;
                             height: 100%;

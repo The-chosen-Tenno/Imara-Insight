@@ -6,29 +6,6 @@ require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
 // Create user
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_user') {
-//     try {
-//         $user_name = $_POST['user_name'];
-//         $full_name = $_POST['full_name'];
-//         $email = $_POST['email'];
-//         $password = $_POST['password'];
-//         $role = $_POST['role'];
-
-//         $userModel = new User();
-//         $created = $userModel->createUser($full_name, $user_name, $email, $password, $role);
-//         if ($created) {
-//             echo json_encode(['success' => true, 'message' => "User created successfully!"]);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to create user. User may already exist!']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle DB errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
-
-// Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
         $user_name = $_POST['user_name'];
@@ -117,33 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
-
-// Delete user by ID
-// if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'delete_user') {
-//     try {
-//         $ID = $_GET['user_id'];
-//         $userModel = new User();
-
-//         // Uncomment if admin check needed for doctor deletion
-//         // if ($permission == 'admin') {
-//         //     $userDeleted = $userModel->deleteUser($ID);
-//         //     if ($userDeleted === false) {
-//         //         echo json_encode(['success' => false, 'message' => 'Doctor has appointments and cannot be deleted.']);
-//         //         exit;
-//         //     }
-//         // }
-//         $userDeleted = $userModel->deleteUser($ID);
-//         if ($userDeleted) {
-//             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
-//         } else {
-//             echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
-//         }
-//     } catch (PDOException $e) {
-//         // Handle DB errors
-//         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-//     }
-//     exit;
-// }
 
 // Accept user registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
@@ -329,10 +279,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+// approve leave request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
+    try {
+        $id = $_POST['id'];
+        $leaveModel = new Leave();
+        $requested = $leaveModel->approveLeave($id);
+        if ($requested) {
+            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// deny leave request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'deny_leave') {
+    try {
+        $id = $_POST['id'];
+        $leaveModel = new Leave();
+        $requested = $leaveModel->denyLeave($id);
+        if ($requested) {
+            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+
 
 dd('Access denied..!');
