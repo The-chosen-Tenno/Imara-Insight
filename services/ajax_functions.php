@@ -267,12 +267,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $reason_type = $_POST['reason_type'];
         $other_reason = $_POST['other_reason'];
+        $half_day = $_POST['half_day'];
         $date_off = $_POST['date_off'];
         $description = $_POST['description'];
         $user_id = $_POST['user_id'];
 
         $leaveModel = new Leave();
-        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $date_off, $description, $user_id);
+        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason,$half_day, $date_off, $description, $user_id);
         if ($requested) {
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {

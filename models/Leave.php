@@ -5,6 +5,7 @@ class Leave extends BaseModel
 {
     public $reason_type;
     public $other_reason;
+    public $half_day;
     public $date_off;
     public $description;
     public $user_id;
@@ -14,7 +15,7 @@ class Leave extends BaseModel
         return 'leave_requests';
     }
 
-    function createLeaveReq($reason_type, $other_reason, $date_off, $description, $user_id)
+    function createLeaveReq($reason_type, $other_reason, $half_day, $date_off, $description, $user_id)
     {
         $leaveModel = new Leave();
         $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
@@ -24,6 +25,7 @@ class Leave extends BaseModel
         $leave = new Leave();
         $leave->reason_type = $reason_type;
         $leave->other_reason = $other_reason;
+        $leave->half_day = $half_day;
         $leave->date_off = $date_off;
         $leave->description = $description;
         $leave->user_id = $user_id;
@@ -45,12 +47,13 @@ class Leave extends BaseModel
         $param = [
             ':reason_type' => $this->reason_type,
             ':other_reason' => $this->other_reason,
+            ':half_day' => $this->half_day,
             ':date_off' => $this->date_off,
             ':description' => $this->description,
             ':user_id' => $this->user_id,
         ];
         $result = $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . "(reason_type,other_reason,date_off, description, user_id) values(:reason_type,:other_reason,:date_off,:description,:user_id)",
+            "INSERT INTO " . $this->getTableName() . "(reason_type,other_reason,half_day,date_off, description, user_id) values(:reason_type,:other_reason,:half_day,:date_off,:description,:user_id)",
             $param
         );
         return  $result;

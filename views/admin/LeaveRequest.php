@@ -31,24 +31,20 @@ if (!isset($permission)) dd('Access Denied...!');
                         </div>
 
                         <div class="col-12 mb-3">
-                            <label for="date_off" class="form-label d-block text-center">Date(s) Off</label>
+                            <label for="date_off" class="form-label d-block text-center">Leave Date</label>
                             <input type="date" id="date_off" name="date_off" class="form-control" required />
                         </div>
 
                         <div class="col-12 mb-3" id="half_day_off" style="display: none;">
                             <label class="form-label d-block text-center mb-2">Half Day Off</label>
-                            <div class="row g-2">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="start" class="form-label">Start Time</label>
-                                        <input type="time" id="start" name="start" class="form-control">
-                                    </div>
+                            <div class="d-flex justify-content-center" style="gap: 60px;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="half_day" id="first_half" value="first" required>
+                                    <label class="form-check-label" for="first_half">First Half (Morning)</label>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="end" class="form-label">End Time</label>
-                                        <input type="time" id="end" name="end" class="form-control">
-                                    </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="half_day" id="second_half" value="second" required>
+                                    <label class="form-check-label" for="second_half">Second Half (Afternoon)</label>
                                 </div>
                             </div>
                         </div>

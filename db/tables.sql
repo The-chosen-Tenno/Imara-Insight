@@ -38,8 +38,23 @@ CREATE TABLE leave_requests (
     reason_type VARCHAR(255) NOT NULL,
     other_reason VARCHAR(255),
     date_off DATE NOT NULL,
+    half_day ENUM('first', 'second') DEFAULT NULL
     description TEXT NOT NULL,
     status ENUM('approved', 'denied', 'pending') DEFAULT 'pending',
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- updates
+ALTER TABLE leave_requests
+ADD COLUMN half_day ENUM('first', 'second') DEFAULT NULL;
+
+-- project sub assignees
+CREATE TABLE project_sub_assignees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    sub_assignee_id INT NOT NULL,
+    assigned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(id),
+    FOREIGN KEY (sub_assignee_id) REFERENCES users(id)
 );

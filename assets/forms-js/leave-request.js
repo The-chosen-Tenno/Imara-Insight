@@ -1,11 +1,9 @@
 $(document).ready(function () {
     $('#reason_type').on('change', function () {
         if ($(this).val() === 'half_day') {
-            $('#date_off').closest('.col-12.mb-3').hide().find('input').removeAttr('required');
             $('#half_day_off').show().find('input').attr('required', true);
         } else {
             $('#half_day_off').hide().find('input').removeAttr('required');
-            $('#date_off').closest('.col-12.mb-3').show().find('input').attr('required', true);
         }
         if ($(this).val() === 'other') {
             $('#other_reason_div').show().find('input').attr('required', true);
