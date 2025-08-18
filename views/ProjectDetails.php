@@ -78,13 +78,17 @@ function build_img_src(string $base, string $file): string
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <title><?= h($project_name) ?> — Project Details</title> -->
-         <title>Imara - Insight</title>
+    <title>Imara - Insight</title>
     <meta name="description" content="<?= h(mb_strimwidth($desc, 0, 150, '…')) ?>">
     <meta property="og:title" content="<?= h($project_name) ?>">
     <meta property="og:description" content="<?= h(mb_strimwidth($desc, 0, 150, '…')) ?>">
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- AOS CSS -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
 
     <style>
         :root {
@@ -359,7 +363,7 @@ function build_img_src(string $base, string $file): string
 
 
         <!-- Header Card -->
-        <div class="project-header glass-card">
+        <div class="project-header glass-card" data-aos="fade-up">
             <div class="header-bg">
                 <div class="overlay"></div>
             </div>
@@ -375,7 +379,7 @@ function build_img_src(string $base, string $file): string
                 <?php endif; ?>
 
                 <div class="metadata-grid">
-                    <div class="metadata-card">
+                    <div class="metadata-card"  data-aos="zoom-in" data-aos-delay="100">
                         <div class="icon bg-primary-light">
                             <!-- user icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -389,7 +393,7 @@ function build_img_src(string $base, string $file): string
                         </div>
                     </div>
 
-                    <div class="metadata-card">
+                    <div class="metadata-card" data-aos="zoom-in" data-aos-delay="200">
                         <div class="icon bg-secondary-light">
                             <!-- calendar icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -405,7 +409,7 @@ function build_img_src(string $base, string $file): string
                         </div>
                     </div>
 
-                    <div class="metadata-card">
+                    <div class="metadata-card" data-aos="zoom-in" data-aos-delay="300">
                         <div class="icon bg-accent-light">
                             <!-- clock icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -443,7 +447,7 @@ function build_img_src(string $base, string $file): string
                         $title    = $img['title'] ?? 'Screenshot';
                         $imgDesc  = $img['description'] ?? '';
                         ?>
-                        <div class="screenshot-card">
+                        <div class="screenshot-card" data-aos="fade-up" data-aos-delay="<?= $i * 100 ?>">
                             <div class="image-container">
                                 <?php if ($imgSrc): ?>
                                     <img src="<?= h($imgSrc) ?>" alt="<?= h($title) ?>" loading="lazy" referrerpolicy="no-referrer" />
@@ -467,7 +471,15 @@ function build_img_src(string $base, string $file): string
             <?php endif; ?>
         </section>
     </div>
-
+    <!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,   // animation speed (ms)
+    easing: 'ease-in-out',
+    once: true,      // run animation only once
+  });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
