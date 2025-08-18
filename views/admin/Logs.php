@@ -2,11 +2,13 @@
 require_once('../layouts/header.php');
 include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
+include BASE_PATH . '/models/Sub-Assignees.php';
 
 $project_logs = new Logs();
 $logs_data = $project_logs->getAll();
 $user_details = new User();
 $user_data = $user_details->getAll();
+$sub_assignee_details = new SubAssignee();
 
 if (!isset($permission)) dd('Access Denied...!');
 ?>
@@ -38,6 +40,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     <tr>
                         <th>Assigned To</th>
                         <th>Project</th>
+                        <th>Sub-Assignees</th>
                         <th>Status</th>
                         <th>Photos</th>
                         <th>Last Update</th>
@@ -50,10 +53,17 @@ if (!isset($permission)) dd('Access Denied...!');
                         $user_names[$user['id']] = $user['full_name'];
                     }
                     foreach ($logs_data as $LD) {
+                        $sub_assignee_data = $sub_user_details->getAllByProjectId($LD['id']);
+                        $sub_assignee_names_list = [];
+                        foreach($sub_assignee_data as $sa){
+                            $sub_assignee_names_list[] = $user_names[$sa['sub_assignee_id']];
+                        }
+                        $sub_assignee_names_str = implode(', ', $sub_assignee_names_list);
                     ?>
                         <tr>
                             <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
+                            <td><?= $user_names[$LD['sub-assignees']] ?? '' ?></td>
                             <td>
                                 <?php if ($LD['status'] == 'finished'): ?>
                                     <span class="badge bg-success"><?= $LD['status'] ?? '' ?></span>
