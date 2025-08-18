@@ -61,58 +61,6 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                 </div>
             </div>
         </div>
-        <div class="col-lg-12 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="row g-4 align-items-center">
-                    <div class="col-sm-8">
-                        <div class="card-body">
-                            <h2 class="card-title text-primary fw-bold mb-3">
-                                Success Rate
-                            </h2>
-                            <dl class="row mb-4">
-
-                                <dt class="col-sm-3 fw-semibold">Fullname:</dt>
-                                <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['full_name']) ?></dd>
-
-                                <dt class="col-sm-3 fw-semibold">User ID:</dt>
-                                <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['id']) ?></dd>
-
-                                <dt class="col-sm-3 fw-semibold">Email:</dt>
-                                <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['email']) ?></dd>
-                            </dl>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 text-center">
-                        <div class="card-body p-0">
-                            <div class="mx-auto" style="max-width: 180px; width: 100%;">
-                                <svg viewBox="0 0 36 36" class="circular-progress w-100" style="height: auto; max-height: 180px;">
-                                    <path
-                                        class="circle-bg"
-                                        d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831"
-                                        fill="none"
-                                        stroke="#e9ecef"
-                                        stroke-width="3" />
-                                    <path
-                                        class="circle"
-                                        stroke-linecap="round"
-                                        d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831"
-                                        fill="none"
-                                        stroke="#0d6efd"
-                                        stroke-width="3"
-                                        stroke-dasharray="0, 100" />
-                                    <text x="18" y="20.35" class="percentage" fill="#0d6efd" font-size="6" font-weight="700" text-anchor="middle" font-family="Inter, sans-serif">
-                                        0%
-                                    </text>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <!-- model -->

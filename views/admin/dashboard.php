@@ -45,6 +45,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         <tr>
                             <th>Project</th>
                             <th>Status</th>
+                            <th>Photos</th>
                             <th>Last Update</th>
                             <th>Action</th>
                         </tr>
@@ -64,6 +65,13 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                         <span class="badge bg-danger"><?= $LD['status'] ?></span>
                                     <?php endif; ?>
                                 </td>
+                                                            <td>
+                                <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
+                                    class="btn rounded-pill btn-outline-primary"
+                                    target="_blank">
+                                    Show
+                                </a>
+                            </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
                                     <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>

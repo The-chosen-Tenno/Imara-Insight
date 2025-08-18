@@ -8,7 +8,6 @@ if (!isset($permission)) dd('Access Denied...!');
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
             <div class="card p-4">
-                <!-- Leave Request Form -->
                 <form id="leave-request-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="request_leave" />
                     <h2 class="fw-bold mb-4 text-center">Submit Leave Request</h2>
@@ -22,10 +21,10 @@ if (!isset($permission)) dd('Access Denied...!');
                                 <option value="sick">Sick Leave</option>
                                 <option value="personal">Personal Leave</option>
                                 <option value="vacation">Vacation</option>
+                                <option value="half_day">Half Day</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
-
                         <div class="col-12 mb-3" id="other_reason_div" style="display:none;">
                             <label for="other_reason" class="form-label d-block text-center">Specify Other Reason</label>
                             <input type="text" id="other_reason" name="other_reason" class="form-control" placeholder="Type your reason here">
@@ -35,6 +34,30 @@ if (!isset($permission)) dd('Access Denied...!');
                             <label for="date_off" class="form-label d-block text-center">Date(s) Off</label>
                             <input type="date" id="date_off" name="date_off" class="form-control" required />
                         </div>
+
+                        <div class="col-12 mb-3" id="half_day_off" style="display: none;">
+                            <label class="form-label d-block text-center mb-2">Half Day Off</label>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="start" class="form-label">Start Time</label>
+                                        <input type="time" id="start" name="start" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="end" class="form-label">End Time</label>
+                                        <input type="time" id="end" name="end" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3" id="half_day_reason" style="display:none;">
+                            <label for="half_day_detail" class="form-label d-block text-center">Specify Half Day Details</label>
+                            <input type="text" id="half_day_detail" name="half_day_detail" class="form-control" placeholder="e.g. Morning / Afternoon">
+                        </div>
+
 
                         <div class="col-12 mb-3">
                             <label for="description" class="form-label d-block text-center">Explanation / Description</label>
@@ -49,7 +72,6 @@ if (!isset($permission)) dd('Access Denied...!');
                     </div>
                 </form>
 
-                <!-- Success / Message Div -->
                 <div id="leave-success-message" style="display:none; text-align:center; padding:20px;">
                     <h3 class="text-success">Success!</h3>
                     <h3 class="text-failed" style="display:none; color:red;">Failed!</h3>
