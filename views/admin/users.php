@@ -17,7 +17,7 @@ $data = $userModel->getAll();
 <div class="container-xxl flex-grow-1 container-p-y">
 
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light"> </span> 
+        <span class="text-muted fw-light"> </span>
         Employees
     </h4>
     <div class="row m-3">
@@ -47,41 +47,25 @@ $data = $userModel->getAll();
                 </thead>
                 <tbody class="table-border-bottom-0">
                     <?php foreach ($data as $user): ?>
-    <?php 
-        $userIdFromDB = $user['ID'] ?? $user['id'] ?? null;
-        $userRole = $user['Role'] ?? $user['role'] ?? '';
-    ?>
-    <tr>
-<td>
-<?php 
-    $profile = $user['Profile'] ?? $user['photo'] ?? null;
-
-    if ($profile && file_exists(__DIR__ . '/../../uploads/profileimage/' . $profile)) {
-        // Relative path from this file to uploads folder
-        $profileUrl = '../../uploads/profileimage/' . $profile;
-    } else {
-        // Default placeholder relative path
-        $profileUrl = '../../assets/img/illustrations/default-profile-picture.png';
-    }
-?>
-<img src="<?= htmlspecialchars($profileUrl) ?>" alt="Profile" style="width:50px;height:50px;border-radius:50%;">
-</td>
-
-
-
-
-        <td><strong><?= htmlspecialchars($user['UserName'] ?? $user['user_name'] ?? '') ?></strong></td>
-        <td><?= htmlspecialchars($user['FulltName'] ?? $user['full_name'] ?? '') ?></td>
-        <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>
-        <td>
-            <?php if ($permission === 'admin'): ?>
-                <span class="text-capitalize"><?= htmlspecialchars($userRole) ?></span>
-            <?php else: ?>
-                <span class="text-muted">Restricted</span>
-            <?php endif; ?>
-        </td>
-    </tr>
-<?php endforeach; ?>
+                        <?php
+                        $userIdFromDB = $user['ID'] ?? $user['id'] ?? null;
+                        $userRole = $user['Role'] ?? $user['role'] ?? '';
+                        ?>
+                        <tr>
+                            <td><img src="<?= !empty($user['photo']) ? url($user['photo'])
+                                : url('assets/img/illustrations/default-profile-picture.png') ?>" alt="Profile" style="width:50px;height:50px;border-radius:50%;"></td>
+                            <td><strong><?= htmlspecialchars($user['UserName'] ?? $user['user_name'] ?? '') ?></strong></td>
+                            <td><?= htmlspecialchars($user['FulltName'] ?? $user['full_name'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>
+                            <td>
+                                <?php if ($permission === 'admin'): ?>
+                                    <span class="text-capitalize"><?= htmlspecialchars($userRole) ?></span>
+                                <?php else: ?>
+                                    <span class="text-muted">Restricted</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
 
                 </tbody>
             </table>
@@ -95,13 +79,13 @@ $data = $userModel->getAll();
 
 <!-- Inline script for search filter -->
 <script>
-document.getElementById("searchInput").addEventListener("keyup", function () {
-    let filter = this.value.toLowerCase();
-    let rows = document.querySelectorAll("#usersTable tbody tr");
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#usersTable tbody tr");
 
-    rows.forEach(row => {
-        let text = row.innerText.toLowerCase();
-        row.style.display = text.includes(filter) ? "" : "none";
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
     });
-});
 </script>

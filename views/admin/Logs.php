@@ -56,17 +56,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     ?>
                         <tr>
                             <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
-                            <td>
-                                <?php if (!empty($LD['project_type'])): ?>
-                                    <?php 
-                                        $type = $LD['project_type'];
-                                        $badgeClass = ($type == 'automation') ? 'bg-info' : 'bg-purple';
-                                    ?>
-                                    <span class="badge <?= $badgeClass ?> me-1 text-white text-uppercase">
-                                        <?= htmlspecialchars($type) ?>
-                                    </span>
-                                <?php endif; ?>
-                                <?= htmlspecialchars($LD['project_name'] ?? '') ?>
+                            <td><?= htmlspecialchars($LD['project_name'] ?? '') ?>
                             </td>
                             <td>
                                 <div class="overflow-auto" style="max-height:70px;">
@@ -241,46 +231,46 @@ if (!isset($permission)) dd('Access Denied...!');
 <?php require_once('../layouts/footer.php'); ?>
 
 <script>
-$(document).ready(function() {
-    $("#searchInput").on("input", function() {
-        var searchTerm = $(this).val().toLowerCase();
-        $("tbody tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
+    $(document).ready(function() {
+        $("#searchInput").on("input", function() {
+            var searchTerm = $(this).val().toLowerCase();
+            $("tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
+            });
+        });
+
+        $('#datePicker').val(getFormattedDate(new Date()));
+
+        function getFormattedDate(date) {
+            var year = date.getFullYear();
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var day = date.getDate().toString().padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function filterAppointmentsByDate(selectedDate) {
+            $('tbody tr').each(function() {
+                var appointmentDate = $(this).find('.appointment_date').text().trim();
+                $(this).toggle(appointmentDate === selectedDate);
+            });
+        }
+
+        $('#clear').on('click', function() {
+            location.reload();
+        });
+
+        $('#datePicker').on('change', function() {
+            var selectedDate = $(this).val();
+            alert(selectedDate);
+            filterAppointmentsByDate(selectedDate);
         });
     });
-
-    $('#datePicker').val(getFormattedDate(new Date()));
-
-    function getFormattedDate(date) {
-        var year = date.getFullYear();
-        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-        var day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    function filterAppointmentsByDate(selectedDate) {
-        $('tbody tr').each(function() {
-            var appointmentDate = $(this).find('.appointment_date').text().trim();
-            $(this).toggle(appointmentDate === selectedDate);
-        });
-    }
-
-    $('#clear').on('click', function() {
-        location.reload();
-    });
-
-    $('#datePicker').on('change', function() {
-        var selectedDate = $(this).val();
-        alert(selectedDate);
-        filterAppointmentsByDate(selectedDate);
-    });
-});
 </script>
 
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
 
 <style>
-.bg-purple {
-    background-color: #673ab7 !important;
-}
+    .bg-purple {
+        background-color: #673ab7 !important;
+    }
 </style>
