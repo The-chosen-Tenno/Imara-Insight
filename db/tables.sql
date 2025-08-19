@@ -18,9 +18,12 @@ CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     project_name VARCHAR(150) NOT NULL,
+    project_type ENUM('automation', 'coding') DEFAULT NULL,
     status ENUM('finished', 'idle', 'in_progress', 'cancelled') DEFAULT 'in_progress',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    INDEX idx_user_id (user_id) 
 );
 --  table for project image (optional)
 CREATE TABLE project_images (
@@ -48,6 +51,13 @@ CREATE TABLE leave_requests (
 -- updates
 ALTER TABLE leave_requests
 ADD COLUMN half_day ENUM('first', 'second') DEFAULT NULL;
+
+ALTER TABLE projects
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD INDEX idx_user_id (user_id);
+
+ALTER TABLE projects
+ADD COLUMN project_type ENUM('automation', 'coding') DEFAULT NULL AFTER project_name;
 
 -- project sub assignees
 CREATE TABLE project_sub_assignees (
