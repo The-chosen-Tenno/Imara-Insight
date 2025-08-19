@@ -15,11 +15,7 @@ if (!isset($permission)) dd('Access Denied...!');
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> </span> Project Logs
         <?php if ($permission == 'admin') { ?>
-            <button
-                type="button"
-                class="btn btn-primary float-end add"
-                data-bs-toggle="modal"
-                data-bs-target="#add-project">
+            <button type="button" class="btn btn-primary float-end add" data-bs-toggle="modal" data-bs-target="#add-project">
                 Add Project
             </button>
         <?php } ?>
@@ -60,7 +56,18 @@ if (!isset($permission)) dd('Access Denied...!');
                     ?>
                         <tr>
                             <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
-                            <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
+                            <td>
+                                <?php if (!empty($LD['project_type'])): ?>
+                                    <?php 
+                                        $type = $LD['project_type'];
+                                        $badgeClass = ($type == 'automation') ? 'bg-info' : 'bg-purple';
+                                    ?>
+                                    <span class="badge <?= $badgeClass ?> me-1 text-white text-uppercase">
+                                        <?= htmlspecialchars($type) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?= htmlspecialchars($LD['project_name'] ?? '') ?>
+                            </td>
                             <td>
                                 <div class="overflow-auto" style="max-height:70px;">
                                     <?php foreach ($sub_assignee_data as $sub_assignee_id): ?>
@@ -105,44 +112,30 @@ if (!isset($permission)) dd('Access Denied...!');
     </div>
 
     <hr class="my-5" />
-
 </div>
+
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Add Project</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label" for="basic-default-password1">Project Name</label>
                             <div class="input-group">
-                                <input
-                                    class="form-control"
-                                    type="text"
-                                    value=""
-                                    placeholder="Enter the Project Name"
-                                    id="project_name"
-                                    name="project_name" />
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="create_project">
+                                <input class="form-control" type="text" value="" placeholder="Enter the Project Name" id="project_name" name="project_name" />
+                                <input type="hidden" name="action" value="create_project">
                             </div>
                         </div>
                         <div class="col">
                             <label class="form-label" for="basic-default-password2">Assign To</label>
                             <div class="input-group">
                                 <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
-                                    <?php
-                                    foreach ($user_data as $full_name => $user) { ?>
+                                    <?php foreach ($user_data as $full_name => $user) { ?>
                                         <option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
                                     <?php } ?>
                                 </select>
@@ -153,14 +146,11 @@ if (!isset($permission)) dd('Access Denied...!');
                         <div id="alert-container"></div>
                     </div>
                     <div class="mb-3 mt-3">
-                        <div id="additional-fields">
-                        </div>
+                        <div id="additional-fields"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
                 </div>
             </form>
@@ -174,45 +164,24 @@ if (!isset($permission)) dd('Access Denied...!');
             <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Update Project</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row gy-2 mb-3">
                         <div class="col form-password-toggle">
                             <label class="form-label">Project Name</label>
                             <div class="input-group">
-                                <input
-                                    type="text"
-                                    name="project_name"
-                                    required
-                                    class="form-control"
-                                    id="ProjectName"
-                                    placeholder="Project Name" />
-                                <input
-                                    type="hidden"
-                                    name="project_id"
-                                    required
-                                    id="ProjectId" />
-                                <input
-                                    type="hidden"
-                                    name="user_id"
-                                    required
-                                    id="UserID" />
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="update_project" />
+                                <input type="text" name="project_name" required class="form-control" id="ProjectName" placeholder="Project Name" />
+                                <input type="hidden" name="project_id" required id="ProjectId" />
+                                <input type="hidden" name="user_id" required id="UserID" />
+                                <input type="hidden" name="action" value="update_project" />
                             </div>
                         </div>
                     </div>
-                    <div class="row ">
+                    <div class="row">
                         <div class="mb-3">
                             <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
-                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
+                            <select class="form-select" id="ProjectStatus" name="status" required>
                                 <option value="idle">Idle</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="finished">Finished</option>
@@ -224,32 +193,25 @@ if (!isset($permission)) dd('Access Denied...!');
                         <div id="alert-container"></div>
                     </div>
                     <div class="mb-3 mt-3">
-                        <div id="additional-fields">
-
-                        </div>
+                        <div id="additional-fields"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="'add-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Add Sub-assignee</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -264,59 +226,61 @@ if (!isset($permission)) dd('Access Denied...!');
                         <div id="alert-container"></div>
                     </div>
                     <div class="mb-3 mt-3">
-                        <div id="additional-fields">
-
-                        </div>
+                        <div id="additional-fields"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary ms-2" id="add-sub-assignee">add</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<?php
 
-require_once('../layouts/footer.php');
-?>
-
+<?php require_once('../layouts/footer.php'); ?>
 
 <script>
-    $(document).ready(function() {
-        $("#searchInput").on("input", function() {
-            var searchTerm = $(this).val().toLowerCase();
-            $("tbody tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
-            });
-        });
-        $('#datePicker').val(getFormattedDate(new Date()));
-
-        function getFormattedDate(date) {
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function filterAppointmentsByDate(selectedDate) {
-            console.log("selectedDate Date:", selectedDate);
-            $('tbody tr').each(function() {
-                var appointmentDate = $(this).find('.appointment_date').text().trim();
-                $(this).toggle(appointmentDate === selectedDate);
-            });
-        }
-        $('#clear').on('click', function() {
-            location.reload();
-        });
-        $('#datePicker').on('change', function() {
-            var selectedDate = $(this).val();
-            alert(selectedDate);
-            filterAppointmentsByDate(selectedDate);
+$(document).ready(function() {
+    $("#searchInput").on("input", function() {
+        var searchTerm = $(this).val().toLowerCase();
+        $("tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
         });
     });
+
+    $('#datePicker').val(getFormattedDate(new Date()));
+
+    function getFormattedDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function filterAppointmentsByDate(selectedDate) {
+        $('tbody tr').each(function() {
+            var appointmentDate = $(this).find('.appointment_date').text().trim();
+            $(this).toggle(appointmentDate === selectedDate);
+        });
+    }
+
+    $('#clear').on('click', function() {
+        location.reload();
+    });
+
+    $('#datePicker').on('change', function() {
+        var selectedDate = $(this).val();
+        alert(selectedDate);
+        filterAppointmentsByDate(selectedDate);
+    });
+});
 </script>
+
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
+
+<style>
+.bg-purple {
+    background-color: #673ab7 !important;
+}
+</style>
