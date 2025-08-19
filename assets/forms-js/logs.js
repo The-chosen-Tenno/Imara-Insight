@@ -171,8 +171,8 @@ $(document).ready(function () {
     });
     $('#add-sub-assignee').on('click', function () {
         var projectId = $('#add-sub-assignee-modal').data('project-id');
-        var selectedUsers = $('#multiSelect').val(); // array of selected user IDs
-        var url = $('#add-sub-assignee-form').attr('action');
+        var selectedUsers = $('#multiSelect').val();
+        var url = $('#update-form').attr('action');
 
         $.ajax({
             url: url,
@@ -180,19 +180,24 @@ $(document).ready(function () {
             data: {
                 project_id: projectId,
                 user_id: selectedUsers,
-                action: 'update_sub_assignees'
+                action: 'add_sub_assignees'
             },
             dataType: 'json',
             success: function (response) {
+                showAlert(response.message, response.success ? 'primary' : 'danger');
                 if (response.success) {
                     $('#add-sub-assignee-modal').modal('hide');
-                    alert('Sub-assignees updated!');
-                    location.reload();
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
                 } else {
                     alert('Failed to update sub-assignees!');
                 }
+            },
+            error: function (error) {
+                console.error('AJAX error:', error);
+                alert('Something went wrong while updating sub-assignees.');
             }
         });
     });
-
 });
