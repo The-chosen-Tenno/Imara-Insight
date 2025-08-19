@@ -1,7 +1,4 @@
-<!-- 
-this is have to be in services -->
 <?php
-
 include __DIR__ . '/../config.php';
 include __DIR__ . '/../helpers/AppManager.php';
 
@@ -13,7 +10,20 @@ $password = $_POST['Password'] ?? '';
 
 $param = array(':Email' => $email);
 $user = $pm->run("SELECT * FROM users WHERE email = :Email", $param, true);
+
 if ($user != null) {
+
+    if ($user['status'] !== 'confirmed') {
+        if(password_verify($password, $user['password'])){
+            echo json_encode([
+                "success" => false,
+                "message" => "pending"
+            ]);
+            exit; // stop here! no redirect
+        }
+    }
+
+
     $correct = password_verify($password, $user['password']);
     if ($correct) {
 

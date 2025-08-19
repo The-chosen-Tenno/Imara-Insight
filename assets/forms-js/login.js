@@ -24,6 +24,17 @@ $(document).ready(function () {
                                 location.reload(); // Reload page after 1 second
                             }, 5000);
                         }
+                         else if (response.message === 'pending') {
+                        // Pending approval
+                        $('.authentication-inner').hide();
+                        $('#pending-message').show();
+
+                         }else {
+                        // Show error under password field
+                            $("#password-error").after(
+                        '<span class="error-message" style="color: red;">' + response.message + '</span>'
+                        );
+                    }
                     },
                     error: function (error) {
                         // Handle any errors in the request
@@ -39,4 +50,41 @@ $(document).ready(function () {
             }
         }
     });
-});
+
+    $("#formAuthentication").on("submit", function(event) {
+        // Prevent form from submitting
+        event.preventDefault();
+
+        // Clear previous error messages
+        $(".error-message").remove();
+
+        // Get form values
+        const email = $("#email").val().trim();
+        const password = $("#password").val().trim();
+        let isValid = true;
+
+        // Email validation
+        if (email === "") {
+            $("#email").after('<span class="error-message" style="color: red;">Type Email!</span>');
+            isValid = false;
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                $("#email").after('<span class="error-message" style="color: red;">Enter a valid Email!</span>');
+                isValid = false;
+            }
+        }
+
+            // Password validation
+            if (password === "") {
+                $("#password-error").after('<span class="error-message" style="color: red;">Enter Password!</span>');
+                isValid = false;
+            }
+
+            // If all validations pass, submit the form
+            if (isValid) {
+                // Now, submit the form
+                this.submit();
+            }
+        });
+    });

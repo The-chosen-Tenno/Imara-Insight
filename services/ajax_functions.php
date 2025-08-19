@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $password = $_POST['password'];
         $role = $_POST['role'];
 
+
         $userModel = new User();
         $created = $userModel->createUserByAdmin($full_name, $user_name, $email, $password, $role);
         if ($created) {
