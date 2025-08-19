@@ -92,6 +92,9 @@ if (!isset($permission)) dd('Access Denied...!');
                                     <a class="edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>">
                                         <i class="bx bx-edit-alt me-1"></i>
                                     </a>
+                                    <a class="add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-user-plus"></i>
+                                    </a>
                                 </td>
                             <?php } ?>
                         </tr>
@@ -134,7 +137,7 @@ if (!isset($permission)) dd('Access Denied...!');
                                     value="create_project">
                             </div>
                         </div>
-                        <div class="col form-password-toggle">
+                        <div class="col">
                             <label class="form-label" for="basic-default-password2">Assign To</label>
                             <div class="input-group">
                                 <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
@@ -236,17 +239,43 @@ if (!isset($permission)) dd('Access Denied...!');
         </div>
     </div>
 </div>
+<div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="'add-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Add Sub-assignee</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Project Members</label>
+                        <select id="multiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
+                            <?php foreach ($user_data as $sub_assignee_list) { ?>
+                                <option value="<?= $sub_assignee_list['id'] ?>"><?= htmlspecialchars($sub_assignee_list['full_name']) ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="alert-container"></div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="additional-fields">
 
-<div class="modal fade" id="show-images" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3 text-center">
-            <h5 class="modal-title mb-3" id="imageModalLabel">Image Gallery</h5>
-            <img id="modalImage" src="" alt="Gallery Image" class="img-fluid rounded" style="max-height: 400px;">
-            <div class="mt-3">
-                <button id="prevBtn" class="btn btn-secondary btn-sm me-2">Previous</button>
-                <button id="nextBtn" class="btn btn-secondary btn-sm">Next</button>
-            </div>
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary ms-2" id="add-sub-assignee">add</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

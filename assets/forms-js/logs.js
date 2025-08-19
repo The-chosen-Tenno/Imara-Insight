@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     $('#create-project').on('click', function () {
-        var form = $('#create-form')[0] ?? null;
+        var form = $('#create-form')[0] || null;
         if (!form) console.log('Something went wrong..');
 
         var url = $('#create-form').attr('action');
@@ -40,7 +40,7 @@ $(document).ready(function () {
         var projectId = $(this).data('id');
         await getProjectById(projectId);
     })
-    
+
     $('#update-project').on('click', function () {
         var form = $('#update-form')[0];
         form.reportValidity();
@@ -82,87 +82,117 @@ $(document).ready(function () {
         await getImageByProjectId(project_id);
     })
 
-async function getProjectById(id) {
-    var url = $('#update-form').attr('action');
-    $('#edit-additional-fields').empty();
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: {
-            project_id: id,
-            action: 'get_project'
-        },
-        dataType: 'json',
-        success: function (response) {
-            console.log(response);
-            showAlert(response.message, response.success ? 'primary' : 'danger');
-            if (response.success) {
-                var ProjectId = response.data.id;
-                var UserID = response.data.user_id;
-                var ProjectName = response.data.project_name;
-                var ProjectStatus = response.data.status;
-   
+    async function getProjectById(id) {
+        var url = $('#update-form').attr('action');
+        $('#edit-additional-fields').empty();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {
+                project_id: id,
+                action: 'get_project'
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                showAlert(response.message, response.success ? 'primary' : 'danger');
+                if (response.success) {
+                    var ProjectId = response.data.id;
+                    var UserID = response.data.user_id;
+                    var ProjectName = response.data.project_name;
+                    var ProjectStatus = response.data.status;
 
-                $('#edit-project-modal #ProjectId').val(ProjectId);
-                $('#edit-project-modal #UserID').val(UserID);
-                $('#edit-project-modal #ProjectName').val(ProjectName);
-                $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
-            }
-                 else {
+
+                    $('#edit-project-modal #ProjectId').val(ProjectId);
+                    $('#edit-project-modal #UserID').val(UserID);
+                    $('#edit-project-modal #ProjectName').val(ProjectName);
+                    $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
+                } else {
                     $('#edit-additional-fields').empty();
                 }
                 $('#edit-user-modal').modal('show');
-           
-        },
-        error: function (error) {
-            console.error('Error submitting the form:', error);
-        },
-        complete: function (response) {
-            console.log('Request complete:', response);
-        }
-    });
-}
 
-async function getImageByProjectId(id) {
-    var url = $('#update-form').attr('action');
-    // $('#edit-additional-fields').empty();
-    $.ajax({
-        url: url,
-        type: 'GET',
-        data: {
-            project_id: id,
-            action: 'get_images'
-        },
-        dataType: 'json',
-        success: function (response) {
-            console.log(response);
-            showAlert(response.message, response.success ? 'primary' : 'danger');
-            if (response.success) {
-                var ProjectId = response.data.id;
-                var UserID = response.data.user_id;
-                var ProjectName = response.data.project_name;
-                var ProjectStatus = response.data.status;
-   
-
-                $('#edit-project-modal #ProjectId').val(ProjectId);
-                $('#edit-project-modal #UserID').val(UserID);
-                $('#edit-project-modal #ProjectName').val(ProjectName);
-                $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
+            },
+            error: function (error) {
+                console.error('Error submitting the form:', error);
+            },
+            complete: function (response) {
+                console.log('Request complete:', response);
             }
-                 else {
+        });
+    }
+
+    async function getImageByProjectId(id) {
+        var url = $('#update-form').attr('action');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {
+                project_id: id,
+                action: 'get_images'
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                showAlert(response.message, response.success ? 'primary' : 'danger');
+                if (response.success) {
+                    var ProjectId = response.data.id;
+                    var UserID = response.data.user_id;
+                    var ProjectName = response.data.project_name;
+                    var ProjectStatus = response.data.status;
+
+
+                    $('#edit-project-modal #ProjectId').val(ProjectId);
+                    $('#edit-project-modal #UserID').val(UserID);
+                    $('#edit-project-modal #ProjectName').val(ProjectName);
+                    $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
+                } else {
                     $('#edit-additional-fields').empty();
                 }
                 $('#show-images').modal('show');
-           
-        },
-        error: function (error) {
-            console.error('Error submitting the form:', error);
-        },
-        complete: function (response) {
-            console.log('Request complete:', response);
-        }
-    });
-}
 
+            },
+            error: function (error) {
+                console.error('Error submitting the form:', error);
+            },
+            complete: function (response) {
+                console.log('Request complete:', response);
+            }
+        });
+    }
+    $('#add-sub-assignee-modal').on('shown.bs.modal', function () {
+        $('#multiSelect').select2({
+            placeholder: "Select project members",
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownParent: $('#add-sub-assignee-modal') // ensures dropdown appears above modal
+        });
+    });
+    $('#add-sub-assignee').on('click', function () {
+        var projectId = $('#add-sub-assignee-modal').data('project-id');
+        var selectedUsers = $('#multiSelect').val(); // array of selected user IDs
+        var url = $('#add-sub-assignee-form').attr('action');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                project_id: projectId,
+                user_id: selectedUsers,
+                action: 'update_sub_assignees'
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    $('#add-sub-assignee-modal').modal('hide');
+                    alert('Sub-assignees updated!');
+                    location.reload();
+                } else {
+                    alert('Failed to update sub-assignees!');
+                }
+            }
+        });
+    });
 
 });
