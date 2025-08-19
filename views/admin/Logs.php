@@ -44,6 +44,9 @@ if (!isset($permission)) dd('Access Denied...!');
                         <th>Status</th>
                         <th>Photos</th>
                         <th>Last Update</th>
+                        <?php if ($permission == 'admin') { ?>
+                            <th>Actions</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -53,46 +56,51 @@ if (!isset($permission)) dd('Access Denied...!');
                         $user_names[$user['id']] = $user['full_name'];
                     }
                     foreach ($logs_data as $LD) {
-                        $sub_assignee_data = $sub_user_details->getAllByProjectId($LD['id']);
-                        $sub_assignee_names_list = [];
-                        foreach($sub_assignee_data as $sa){
-                            $sub_assignee_names_list[] = $user_names[$sa['sub_assignee_id']];
-                        }
-                        $sub_assignee_names_str = implode(', ', $sub_assignee_names_list);
+                        $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
                     ?>
                         <tr>
                             <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
-                            <td><?= $user_names[$LD['sub-assignees']] ?? '' ?></td>
+                            <td>
+                                <div class="overflow-auto" style="max-height:70px;">
+                                    <?php foreach ($sub_assignee_data as $sub_assignee_id): ?>
+                                        <span class="badge bg-secondary d-block mb-1">
+                                            <?= htmlspecialchars($user_names[$sub_assignee_id]) ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </td>
                             <td>
                                 <?php if ($LD['status'] == 'finished'): ?>
                                     <span class="badge bg-success"><?= $LD['status'] ?? '' ?></span>
                                 <?php elseif ($LD['status'] == 'in_progress'): ?>
                                     <span class="badge bg-primary">In Progress</span>
                                 <?php elseif ($LD['status'] == 'idle'): ?>
-                                    <span class="badge bg-dark"> <?= $LD['status'] ?? '' ?></span>
+                                    <span class="badge bg-dark"><?= $LD['status'] ?? '' ?></span>
                                 <?php elseif ($LD['status'] == 'cancelled'): ?>
-                                    <span class="badge bg-danger"> <?= $LD['status'] ?? '' ?></span>
+                                    <span class="badge bg-danger"><?= $LD['status'] ?? '' ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
-                                    class="btn rounded-pill btn-outline-primary"
-                                    target="_blank">
+                                <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>" class="btn rounded-pill btn-outline-primary" target="_blank">
                                     Show
                                 </a>
                             </td>
-                            <td><?= date('Y-m-d  H:i', strtotime($LD['last_updated'])) ?></td>
+                            <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                             <?php if ($permission == 'admin') { ?>
                                 <td>
-                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
+                                    <a class="edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-edit-alt me-1"></i>
+                                    </a>
                                 </td>
                             <?php } ?>
-                        <?php } ?>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
+
     <hr class="my-5" />
 
 </div>
