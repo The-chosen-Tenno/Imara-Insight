@@ -38,9 +38,9 @@ $users = $userDetails->getUserbyStatus();
                                         <dd class="col-sm-10"><?= htmlspecialchars($pending['email']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
-                                        <a href=""><button class="btn btn-sm btn-success d-flex align-items-center accept-user-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
+                                        <button class="btn btn-sm btn-success d-flex align-items-center accept-user-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
                                             <i class='bx bx-check me-2'></i>Accept
-                                        </button></a>
+                                        </button>
                                         <button class="btn btn-sm btn-danger d-flex align-items-center decline-user-btn" data-id="<?= htmlspecialchars($pending['id']) ?>">
                                             <i class='bx bx-x me-2'></i>Decline
                                         </button>

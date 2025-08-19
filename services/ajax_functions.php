@@ -5,6 +5,9 @@ require_once '../models/Users.php';
 require_once '../models/Logs.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
+require_once '../vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
@@ -96,14 +99,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Accept user registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
     try {
         $id = $_POST['user_id'];
         $userModel = new User();
         $accepted = $userModel->acceptUser($id);
+
         if ($accepted) {
-            echo json_encode(['success' => true, 'message' => "User accepted successfully!"]);
+            $user = $userModel->getUserById($id); 
+
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'sandbox.smtp.mailtrap.io';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'bd5ed557564c7b';
+                $mail->Password   = '496353a167a69c';
+                $mail->Port       = 2525;
+
+                $mail->setFrom('hameemtrooper@gmail.com', 'Admin');
+                $mail->addAddress($user['email'], $user['user_name']); // ✅ send to actual 
+
+                $mail->isHTML(true);
+                $mail->Subject = 'Your Account Has Been Accepted';
+                $mail->Body    = "Hello <b>{$user['user_name']}</b>,<br>Your account has been <b>accepted</b> successfully!";
+
+                $mail->send();
+
+                echo json_encode(['success' => true, 'message' => "User accepted successfully & email sent!"]);
+            } catch (Exception $e) {
+                echo json_encode(['success' => true, 'message' => "User accepted successfully but email failed: {$mail->ErrorInfo}"]);
+            }
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
         }
