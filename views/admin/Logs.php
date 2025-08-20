@@ -60,9 +60,9 @@ if (!isset($permission)) dd('Access Denied...!');
                             </td>
                             <td>
                                 <div class="overflow-auto" style="max-height:70px;">
-                                    <?php foreach ($sub_assignee_data as $sub_assignee_id): ?>
+                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
                                         <span class="badge bg-secondary d-block mb-1">
-                                            <?= htmlspecialchars($user_names[$sub_assignee_id]) ?>
+                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
                                         </span>
                                     <?php endforeach; ?>
                                 </div>
@@ -198,7 +198,7 @@ if (!isset($permission)) dd('Access Denied...!');
 <div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form id="'add-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+            <form id="add-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Add Sub-assignee</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -268,9 +268,3 @@ if (!isset($permission)) dd('Access Denied...!');
 </script>
 
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
-
-<style>
-    .bg-purple {
-        background-color: #673ab7 !important;
-    }
-</style>

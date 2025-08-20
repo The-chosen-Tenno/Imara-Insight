@@ -29,9 +29,6 @@ class SubAssignee extends BaseModel
         }
     }
 
-    function updateUser() {}
-
-
     protected function addNewRec()
     {
         $param = [
@@ -39,12 +36,12 @@ class SubAssignee extends BaseModel
             ':sub_assignee_id' => $this->sub_assignee_id
         ];
         $result = $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . "(project_id,other_reason) values(:sub_assignee_id,:sub_assignee_id)",
+            "INSERT INTO " . $this->getTableName() . "(project_id,sub_assignee_id) values(:project_id,:sub_assignee_id)",
             $param
         );
         return  $result;
     }
-
+    
     protected function updateRec() {}
 
     public function getSubAssigneeByProjectIDAndUserID($project_id, $sub_assignee_id)
@@ -53,15 +50,24 @@ class SubAssignee extends BaseModel
         $query = "SELECT * FROM " . $this->getTableName() . " WHERE (sub_assignee_id = :sub_assignee_id AND project_id = :project_id)";
         return $this->pm->run($query, $param);
     }
-    public function getAllByProjectId($project_id)
-    {
-        $param = [':project_id' => $project_id];
-        $query = "SELECT project_id, sub_assignee_id 
-              FROM " . $this->getTableName() . " 
-              WHERE project_id = :project_id";
+public function getAllByProjectId($project_id)
+{
+    $param = [':project_id' => $project_id];
+    $query = "SELECT sub_assignee_id FROM " . $this->getTableName() . " WHERE project_id = :project_id";
+    
+    // Don't pass 'true' as third argument if it makes pm->run return only one row
+    $result = $this->pm->run($query, $param); // remove the 'true'
 
-        $result = $this->pm->run($query, $param, true);
+    if (!$result || !is_array($result)) return [];
 
-        return is_array($result) ? $result : [];
+    $ids = [];
+    foreach ($result as $row) {
+        // Make sure each row has 'sub_assignee_id'
+        if (isset($row['sub_assignee_id'])) {
+            $ids[] = (int)$row['sub_assignee_id'];
+        }
     }
+
+    return $ids;
+}
 }

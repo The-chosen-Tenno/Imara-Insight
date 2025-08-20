@@ -1,201 +1,123 @@
 $(document).ready(function () {
+    $("#searchInput").on("input", function () {
+        var term = $(this).val().toLowerCase();
+        $("tbody tr").each(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
+        });
+    });
 
     $('#create-project').on('click', function () {
-        var form = $('#create-form')[0] || null;
-        if (!form) console.log('Something went wrong..');
+        var form = $('#create-form')[0];
+        if (!form.checkValidity() || !form.reportValidity()) return showAlert('Form is not valid.', 'danger', 'create-alert-container');
 
-        var url = $('#create-form').attr('action');
-        if (form.checkValidity() && form.reportValidity()) {
-            var formData = new FormData(form);
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                success: function (response) {
-                    showAlert(response.message, response.success ? 'primary' : 'danger');
-                    if (response.success) {
-                        $('#add-project').modal('hide');
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
-                },
-                error: function (error) {
-                    console.error('Error submitting the form:', error);
-                    showAlert('Failed to create Project!', 'danger');
-                },
-                complete: function (response) {
-                    console.log('Request complete:', response);
+        $.ajax({
+            url: $(form).attr('action'),
+            type: 'POST',
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'create-alert-container');
+                if (res.success) {
+                    $('#add-project').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
                 }
-            });
-        } else {
-            showAlert('Form is not valid. Please check your inputs.', 'danger');
-        }
+            },
+            error: function () {
+                showAlert('Failed to create Project!', 'danger', 'create-alert-container');
+            }
+        });
     });
 
     $('.edit-project-btn').on('click', async function () {
-        var projectId = $(this).data('id');
-        await getProjectById(projectId);
-    })
+        var id = $(this).data('id');
+        $.ajax({
+            url: $('#update-form').attr('action'),
+            type: 'GET',
+            data: { project_id: id, action: 'get_project' },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#ProjectId').val(res.data.id);
+                    $('#UserID').val(res.data.user_id);
+                    $('#ProjectName').val(res.data.project_name);
+                    $('#ProjectStatus').val(res.data.status);
+                    $('#edit-project-modal').modal('show');
+                } else {
+                    showAlert(res.message, 'danger', 'edit-alert-container');
+                }
+            }
+        });
+    });
 
     $('#update-project').on('click', function () {
         var form = $('#update-form')[0];
-        form.reportValidity();
-        if (form.checkValidity()) {
-            var url = $('#update-form').attr('action');
-            var formData = new FormData($('#update-form')[0]);
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    showAlert(response.message, response.success ? 'primary' : 'danger', 'edit-alert-container');
-                    if (response.success) {
-                        $('#edit-project-modal').modal('hide');
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    }
-                },
-                error: function (error) {
-                    console.error('Error submitting the form:', error);
-                },
-                complete: function (response) {
-                    console.log('Request complete:', response);
+        if (!form.checkValidity() || !form.reportValidity()) return showAlert('Form is not valid.', 'danger', 'edit-alert-container');
+
+        $.ajax({
+            url: $(form).attr('action'),
+            type: 'POST',
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'edit-alert-container');
+                if (res.success) {
+                    $('#edit-project-modal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
                 }
-            });
-        } else {
-            var message = ('Form is not valid. Please check your inputs.');
-            showAlert(message, 'danger');
-        }
+            }
+        });
     });
 
-    $('.open-images').on('click', async function () {
-        var project_id = $(this).data('id');
-        console.log($(this).data('id'));
-        await getImageByProjectId(project_id);
-    })
-
-    async function getProjectById(id) {
-        var url = $('#update-form').attr('action');
-        $('#edit-additional-fields').empty();
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: {
-                project_id: id,
-                action: 'get_project'
-            },
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
-                showAlert(response.message, response.success ? 'primary' : 'danger');
-                if (response.success) {
-                    var ProjectId = response.data.id;
-                    var UserID = response.data.user_id;
-                    var ProjectName = response.data.project_name;
-                    var ProjectStatus = response.data.status;
-
-
-                    $('#edit-project-modal #ProjectId').val(ProjectId);
-                    $('#edit-project-modal #UserID').val(UserID);
-                    $('#edit-project-modal #ProjectName').val(ProjectName);
-                    $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
-                } else {
-                    $('#edit-additional-fields').empty();
-                }
-                $('#edit-user-modal').modal('show');
-
-            },
-            error: function (error) {
-                console.error('Error submitting the form:', error);
-            },
-            complete: function (response) {
-                console.log('Request complete:', response);
-            }
-        });
-    }
-
-    async function getImageByProjectId(id) {
-        var url = $('#update-form').attr('action');
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: {
-                project_id: id,
-                action: 'get_images'
-            },
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
-                showAlert(response.message, response.success ? 'primary' : 'danger');
-                if (response.success) {
-                    var ProjectId = response.data.id;
-                    var UserID = response.data.user_id;
-                    var ProjectName = response.data.project_name;
-                    var ProjectStatus = response.data.status;
-
-
-                    $('#edit-project-modal #ProjectId').val(ProjectId);
-                    $('#edit-project-modal #UserID').val(UserID);
-                    $('#edit-project-modal #ProjectName').val(ProjectName);
-                    $('#edit-project-modal #ProjectStatus').val(ProjectStatus);
-                } else {
-                    $('#edit-additional-fields').empty();
-                }
-                $('#show-images').modal('show');
-
-            },
-            error: function (error) {
-                console.error('Error submitting the form:', error);
-            },
-            complete: function (response) {
-                console.log('Request complete:', response);
-            }
-        });
-    }
     $('#add-sub-assignee-modal').on('shown.bs.modal', function () {
         $('#multiSelect').select2({
             placeholder: "Select project members",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
-            dropdownParent: $('#add-sub-assignee-modal') // ensures dropdown appears above modal
+            dropdownParent: $('#add-sub-assignee-modal')
         });
     });
+
+    $('#add-sub-assignee-modal').on('hidden.bs.modal', function () {
+        $('#multiSelect').val(null).trigger('change');
+        $('#subassignee-alert-container').html('');
+        $(this).find('form')[0].reset();
+    });
+
+    $('.add-sub-assignee-btn').on('click', function () {
+        var projectId = $(this).data('id');
+        $('#add-sub-assignee-modal').data('project-id', projectId).modal('show');
+    });
+
     $('#add-sub-assignee').on('click', function () {
         var projectId = $('#add-sub-assignee-modal').data('project-id');
         var selectedUsers = $('#multiSelect').val();
-        var url = $('#update-form').attr('action');
+        if (!selectedUsers || selectedUsers.length === 0) return;
+
+        var formData = new FormData();
+        formData.append('project_id', projectId);
+        selectedUsers.forEach(u => formData.append('user_id[]', u));
+        formData.append('action', 'add_sub_assignees');
 
         $.ajax({
-            url: url,
+            url: $('#update-form').attr('action'),
             type: 'POST',
-            data: {
-                project_id: projectId,
-                user_id: selectedUsers,
-                action: 'add_sub_assignees'
-            },
+            data: formData,
+            contentType: false,
+            processData: false,
             dataType: 'json',
-            success: function (response) {
-                showAlert(response.message, response.success ? 'primary' : 'danger');
-                if (response.success) {
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'subassignee-alert-container');
+                if (res.success) {
                     $('#add-sub-assignee-modal').modal('hide');
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1000);
-                } else {
-                    alert('Failed to update sub-assignees!');
+                    setTimeout(() => location.reload(), 1000);
                 }
             },
-            error: function (error) {
-                console.error('AJAX error:', error);
+            error: function () {
                 alert('Something went wrong while updating sub-assignees.');
             }
         });

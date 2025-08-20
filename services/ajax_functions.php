@@ -3,8 +3,13 @@ require_once '../config.php';
 require_once '../helpers/AppManager.php';
 require_once '../models/Users.php';
 require_once '../models/Logs.php';
+require_once '../models/Sub-Assignees.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
+require_once '../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
@@ -96,14 +101,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Accept user registration
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
     try {
         $id = $_POST['user_id'];
         $userModel = new User();
         $accepted = $userModel->acceptUser($id);
+
         if ($accepted) {
-            echo json_encode(['success' => true, 'message' => "User accepted successfully!"]);
+            $user = $userModel->getUserById($id); 
+
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'sandbox.smtp.mailtrap.io';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'bd5ed557564c7b';
+                $mail->Password   = '496353a167a69c';
+                $mail->Port       = 2525;
+
+                $mail->setFrom('hameemtrooper@gmail.com', 'Admin');
+                $mail->addAddress($user['email'], $user['user_name']); // ✅ send to actual 
+
+                $mail->isHTML(true);
+                $mail->Subject = 'Your Account Has Been Accepted';
+                $mail->Body    = "Hello <b>{$user['user_name']}</b>,<br>Your account has been <b>accepted</b> successfully!";
+
+                $mail->send();
+
+                echo json_encode(['success' => true, 'message' => "User accepted successfully & email sent!"]);
+            } catch (Exception $e) {
+                echo json_encode(['success' => true, 'message' => "User accepted successfully but email failed: {$mail->ErrorInfo}"]);
+            }
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
         }
@@ -312,6 +340,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_sub_assignees') {
+    try {
+        $project_id = $_POST['project_id'];
+        $user_ids = $_POST['user_id']; 
+
+        $successCount = 0;
+        $subAssigneeModel = new SubAssignee();
+        foreach ($user_ids as $user_id) {
+            $added = $subAssigneeModel->createSubAssignee($project_id, $user_id);
+            if ($added) $successCount++;
+        }
+
+        if ($successCount > 0) {
+            echo json_encode(['success' => true, 'message' => "$successCount sub-assignees added successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No sub-assignees were added (they may already exist).']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
