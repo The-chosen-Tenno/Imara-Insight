@@ -1,220 +1,192 @@
-<?php
-
-require_once __DIR__ . '/../helpers/AppManager.php';
-require_once __DIR__ . '/../models/BaseModel.php';
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../models/Logs.php';
-require_once __DIR__ . '/../models/Users.php';
-require_once __DIR__ . '/../models/ProjectImageModel.php';
-
-function h(?string $v): string
-{
-    return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8');
-}
-function safe_date(?string $v, string $format = 'Y-m-d'): string
-{
-    if (!$v) return 'N/A';
-    $t = strtotime($v);
-    return $t ? date($format, $t) : 'N/A';
-}
-function status_badge(string $status): array
-{
-    $map = [
-        'finished'    => ['COMPLETED', 'bg-success'],
-        'in_progress' => ['IN PROGRESS', 'bg-primary'],
-        'idle'        => ['IDLE', 'bg-muted'],
-        'cancelled'   => ['CANCELLED', 'bg-destructive'],
-    ];
-    return $map[$status] ?? ['UNKNOWN', 'bg-muted'];
-}
-
-// === Input Validation ===
-$project_id = isset($_GET['id']) ? trim($_GET['id']) : '';
-if ($project_id === '' || !ctype_digit($project_id)) {
-    http_response_code(400);
-    echo '<!doctype html><html><head><meta charset="utf-8"><title>Invalid project</title></head><body><h3>Invalid project ID.</h3></body></html>';
-    exit;
-}
-
-try {
-    $logsModel  = new Logs();
-    $usersModel = new User();
-    $imgModel   = new ProjectImageModel();
-
-    $project    = $logsModel->getById((int)$project_id);
-
-    if (!$project) {
-        http_response_code(404);
-        echo '<!doctype html><html><head><meta charset="utf-8"><title>Project not found</title></head><body><h3>Project not found.</h3></body></html>';
-        exit;
-    }
-
-    $assigned   = isset($project['user_id']) ? $usersModel->getById((int)$project['user_id']) : null;
-    $images     = $imgModel->getImagebyProjectId((int)$project_id) ?? [];
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo '<!doctype html><html><head><meta charset="utf-8"><title>Error</title></head><body><h3>Something went wrong loading this project.</h3></body></html>';
-    exit;
-}
-
-[$status_text, $status_class] = status_badge((string)($project['status'] ?? ''));
-$project_name  = $project['project_name'] ?? 'Project';
-$desc          = $project['description'] ?? '';
-$due_date      = safe_date($project['due_date'] ?? null, 'Y-m-d');
-$last_updated  = safe_date($project['last_updated'] ?? null, 'F j, Y H:i');
-$assigned_name = $assigned['full_name'] ?? 'N/A';
-
-$uploadBaseRel = '../uploads/projects/';
-function build_img_src(string $base, string $file): string
-{
-    $file = ltrim($file, '/\\');
-    return $base . $file;
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <title><?= h($project_name) ?> — Project Details</title> -->
-    <title>Imara - Insight</title>
-    <meta name="description" content="<?= h(mb_strimwidth($desc, 0, 150, '…')) ?>">
-    <meta property="og:title" content="<?= h($project_name) ?>">
-    <meta property="og:description" content="<?= h(mb_strimwidth($desc, 0, 150, '…')) ?>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <!-- AOS CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= asset('assets/css/projectDetails.css') ?>">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* Background gradient for hero (cyan-purple style) */
+        .bg-gradient-hero {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(163, 0, 255, 0.3));
+        }
+
+        /* Neon Glow Effects only for buttons and badges */
+        .button-glow:hover {
+            box-shadow: 0 0 10px #0ff, 0 0 20px #a300ff;
+        }
+
+        .badge-glow {
+            background-color: rgba(163, 0, 255, 0.2);
+            color: #0ff;
+        }
+
+        body {
+            background-color: #0f0f1a;
+            /* deep dark background */
+            color: #e5e7eb;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        .scroll-indicator div {
+            background-color: #0ff;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- <video src="<?= asset('assets/uploads/Video/Background.mp4') ?>" autoplay loop muted class="bg-video"></video> -->
-    <div class="container">
-        <div class="container-narrow">
-            <!-- Header Card -->
-            <div class="project-header glass-card" data-aos="flip-left"
-                data-aos-easing="ease-out-cubic">
-                <div class="header-bg">
-                    <div class="overlay"></div>
-                </div>
-                <div class="header-content">
-                    <div class="title-row">
-                        <h1 class="title text-gradient"><?= h($project_name) ?></h1>
-                        <span class="badge <?= h($status_class) ?>"><?= h($status_text) ?></span>
-                    </div>
 
-                    <?php if ($desc): ?>
-                        <p class="description"><?= h($desc) ?></p>
-                    <?php endif; ?>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-900 via-purple-900 to-purple-800 opacity-90"></div>
+    </div>
 
-                    <div class="metadata-grid">
-                        <div class="metadata-card" data-aos="zoom-in" data-aos-delay="100">
-                            <div class="icon bg-primary-light">
-                                <!-- user icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="meta-label">Assigned to</p>
-                                <p class="meta-value"><?= h($assigned_name) ?></p>
-                            </div>
-                        </div>
+    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white group" data-aos="fade-down" data-aos-delay="200">
+            Innovation Through<br>Code & Automation
+        </h1>
 
-                        <div class="metadata-card" data-aos="zoom-in" data-aos-delay="200">
-                            <div class="icon bg-secondary-light">
-                                <!-- calendar icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="meta-label">Due Date</p>
-                                <p class="meta-value"><?= h($due_date) ?></p>
-                            </div>
-                        </div>
+        <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="400">
+            We create cutting-edge solutions that bridge the gap between intelligent automation and powerful software development
+        </p>
 
-                        <div class="metadata-card" data-aos="zoom-in" data-aos-delay="300">
-                            <div class="icon bg-accent-light">
-                                <!-- clock icon -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="meta-label">Last Updated</p>
-                                <p class="meta-value"><?= h($last_updated) ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Feature Buttons -->
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12" data-aos="zoom-in" data-aos-delay="600">
+            <div class="flex items-center gap-3 px-6 py-3 bg-purple-900/50 rounded-full backdrop-blur-sm hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2M12 22v-2M17 20.66l-1-1.73M11 10.27 7 3.34M20.66 17l-1.73-1M3.34 7l1.73 1M14 12h8M2 12h2M20.66 7l-1.73 1M3.34 17l1.73-1M17 3.34l-1 1.73M11 13.73l-4 6.93"/>
+                </svg>
+                <span class="text-white font-medium">Smart Automation</span>
             </div>
 
-            <!-- Screenshots -->
-            <section class="screenshots-section">
-                <div class="section-header">
-                    <div>
-                        <h2 class="section-title">Project Screenshots</h2>
-                        <p class="section-subtitle">Visual preview of the project's key features and interfaces</p>
-                    </div>
-                    <?php if (!empty($images)): ?>
-                        <span class="badge bg-secondary"><?= count($images) ?> Image<?= count($images) > 1 ? 's' : '' ?></span>
-                    <?php endif; ?>
-                </div>
+            <div class="flex items-center gap-3 px-6 py-3 bg-purple-900/50 rounded-full backdrop-blur-sm hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="text-white font-medium">Custom Development</span>
+            </div>
+        </div>
 
-                <?php if (!empty($images)): ?>
-                    <div class="screenshots-grid">
-                        <?php foreach ($images as $img): ?>
-                            <?php
-                            $file     = (string)($img['file_path'] ?? '');
-                            $imgSrc   = $file !== '' ? build_img_src($uploadBaseRel, $file) : '';
-                            $title    = $img['title'] ?? 'Screenshot';
-                            $imgDesc  = $img['description'] ?? '';
-                            ?>
-                            <div class="screenshot-card" data-aos="flip-up" data-aos-delay="<?= $i * 100 ?>">
-                                <div class="image-container">
-                                    <?php if ($imgSrc): ?>
-                                        <img src="<?= h($imgSrc) ?>" alt="<?= h($title) ?>" loading="lazy" referrerpolicy="no-referrer" />
-                                    <?php else: ?>
-                                        <div class="d-flex align-items-center justify-content-center h-100 w-100 text-muted">No image</div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="card-content">
-                                    <h3 class="card-title"><?= h($title) ?></h3>
-                                    <?php if (!empty($imgDesc)): ?>
-                                        <p class="card-desc"><?= h($imgDesc) ?></p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="alert alert-warning alert-empty">
-                        No screenshots available for this project.
-                    </div>
-                <?php endif; ?>
-            </section>
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="800">
+            <button class="inline-flex items-center justify-center gap-2 font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 h-11 rounded-md text-lg px-8 transition-all duration-300">
+                Explore Our Work
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14"></path>
+                    <path d="m19 12-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <button class="inline-flex items-center justify-center gap-2 font-medium h-11 rounded-md text-lg px-8 border border-cyan-400 text-white hover:bg-cyan-500/20 hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
+                Get In Touch
+            </button>
         </div>
     </div>
+
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="w-6 h-10 border-2 border-cyan-400 rounded-full flex justify-center">
+            <div class="w-1 h-3 rounded-full mt-2 animate-pulse bg-cyan-400"></div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 bg-gray-900">
+       <div class="max-w-7xl mx-auto">
+  <div class="text-center mb-16">
+    <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4" data-aos="fade-down">Our Projects</h2>
+    <p class="text-muted-foreground text-lg max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+      Explore our diverse portfolio of automation solutions and software development projects
+    </p>
+  </div>
+
+  <!-- Filter Buttons -->
+  <div class="flex justify-center gap-4 mb-12" data-aos="fade-up" data-aos-delay="400">
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-cyan-500 text-white hover:bg-cyan-500/90 h-10 px-4 py-2">
+      All Projects (6)
+    </button>
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+      Automation (3)
+    </button>
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+      Coding (3)
+    </button>
+  </div>
+
+  <!-- Projects Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Project Card -->
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm project-card group animate-fade-in transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50" style="animation-delay: 0s;">
+      <div class="relative overflow-hidden rounded-t-lg mb-4">
+        <img src="/assets/automation-project-BSCkLevg.jpg" alt="Smart Home Controller"
+             class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+        <div class="absolute top-3 right-3">
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors hover:bg-secondary/80 category-badge bg-purple-500/20 text-purple-300">
+            Automation
+          </div>
+        </div>
+      </div>
+      <div class="space-y-4 px-4 pb-4">
+          <h3 class="text-xl font-semibold text-foreground group-hover:text-primary group-hover:text-glow transition-all duration-300">
+      Smart Home Controller
+    </h3>
+        <p class="text-muted-foreground text-sm leading-relaxed">
+          Advanced IoT automation system for smart homes with voice control, energy monitoring, and intelligent scheduling capabilities.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">Python</div>
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">Raspberry Pi</div>
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">MQTT</div>
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">React</div>
+          <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">Node.js</div>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <a href="https://github.com" target="_blank"
+             class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-md hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
+            Code
+          </a>
+          <a href="https://demo.com" target="_blank"
+             class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
+            Live Demo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Duplicate project cards with delay animation -->
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm project-card group animate-fade-in transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50" style="animation-delay: 0.1s;">
+      <!-- Project content similar to above with different image & details -->
+    </div>
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm project-card group animate-fade-in transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50" style="animation-delay: 0.2s;">
+      <!-- Project content similar to above with different image & details -->
+    </div>
+  </div>
+</div>
+>
+    </section>
+
     <!-- AOS JS -->
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
         AOS.init({
-            duration: 2000,
-            easing: 'ease-in-out',
-            once: true, // run animation only once
+            duration: 1000,
+            easing: 'ease-out-cubic',
+            once: true,
+            mirror: false
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

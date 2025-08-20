@@ -86,7 +86,6 @@ function build_img_src(string $base, string $file): string
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('assets/css/projectDetails.css') ?>">
 </head>
 
@@ -94,7 +93,7 @@ function build_img_src(string $base, string $file): string
     <div class="container">
         <div class="container-narrow">
             <!-- Header Card -->
-            <div class="project-header glass-card" data-aos="flip-left"
+            <div class="project-header glass-card" data-aos="flip-up"
                 data-aos-easing="ease-out-cubic">
                 <div class="header-bg">
                     <div class="overlay"></div>
