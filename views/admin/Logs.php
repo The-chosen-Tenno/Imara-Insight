@@ -92,6 +92,9 @@ if (!isset($permission)) dd('Access Denied...!');
                                     <a class="add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= $LD['id']; ?>">
                                         <i class="bx bx-user-plus"></i>
                                     </a>
+                                    <a class="remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-user-minus"></i>
+                                    </a>
                                 </td>
                             <?php } ?>
                         </tr>
@@ -207,9 +210,6 @@ if (!isset($permission)) dd('Access Denied...!');
                     <div class="mb-3">
                         <label class="form-label">Project Members</label>
                         <select id="multiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
-                            <?php foreach ($user_data as $sub_assignee_list) { ?>
-                                <option value="<?= $sub_assignee_list['id'] ?>"><?= htmlspecialchars($sub_assignee_list['full_name']) ?></option>
-                            <?php } ?>
                         </select>
                     </div>
                     <div class="mb-3 mt-3">
@@ -228,6 +228,32 @@ if (!isset($permission)) dd('Access Denied...!');
     </div>
 </div>
 
+<div class="modal fade" id="remove-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form id="remove-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title">Remove Sub-assignee</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="project_id" id="removeProjectId">
+          <label class="form-label">Assigned Sub-assignees</label>
+          <select id="removeMultiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
+            <!-- Options filled by JS -->
+          </select>
+          <input type="hidden" name="action" value="remove_sub_assignee">
+          <div id="remove-alert-container" class="mt-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="remove-sub-assignee">Remove</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <?php require_once('../layouts/footer.php'); ?>
 
 <script>
@@ -240,7 +266,7 @@ if (!isset($permission)) dd('Access Denied...!');
         });
 
         $('#datePicker').val(getFormattedDate(new Date()));
-///sakdjaksldjalkgit
+
         function getFormattedDate(date) {
             var year = date.getFullYear();
             var month = (date.getMonth() + 1).toString().padStart(2, '0');

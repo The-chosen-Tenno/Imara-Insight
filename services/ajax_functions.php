@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $accepted = $userModel->acceptUser($id);
 
         if ($accepted) {
-            $user = $userModel->getUserById($id); 
+            $user = $userModel->getUserById($id);
 
             $mail = new PHPMailer(true);
             try {
@@ -302,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $user_id = $_POST['user_id'];
 
         $leaveModel = new Leave();
-        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason,$half_day, $date_off, $description, $user_id);
+        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $half_day, $date_off, $description, $user_id);
         if ($requested) {
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
@@ -346,10 +346,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+
+if (isset($_GET['action']) && $_GET['action'] === 'get_sub_assignees') {
+    header('Content-Type: application/json');
+
+    $project_id = intval($_GET['project_id'] ?? 0);
+    if (!$project_id) {
+        echo json_encode(['success' => false, 'message' => 'Invalid project ID.']);
+        exit;
+    }
+
+    try {
+        $subAssigneeModel = new SubAssignee();
+        $subs = $subAssigneeModel->getAllByProjectId($project_id); // just IDs
+
+        $userModel = new User();
+        $allUsers = $userModel->getAll();
+        $lookup = [];
+        foreach ($allUsers as $u) {
+            $lookup[$u['id']] = $u['full_name'];
+        }
+
+        $data = [];
+        foreach ($subs as $id) {
+            $data[] = [
+                'id' => $id,
+                'full_name' => $lookup[$id] ?? 'Unknown'
+            ];
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Sub-assignees retrieved successfully!',
+            'data' => $data
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage()
+        ]);
+    }
+    exit;
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_sub_assignees') {
     try {
         $project_id = $_POST['project_id'];
-        $user_ids = $_POST['user_id']; 
+        $user_ids = $_POST['user_id'];
 
         $successCount = 0;
         $subAssigneeModel = new SubAssignee();
@@ -369,6 +411,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'remove_sub_assignee') {
+    header('Content-Type: application/json');
 
+    $project_id = intval($_POST['project_id'] ?? 0);
+    $user_ids   = $_POST['user_id'] ?? [];
+
+    if (!$project_id || empty($user_ids) || !is_array($user_ids)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid project ID or no sub-assignees selected.'
+        ]);
+        exit;
+    }
+
+    try {
+        $subAssigneeModel = new SubAssignee();
+        $ok = $subAssigneeModel->removeFromProject($project_id, $user_ids);
+
+        echo json_encode([
+            'success' => $ok,
+            'message' => $ok
+                ? 'Sub-assignees removed successfully!'
+                : 'Failed to remove sub-assignees.'
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage()
+        ]);
+    }
+    exit;
+}
+
+if (isset($_GET['action']) && $_GET['action'] === 'get_available_sub_assignees') {
+    header('Content-Type: application/json');
+
+    $project_id = intval($_GET['project_id'] ?? 0);
+    if (!$project_id) {
+        echo json_encode(['success' => false, 'message' => 'Invalid project ID.']);
+        exit;
+    }
+
+    try {
+        $subAssigneeModel = new SubAssignee();
+        $assignedIds = $subAssigneeModel->getAllByProjectId($project_id); // existing sub-assignees
+
+        $userModel = new User();
+        $allUsers = $userModel->getAll();
+
+        $data = [];
+        foreach ($allUsers as $u) {
+            if (!in_array($u['id'], $assignedIds)) { // exclude already assigned
+                $data[] = [
+                    'id' => $u['id'],
+                    'full_name' => $u['full_name']
+                ];
+            }
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Available users retrieved successfully!',
+            'data' => $data
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage()
+        ]);
+    }
+    exit;
+}
 
 dd('Access denied..!');
