@@ -86,13 +86,11 @@ function build_img_src(string $base, string $file): string
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <!-- AOS CSS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('assets/css/projectDetails.css') ?>">
 </head>
 
 <body>
-    <!-- <video src="<?= asset('assets/uploads/Video/Background.mp4') ?>" autoplay loop muted class="bg-video"></video> -->
     <div class="container">
         <div class="container-narrow">
             <!-- Header Card -->
