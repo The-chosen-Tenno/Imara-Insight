@@ -54,15 +54,11 @@ public function getAllByProjectId($project_id)
 {
     $param = [':project_id' => $project_id];
     $query = "SELECT sub_assignee_id FROM " . $this->getTableName() . " WHERE project_id = :project_id";
-    
-    // Don't pass 'true' as third argument if it makes pm->run return only one row
-    $result = $this->pm->run($query, $param); // remove the 'true'
+    $result = $this->pm->run($query, $param);
 
     if (!$result || !is_array($result)) return [];
-
     $ids = [];
     foreach ($result as $row) {
-        // Make sure each row has 'sub_assignee_id'
         if (isset($row['sub_assignee_id'])) {
             $ids[] = (int)$row['sub_assignee_id'];
         }
@@ -70,4 +66,29 @@ public function getAllByProjectId($project_id)
 
     return $ids;
 }
+public function removeFromProject($project_id, array $user_ids)
+{
+    $project_id = (int) $project_id;
+    // normalize + de-dupe
+    $user_ids = array_values(array_unique(array_map('intval', $user_ids)));
+
+    if ($project_id <= 0 || empty($user_ids)) return false;
+
+    // Build named placeholders :uid0, :uid1, ...
+    $params = [':project_id' => $project_id];
+    $ph = [];
+    foreach ($user_ids as $i => $uid) {
+        $key = ':uid' . $i;
+        $ph[] = $key;
+        $params[$key] = $uid;
+    }
+
+    $query = "DELETE FROM " . $this->getTableName() . "
+              WHERE project_id = :project_id
+              AND sub_assignee_id IN (" . implode(',', $ph) . ")";
+    $result = $this->pm->run($query, $params);
+    return $result !== false;
+}
+
+
 }

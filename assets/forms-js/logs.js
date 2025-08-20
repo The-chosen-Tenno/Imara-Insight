@@ -8,7 +8,8 @@ $(document).ready(function () {
 
     $('#create-project').on('click', function () {
         var form = $('#create-form')[0];
-        if (!form.checkValidity() || !form.reportValidity()) return showAlert('Form is not valid.', 'danger', 'create-alert-container');
+        if (!form.checkValidity() || !form.reportValidity())
+            return showAlert('Form is not valid.', 'danger', 'create-alert-container');
 
         $.ajax({
             url: $(form).attr('action'),
@@ -53,7 +54,8 @@ $(document).ready(function () {
 
     $('#update-project').on('click', function () {
         var form = $('#update-form')[0];
-        if (!form.checkValidity() || !form.reportValidity()) return showAlert('Form is not valid.', 'danger', 'edit-alert-container');
+        if (!form.checkValidity() || !form.reportValidity())
+            return showAlert('Form is not valid.', 'danger', 'edit-alert-container');
 
         $.ajax({
             url: $(form).attr('action'),
@@ -90,35 +92,130 @@ $(document).ready(function () {
 
     $('.add-sub-assignee-btn').on('click', function () {
         var projectId = $(this).data('id');
-        $('#add-sub-assignee-modal').data('project-id', projectId).modal('show');
+        $('#add-sub-assignee-modal').data('project-id', projectId);
+
+        // clear old options
+        $('#multiSelect').empty();
+
+        // fetch users not already in the project
+        $.ajax({
+            url: $('#add-sub-assignee-form').attr('action'),
+            type: 'GET',
+            data: {
+                action: 'get_available_sub_assignees',
+                project_id: projectId
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    res.data.forEach(function (user) {
+                        $('#multiSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
+                    });
+
+                    $('#multiSelect').select2({
+                        placeholder: "Select project members",
+                        width: '100%',
+                        allowClear: true,
+                        closeOnSelect: false,
+                        dropdownParent: $('#add-sub-assignee-modal')
+                    });
+
+                    $('#add-sub-assignee-modal').modal('show');
+                } else {
+                    showAlert(res.message, 'danger', 'subassignee-alert-container');
+                }
+            },
+            error: function () {
+                showAlert('Failed to fetch users.', 'danger', 'subassignee-alert-container');
+            }
+        });
     });
 
-    $('#add-sub-assignee').on('click', function () {
+    $('#add-sub-assignee').on('click', function() {
+        var form = $('#add-sub-assignee-form')[0];
         var projectId = $('#add-sub-assignee-modal').data('project-id');
-        var selectedUsers = $('#multiSelect').val();
-        if (!selectedUsers || selectedUsers.length === 0) return;
+        var userIds = $('#multiSelect').val();
+
+        if (!userIds || userIds.length === 0) {
+            showAlert('Please select at least one sub-assignee.', 'danger', 'subassignee-alert-container');
+            return;
+        }
 
         var formData = new FormData();
-        formData.append('project_id', projectId);
-        selectedUsers.forEach(u => formData.append('user_id[]', u));
         formData.append('action', 'add_sub_assignees');
+        formData.append('project_id', projectId);
+        userIds.forEach(id => formData.append('user_id[]', id));
 
         $.ajax({
-            url: $('#update-form').attr('action'),
+            url: $(form).attr('action'),
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             dataType: 'json',
-            success: function (res) {
+            success: function(res) {
                 showAlert(res.message, res.success ? 'primary' : 'danger', 'subassignee-alert-container');
                 if (res.success) {
                     $('#add-sub-assignee-modal').modal('hide');
                     setTimeout(() => location.reload(), 1000);
                 }
             },
-            error: function () {
-                alert('Something went wrong while updating sub-assignees.');
+            error: function() {
+                showAlert('Failed to add sub-assignees.', 'danger', 'subassignee-alert-container');
+            }
+        });
+    });
+
+    $('.remove-sub-assignee-btn').on('click', function () {
+        var projectId = $(this).data('id');
+        $('#removeProjectId').val(projectId);
+
+        // clear old options
+        $('#removeMultiSelect').empty();
+
+        // fetch current sub-assignees via AJAX
+        $.ajax({
+            url: $('#remove-sub-assignee-form').attr('action'),
+            type: 'GET',
+            data: { action: 'get_sub_assignees', project_id: projectId },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    res.data.forEach(function (user) {
+                        $('#removeMultiSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
+                    });
+
+                    $('#removeMultiSelect').select2({
+                        placeholder: "Select sub-assignees to remove",
+                        width: '100%',
+                        allowClear: true,
+                        closeOnSelect: false,
+                        dropdownParent: $('#remove-sub-assignee-modal')
+                    });
+
+                    $('#remove-sub-assignee-modal').modal('show');
+                } else {
+                    showAlert(res.message, 'danger', 'remove-alert-container');
+                }
+            }
+        });
+    });
+
+    $('#remove-sub-assignee').on('click', function () {
+        var form = $('#remove-sub-assignee-form')[0];
+        $.ajax({
+            url: $(form).attr('action'),
+            type: 'POST',
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'remove-alert-container');
+                if (res.success) {
+                    $('#remove-sub-assignee-modal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
+                }
             }
         });
     });
