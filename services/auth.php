@@ -12,36 +12,43 @@ $param = array(':Email' => $email);
 $user = $pm->run("SELECT * FROM users WHERE email = :Email", $param, true);
 
 if ($user != null) {
-
+    // Check status first
     if ($user['status'] !== 'confirmed') {
-        if(password_verify($password, $user['password'])){
+        if (password_verify($password, $user['password'])) {
             echo json_encode([
                 "success" => false,
                 "message" => "pending"
             ]);
-            exit; // stop here! no redirect
+            exit;
         }
     }
 
-
-    $correct = password_verify($password, $user['password']);
-    if ($correct) {
-
+    // Verify password
+    if (password_verify($password, $user['password'])) {
+        // Set session
         $sm->setAttribute("userId", $user['id']);
         $sm->setAttribute("fullName", $user['full_name']);
         $sm->setAttribute("userName", $user['user_name']);
         $sm->setAttribute("role", $user['role']);
         $sm->setAttribute("userPhoto", $user['photo']);
 
-        header('location: ../index.php');
-        echo 'Login confirmed';
+        echo json_encode([
+            "success" => true,
+            "redirect" => "../../index.php"
+        ]);
         exit;
     } else {
-        $sm->setAttribute("error", 'Invalid username or password!');
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid username or password!"
+        ]);
+        exit;
     }
 } else {
-    $sm->setAttribute("error", 'Invalid username or password!');
+    echo json_encode([
+        "success" => false,
+        "message" => "Invalid username or password!"
+    ]);
+    exit;
 }
-header("Location: " . $_SERVER['HTTP_REFERER']);
 
-exit;

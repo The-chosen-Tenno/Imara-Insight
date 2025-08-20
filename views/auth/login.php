@@ -65,7 +65,7 @@ require_once('../../config.php');
         <div id="pending-message" class="card text-center" style="display: none;">
             <div class="card-body">
                 <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
-                <h4 class="mb-2">Access Denied</h4>
+                <h4 class="mb-2">Adfkljwbfiuegy</h4>
                 <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
             </div>
             <div class="mb-3">
