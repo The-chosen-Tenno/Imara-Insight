@@ -240,7 +240,7 @@ if (!isset($permission)) dd('Access Denied...!');
         });
 
         $('#datePicker').val(getFormattedDate(new Date()));
-
+///sakdjaksldjalkgit
         function getFormattedDate(date) {
             var year = date.getFullYear();
             var month = (date.getMonth() + 1).toString().padStart(2, '0');
