@@ -163,20 +163,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
+        $project_status = $_POST['status'] ?? 'in_progress'; // ✅ default fallback
 
         $logsModel = new Logs();
-        $created = $logsModel->createProject($user_id, $project_name);
-        if ($created) {
+        $projectCreated = $logsModel->createProject($user_id, $project_name, $project_status);
+
+        if ($projectCreated) {
+            $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
+
+            // Optional image upload
+            $titles = $_POST['project_images_title'] ?? [];
+            $descriptions = $_POST['project_images_description'] ?? [];
+            $uploadedData = [];
+
+            if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
+                $uploadDir = __DIR__ . '/../uploads/projects/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
+                    $tmpName = $_FILES['project_images']['tmp_name'][$i];
+                    $originalName = basename($_FILES['project_images']['name'][$i]);
+                    $fileName = uniqid() . '_' . $originalName;
+                    $targetFilePath = $uploadDir . $fileName;
+
+                    $fileType = mime_content_type($tmpName);
+                    if (strpos($fileType, 'image') === false) continue;
+
+                    if (move_uploaded_file($tmpName, $targetFilePath)) {
+                        $uploadedData[] = [
+                            'file' => $fileName,
+                            'title' => $titles[$i] ?? '',
+                            'description' => $descriptions[$i] ?? ''
+                        ];
+                    }
+                }
+
+                if (!empty($uploadedData)) {
+                    $projectImageModel = new ProjectImageModel();
+                    $projectImageModel->saveProjectImages($project_id, $uploadedData);
+                }
+            }
+
             echo json_encode(['success' => true, 'message' => "New project created successfully"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Some error occurred']);
+            echo json_encode(['success' => false, 'message' => 'Some error occurred while creating project']);
         }
     } catch (PDOException $e) {
-        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
+
+
 
 // Get project by ID
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['action']) && $_GET['action'] == 'get_project') {

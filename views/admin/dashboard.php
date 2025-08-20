@@ -104,7 +104,27 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                     value="create_project">
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
+                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
+                                <option value="idle">Idle</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="finished">Finished</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="projectImages" class="form-label">Upload Project Images</label>
+                            <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                        </div>
+                        
                     </div>
+                    
+
+                    <!-- Project Image Upload Fields -->
+
                     <div class="mb-3 mt-3">
                         <div id="alert-container"></div>
                     </div>
