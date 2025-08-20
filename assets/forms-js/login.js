@@ -71,6 +71,13 @@ $(document).ready(function () {
         });
     });
 
+    $(document).ready(function () {
+    $("#contact-hr").on("click", function () {
+        window.location.href = "mailto:hr@gmail.com?subject=Account Pending Approval&body=Hello HR,%0D%0A%0D%0AMy account is pending approval. Please review.%0D%0A%0D%0AThank you.";
+    });
+});
+
+
     // Back to login button
     $("#back-home").on("click", function () {
         $("#pending-message").hide();
