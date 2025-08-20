@@ -16,31 +16,19 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
 }
 
 ?>
-<!-- Content wrapper -->
+
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-        <!-- Project Logs -->
         <h4 class="fw-bold py-3 mb-4">
             My Projects
             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-project">
                 Add Project
             </button>
         </h4>
-
-        <!-- Search -->
-        <div class="row m-3">
-            <div class="col-6">
-                <div class="d-flex align-items-center m-3">
-                    <i class="bx bx-search fs-4 lh-0"></i>
-                    <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Projects Table -->
         <div class="card">
+            <h5 class="card-header"></h5>
             <div class="table-responsive text-nowrap">
-                <table class="table">
+                <table class="table projectTable">
                     <thead>
                         <tr>
                             <th>Project</th>
@@ -65,13 +53,13 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                         <span class="badge bg-danger"><?= $LD['status'] ?></span>
                                     <?php endif; ?>
                                 </td>
-                                                            <td>
-                                <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
-                                    class="btn rounded-pill btn-outline-primary"
-                                    target="_blank">
-                                    Show
-                                </a>
-                            </td>
+                                <td>
+                                    <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
+                                        class="btn rounded-pill btn-outline-primary"
+                                        target="_blank">
+                                        Show
+                                    </a>
+                                </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
                                     <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
@@ -82,7 +70,6 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                 </table>
             </div>
         </div>
-
     </div>
 </div>
 
