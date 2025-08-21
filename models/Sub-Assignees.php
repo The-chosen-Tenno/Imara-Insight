@@ -90,5 +90,10 @@ public function removeFromProject($project_id, array $user_ids)
     return $result !== false;
 }
 
+    public function getByUserId($userId)
+    {
+        $param = array(':user_id' => $userId);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE sub_assignee_id = :user_id", $param);
+    }
 
 }

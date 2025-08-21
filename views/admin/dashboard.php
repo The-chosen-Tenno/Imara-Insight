@@ -6,19 +6,18 @@ include BASE_PATH . '/models/Sub-Assignees.php';
 
 $projectLogs = new Logs();
 $logsData = $projectLogs->getByUserId($userId);
-
 $userDetails = new User();
 $loginUserDetails = $userDetails->getById($userId);
 $UserData = $userDetails->getAll();
-
 $sub_assignee_details = new SubAssignee();
+$subAssignedProjects = $sub_assignee_details->getByUserId($userId);
+
 
 
 if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) {
     dd('Access Denied...');
 }
 ?>
-
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">
@@ -99,7 +98,59 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
         </div>
     </div>
 </div>
-
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">Sub-Assigned Projects</h4>
+        <div class="card">
+            <div class="table-responsive text-nowrap">
+                <table class="table projectTable">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Main Assignee</th>
+                            <th>Status</th>
+                            <th>Photos</th>
+                            <th>Last Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($subAssignedProjects as $SAP):
+                            $project = $projectLogs->getById($SAP['project_id']);
+                            $sub_assignees = $sub_assignee_details->getAllByProjectId($project['id']);
+                        ?>
+                        <tr>
+                            <td><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php if ($project['status'] === 'finished'): ?>
+                                    <span class="badge bg-success"><?= htmlspecialchars($project['status']) ?></span>
+                                <?php elseif ($project['status'] === 'in_progress'): ?>
+                                    <span class="badge bg-primary">In Progress</span>
+                                <?php elseif ($project['status'] === 'idle'): ?>
+                                    <span class="badge bg-dark"><?= htmlspecialchars($project['status']) ?></span>
+                                <?php elseif ($project['status'] === 'cancelled'): ?>
+                                    <span class="badge bg-danger"><?= htmlspecialchars($project['status']) ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn rounded-pill btn-outline-primary" target="_blank">
+                                    Show
+                                </a>
+                            </td>
+                            <td><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- ADD PROJECT MODAL -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
