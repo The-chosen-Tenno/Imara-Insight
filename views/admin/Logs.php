@@ -60,6 +60,16 @@ if (!isset($permission)) dd('Access Denied...!');
                                 </div>
                             </td>
                             <td>
+                            <td>
+                                <div class="overflow-auto" style="max-height:70px;">
+                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                        <span class="badge bg-secondary d-block mb-1">
+                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </td>
+                            <td>
                                 <?php if ($LD['status'] == 'finished'): ?>
                                     <span class="badge bg-success"><?= $LD['status'] ?? '' ?></span>
                                 <?php elseif ($LD['status'] == 'in_progress'): ?>

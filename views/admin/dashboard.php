@@ -13,10 +13,10 @@ $UserData = $userDetails->getAll();
 
 $sub_assignee_details = new SubAssignee();
 
+
 if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) {
     dd('Access Denied...');
 }
-
 ?>
 
 <div class="content-wrapper">
@@ -34,6 +34,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     <thead>
                         <tr>
                             <th>Project</th>
+                            <th>Sub-Assignee</th>
                             <th>Status</th>
                             <th>Photos</th>
                             <th>Last Update</th>
@@ -41,112 +42,110 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($logsData as $LD) { ?>
+                        <?php
+                        $user_names = [];
+                        foreach ($UserData as $user) {
+                            $user_names[$user['id']] = $user['full_name'];
+                        }
+                        foreach ($logsData as $LD):
+                            $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
+                        ?>
                             <tr>
                                 <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                                 <td>
-                                    <?php if ($LD['status'] == 'finished'): ?>
-                                        <span class="badge bg-success"><?= $LD['status'] ?></span>
-                                    <?php elseif ($LD['status'] == 'in_progress'): ?>
+                                    <div class="overflow-auto" style="max-height:70px;">
+                                        <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                            <span class="badge bg-secondary d-block mb-1">
+                                                <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                            </span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php if ($LD['status'] === 'finished'): ?>
+                                        <span class="badge bg-success"><?= htmlspecialchars($LD['status']) ?></span>
+                                    <?php elseif ($LD['status'] === 'in_progress'): ?>
                                         <span class="badge bg-primary">In Progress</span>
-                                    <?php elseif ($LD['status'] == 'idle'): ?>
-                                        <span class="badge bg-dark"><?= $LD['status'] ?></span>
-                                    <?php elseif ($LD['status'] == 'cancelled'): ?>
-                                        <span class="badge bg-danger"><?= $LD['status'] ?></span>
+                                    <?php elseif ($LD['status'] === 'idle'): ?>
+                                        <span class="badge bg-dark"><?= htmlspecialchars($LD['status']) ?></span>
+                                    <?php elseif ($LD['status'] === 'cancelled'): ?>
+                                        <span class="badge bg-danger"><?= htmlspecialchars($LD['status']) ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
-                                        class="btn rounded-pill btn-outline-primary"
-                                        target="_blank">
+                                    <a href="../ProjectDetails.php?id=<?= (int) $LD['id']; ?>"
+                                        class="btn rounded-pill btn-outline-primary" target="_blank">
                                         Show
                                     </a>
                                 </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
-                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>">
+                                    <a class="edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int) $LD['id']; ?>">
                                         <i class="bx bx-edit-alt me-1"></i>
+                                    </a>
+                                    <a class="add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
+                                        <i class="bx bx-user-plus"></i>
+                                    </a>
+                                    <a class="remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
+                                        <i class="bx bx-user-minus"></i>
                                     </a>
                                 </td>
                             </tr>
-                        <?php } ?>
+                        <?php endforeach; ?>
                     </tbody>
+
                 </table>
             </div>
         </div>
     </div>
 </div>
 
+<!-- ADD PROJECT MODAL -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form id="create-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+            <form id="create-form" method="POST" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Add Project</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h5 class="modal-title">Add Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="mb-3">
-                            <label class="form-label" for="basic-default-password1">Project Name</label>
-                            <div class="input-group">
-                                <input
-                                    class="form-control"
-                                    type="text"
-                                    value=""
-                                    placeholder="Enter the Project Name"
-                                    id="project_name"
-                                    name="project_name" />
-                                <input type="text" name="user_id" value="<?= $loginUserDetails['id'] ?>" hidden />
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="create_project">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
-                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
-                                <option value="idle">Idle</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="finished">Finished</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="projectImagesTitle" class="form-label">Project Image Title</label>
-                            <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
-                        </div>
-                        <div class="row">
-                            <div class="mb-3">
-                                <label for="projectImagesDescription" class="form-label">Project Images Description</label>
-                                <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="projectImages" class="form-label">Upload Project Images</label>
-                                <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
-                            </div>
-
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Project Name</label>
+                        <input class="form-control" type="text" placeholder="Enter the Project Name" id="project_name" name="project_name" required />
+                        <input type="hidden" name="user_id" value="<?= (int) $loginUserDetails['id'] ?>">
+                        <input type="hidden" name="action" value="create_project">
                     </div>
 
-                    <div class="mb-3 mt-3">
-                        <div id="alert-container"></div>
+                    <div class="mb-3">
+                        <label class="form-label">Project Status</label>
+                        <select class="form-select" id="ProjectStatusCreate" name="status" required>
+                            <option value="idle">Idle</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="finished">Finished</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
                     </div>
-                    <div class="mb-3 mt-3">
-                        <div id="additional-fields">
-                        </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Image Title</label>
+                        <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Images Description</label>
+                        <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Upload Project Images</label>
+                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                    </div>
+
+                    <div id="create-alert-container" class="mt-3"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
                 </div>
             </form>
@@ -154,94 +153,115 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
     </div>
 </div>
 
+<!-- EDIT PROJECT MODAL -->
 <div class="modal fade" id="edit-project-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+            <form id="update-form" method="POST" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Update Project</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h5 class="modal-title">Update Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row gy-2 mb-3">
-                        <div class="col form-password-toggle">
-                            <label class="form-label">Project Name</label>
-                            <div class="input-group">
-                                <input
-                                    type="text"
-                                    name="project_name"
-                                    required
-                                    class="form-control"
-                                    id="ProjectName"
-                                    placeholder="Project Name" />
-                                <input
-                                    type="hidden"
-                                    name="project_id"
-                                    required
-                                    id="ProjectId" />
-                                <input
-                                    type="hidden"
-                                    name="user_id"
-                                    required
-                                    id="UserID" />
-                                <input
-                                    type="hidden"
-                                    name="action"
-                                    value="update_project_user" />
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Project Name</label>
+                        <input type="text" name="project_name" required class="form-control" id="ProjectName" placeholder="Project Name" />
+                        <input type="hidden" name="project_id" id="ProjectId" required />
+                        <input type="hidden" name="user_id" id="UserID" required />
+                        <input type="hidden" name="action" value="update_project_user" />
                     </div>
-                    <div class="row ">
-                        <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
-                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
-                                <option value="idle">Idle</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="finished">Finished</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-3">
-                            <label for="projectImagesTitle" class="form-label">Project Image Title</label>
-                            <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
-                        </div>
-                        <div class="row">
-                            <div class="mb-3">
-                                <label for="projectImagesDescription" class="form-label">Project Images Description</label>
-                                <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
-                            </div>
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label for="projectImages" class="form-label">Project Images</label>
-                                    <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
-                                    <div class="mb-3 mt-3">
-                                        <div id="alert-container"></div>
-                                    </div>
-                                    <div class="mb-3 mt-3">
-                                        <div id="additional-fields">
 
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
-                                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Project Status</label>
+                        <select class="form-select" id="ProjectStatusUpdate" name="status" required>
+                            <option value="idle">Idle</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="finished">Finished</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Image Title</label>
+                        <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Images Description</label>
+                        <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Project Images</label>
+                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                    </div>
+
+                    <div id="update-alert-container" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary ms-2" id="update-project">Update</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- ADD SUB-ASSIGNEE MODAL -->
+<div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="add-sub-assignee-form" method="POST" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Sub-assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="add_sub_assignee">
+                    <input type="hidden" name="project_id" id="AddSubAssigneeProjectId">
 
-<?php
-require_once('../layouts/footer.php');
-?>
-<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
+                    <div class="mb-3">
+                        <label class="form-label">Project Members</label>
+                        <select id="multiSelect" name="user_id[]" multiple="multiple" style="width:100%;"></select>
+                    </div>
+
+                    <div id="add-sub-alert-container" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary ms-2" id="add-sub-assignee">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- REMOVE SUB-ASSIGNEE MODAL -->
+<div class="modal fade" id="remove-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="remove-sub-assignee-form" method="POST" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Sub-assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="project_id" id="removeProjectId">
+                    <input type="hidden" name="action" value="remove_sub_assignee">
+
+                    <label class="form-label">Assigned Sub-assignees</label>
+                    <select id="removeMultiSelect" name="user_id[]" multiple="multiple" style="width:100%;"></select>
+
+                    <div id="remove-alert-container" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="remove-sub-assignee">Remove</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once('../layouts/footer.php'); ?>
+<script src="<?= asset('assets/forms-js/dashboard.js') ?>"></script>
