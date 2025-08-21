@@ -29,7 +29,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#update-form').attr('action'),
             type: 'GET',
-            data: { project_id: id, action: 'get_project' },
+            data: {
+                project_id: id,
+                action: 'get_project'
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -124,7 +127,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#add-sub-assignee').on('click', function() {
+    $('#add-sub-assignee').on('click', function () {
         var form = $('#add-sub-assignee-form')[0];
         var projectId = $('#add-sub-assignee-modal').data('project-id');
         var userIds = $('#multiSelect').val();
@@ -146,14 +149,14 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             dataType: 'json',
-            success: function(res) {
+            success: function (res) {
                 showAlert(res.message, res.success ? 'primary' : 'danger', 'subassignee-alert-container');
                 if (res.success) {
                     $('#add-sub-assignee-modal').modal('hide');
                     setTimeout(() => location.reload(), 1000);
                 }
             },
-            error: function() {
+            error: function () {
                 showAlert('Failed to add sub-assignees.', 'danger', 'subassignee-alert-container');
             }
         });
@@ -170,7 +173,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#remove-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_sub_assignees', project_id: projectId },
+            data: {
+                action: 'get_sub_assignees',
+                project_id: projectId
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -212,4 +218,5 @@ $(document).ready(function () {
             }
         });
     });
+
 });
