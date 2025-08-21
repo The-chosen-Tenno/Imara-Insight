@@ -28,8 +28,6 @@ $data = $userModel->getAll();
             </div>
         </div>
     </div>
-
-    <!-- Basic Bootstrap Table -->
     <div class="card">
         <div class="m-4">
             <div id="delete-alert-container"></div>
@@ -42,7 +40,6 @@ $data = $userModel->getAll();
                         <th>User Name</th>
                         <th>Full Name</th>
                         <th>Email</th>
-                        <th>Role</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -57,13 +54,6 @@ $data = $userModel->getAll();
                             <td><strong><?= htmlspecialchars($user['UserName'] ?? $user['user_name'] ?? '') ?></strong></td>
                             <td><?= htmlspecialchars($user['FulltName'] ?? $user['full_name'] ?? '') ?></td>
                             <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>
-                            <td>
-                                <?php if ($permission === 'admin'): ?>
-                                    <span class="text-capitalize"><?= htmlspecialchars($userRole) ?></span>
-                                <?php else: ?>
-                                    <span class="text-muted">Restricted</span>
-                                <?php endif; ?>
-                            </td>
                         </tr>
                     <?php endforeach; ?>
 

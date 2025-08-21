@@ -1,41 +1,50 @@
 <?php
-
 require_once 'BaseModel.php';
 
 class ProjectImageModel extends BaseModel
 {
-
-    public $ProjectID;
-    public $file_path;
-
     protected function getTableName()
     {
         return "project_images";
     }
 
-    protected function addNewRec() {}
-    protected function updateRec() {}
-    public function saveProjectImages(int $projectId, array $imagesData)
+    // REQUIRED: empty methods to satisfy BaseModel
+    protected function addNewRec()
     {
-        $sql = "INSERT INTO project_images (project_id, file_path, title, description) 
-            VALUES (:project_id, :file_path, :title, :description)";
-
-        foreach ($imagesData as $img) {
-            $params = [
-                ':project_id' => $projectId,
-                ':file_path'  => $img['file'],
-                ':title'      => $img['title'] ?? '',
-                ':description' => $img['description'] ?? ''
-            ];
-            $this->pm->run($sql, $params);
-        }
+        // Not used here
+        return false;
     }
 
-    function getImagebyProjectId($project_id)
+    protected function updateRec()
     {
-        $sql = "SELECT * FROM project_images WHERE project_id = :project_id";
+        // Not used here
+        return false;
+    }
+
+    public function saveProjectImages($project_id, $images)
+    {
+        foreach ($images as $img) {
+            $params = [
+                ':project_id' => $project_id,
+                ':title' => $img['title'],
+                ':description' => $img['description'],
+                ':file_path' => $img['file'],
+            ];
+
+            $this->pm->run(
+                "INSERT INTO " . $this->getTableName() . " 
+                 (project_id, title, description, file_path) 
+                 VALUES (:project_id, :title, :description, :file_path)",
+                $params
+            );
+        }
+        return true;
+    }
+
+    public function getImagebyProjectId($project_id)
+    {
         $params = [':project_id' => $project_id];
-        return $this->pm->run($sql, $params);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE project_id = :project_id", $params);
     }
 
     function getAll()

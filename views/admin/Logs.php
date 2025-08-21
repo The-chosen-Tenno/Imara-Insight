@@ -20,18 +20,10 @@ if (!isset($permission)) dd('Access Denied...!');
             </button>
         <?php } ?>
     </h4>
-    <div class="row m-3">
-        <div class="col-6">
-            <div class="d-flex align-items-center m-3">
-                <i class="bx bx-search fs-4 lh-0"></i>
-                <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" aria-label="Search..." />
-            </div>
-        </div>
-    </div>
     <div class="card">
         <h5 class="card-header"></h5>
         <div class="table-responsive text-nowrap">
-            <table class="table">
+            <table class="table projectTable">
                 <thead>
                     <tr>
                         <th>Assigned To</th>
@@ -229,68 +221,30 @@ if (!isset($permission)) dd('Access Denied...!');
 </div>
 
 <div class="modal fade" id="remove-sub-assignee-modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <form id="remove-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h5 class="modal-title">Remove Sub-assignee</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="remove-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Sub-assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="project_id" id="removeProjectId">
+                    <label class="form-label">Assigned Sub-assignees</label>
+                    <select id="removeMultiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
+                        <!-- Options filled by JS -->
+                    </select>
+                    <input type="hidden" name="action" value="remove_sub_assignee">
+                    <div id="remove-alert-container" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="remove-sub-assignee">Remove</button>
+                </div>
+            </form>
         </div>
-        <div class="modal-body">
-          <input type="hidden" name="project_id" id="removeProjectId">
-          <label class="form-label">Assigned Sub-assignees</label>
-          <select id="removeMultiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
-            <!-- Options filled by JS -->
-          </select>
-          <input type="hidden" name="action" value="remove_sub_assignee">
-          <div id="remove-alert-container" class="mt-3"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger" id="remove-sub-assignee">Remove</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
 <?php require_once('../layouts/footer.php'); ?>
-
-<script>
-    $(document).ready(function() {
-        $("#searchInput").on("input", function() {
-            var searchTerm = $(this).val().toLowerCase();
-            $("tbody tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
-            });
-        });
-
-        $('#datePicker').val(getFormattedDate(new Date()));
-
-        function getFormattedDate(date) {
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0');
-            var day = date.getDate().toString().padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function filterAppointmentsByDate(selectedDate) {
-            $('tbody tr').each(function() {
-                var appointmentDate = $(this).find('.appointment_date').text().trim();
-                $(this).toggle(appointmentDate === selectedDate);
-            });
-        }
-
-        $('#clear').on('click', function() {
-            location.reload();
-        });
-
-        $('#datePicker').on('change', function() {
-            var selectedDate = $(this).val();
-            alert(selectedDate);
-            filterAppointmentsByDate(selectedDate);
-        });
-    });
-</script>
-
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>

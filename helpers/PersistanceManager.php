@@ -15,9 +15,6 @@ class PersistanceManager
             $this->pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USERNAME, DB_PASSWORD);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-            // Create a tables if it doesn't exist
-        //     $this->createTables();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -38,7 +35,6 @@ class PersistanceManager
             else
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
             $stmt->closeCursor();
             return $result;
         } catch (PDOException $e) {
@@ -46,13 +42,18 @@ class PersistanceManager
             return -1;
         }
     }
-    
+
     public function run($query, $param = null, $fetchFirstRecOnly = false)
     {
         return $this->executeQuery($query, $param, $fetchFirstRecOnly);
     }
 
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
+    }
 }
+
     
 
     // public function createTables()

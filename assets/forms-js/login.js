@@ -1,69 +1,17 @@
 $(document).ready(function () {
-    $('#login').on('click', function () {
-        var form = $('#formAuthentication')[0]; // Get the form element
+    $("#formAuthentication").on("submit", function (event) {
+        event.preventDefault(); // stop normal form submit
 
-        if (!form) {
-            console.log('Fill ..');
-            return;
-        } else {
-            var url = $('#formAuthentication').attr('action');
-            if (form.checkValidity()) { // Only submit if the form is valid
-                var formData = new FormData(form); // Prepare form data
-
-                $.ajax({
-                    url: url, // Target URL (ajax_functions.php)
-                    type: 'POST',
-                    data: formData,
-                    contentType: false, // Don't set content type
-                    processData: false, // Don't process the data
-                    dataType: 'json', // Expect JSON response
-                    success: function (response) {
-                        showAlert(response.message, response.success ? 'primary' : 'danger');
-                        if (response.success) {
-                            setTimeout(function () {
-                                location.reload(); // Reload page after 1 second
-                            }, 5000);
-                        }
-                         else if (response.message === 'pending') {
-                        // Pending approval
-                        $('.authentication-inner').hide();
-                        $('#pending-message').show();
-
-                         }else {
-                        // Show error under password field
-                            $("#password-error").after(
-                        '<span class="error-message" style="color: red;">' + response.message + '</span>'
-                        );
-                    }
-                    },
-                    error: function (error) {
-                        // Handle any errors in the request
-                        console.error('Error submitting the form:', error);
-                        showAlert('Something went wrong..!', 'danger');
-                    },
-                    complete: function (response) {
-                        console.log('Request complete:', response); // Log the request completion
-                    }
-                });
-            } else {
-                form.reportValidity(); // Show form validation errors if invalid
-            }
-        }
-    });
-
-    $("#formAuthentication").on("submit", function(event) {
-        // Prevent form from submitting
-        event.preventDefault();
-
-        // Clear previous error messages
+        // Clear old error messages
         $(".error-message").remove();
 
-        // Get form values
+        const form = this;
+        const url = $(form).attr("action");
         const email = $("#email").val().trim();
         const password = $("#password").val().trim();
         let isValid = true;
 
-        // Email validation
+        // --- Validation ---
         if (email === "") {
             $("#email").after('<span class="error-message" style="color: red;">Type Email!</span>');
             isValid = false;
@@ -75,16 +23,64 @@ $(document).ready(function () {
             }
         }
 
-            // Password validation
-            if (password === "") {
-                $("#password-error").after('<span class="error-message" style="color: red;">Enter Password!</span>');
-                isValid = false;
-            }
+        if (password === "") {
+            $("#password-error").after('<span class="error-message" style="color: red;">Enter Password!</span>');
+            isValid = false;
+        }
 
-            // If all validations pass, submit the form
-            if (isValid) {
-                // Now, submit the form
-                this.submit();
+        if (!isValid) {
+            return; // stop here if validation failed
+        }
+
+        // --- Submit via AJAX ---
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    // success → redirect
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                    } else {
+                        location.reload(); // fallback
+                    }
+                } else if (response.message === "pending") {
+                    // pending → show block message
+                    $(".authentication-inner").hide();
+                    $("#pending-message").show();
+                } else {
+                    // invalid login
+                    $("#password-error").after(
+                        '<span class="error-message" style="color: red;">' + response.message + "</span>"
+                    );
+                }
+            },
+            error: function (error) {
+                console.error("Error submitting the form:", error);
+                alert("Something went wrong. Please try again.");
+            },
+            complete: function (response) {
+                console.log("Request complete:", response);
             }
         });
     });
+
+    $(document).ready(function () {
+    $("#contact-hr").on("click", function () {
+        window.location.href = "mailto:hr@gmail.com?subject=Account Pending Approval&body=Hello HR,%0D%0A%0D%0AMy account is pending approval. Please review.%0D%0A%0D%0AThank you.";
+    });
+});
+
+
+    // Back to login button
+    $("#back-home").on("click", function () {
+        $("#pending-message").hide();
+        $(".authentication-inner").show();
+    });
+});

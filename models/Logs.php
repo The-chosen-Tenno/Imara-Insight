@@ -9,7 +9,6 @@ class Logs extends BaseModel
     public $ProjectStatus;
     public $LastUpdated;
 
-
     protected function getTableName()
     {
         return "projects";
@@ -20,10 +19,11 @@ class Logs extends BaseModel
         $param = array(
             ':user_id' => $this->UserID,
             ':project_name' => $this->ProjectName,
+            ':status' => $this->ProjectStatus, // ✅ fixed
         );
         return $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . "(user_id, project_name) 
-                                VALUES(:user_id, :project_name)",
+            "INSERT INTO " . $this->getTableName() . " (user_id, project_name, status) 
+             VALUES (:user_id, :project_name, :status)",
             $param
         );
     }
@@ -32,26 +32,26 @@ class Logs extends BaseModel
     {
         $param = array(
             ':project_id' => $this->ProjectID,
-            // ':user_id' => $this->UserID,
             ':project_name' => $this->ProjectName,
-            ':project_status' => $this->ProjectStatus,
+            ':status' => $this->ProjectStatus, // ✅ fixed
         );
 
         return $this->pm->run(
             "UPDATE " . $this->getTableName() . " 
-             SET project_name = :project_name, status = :project_status
+             SET project_name = :project_name, status = :status
              WHERE id = :project_id",
             $param
         );
     }
 
-
-    function createProject($user_id, $project_name)
+    function createProject($user_id, $project_name, $status = 'in_progress') // ✅ fixed signature
     {
         $LogModel = new Logs();
         $LogModel->UserID = $user_id;
         $LogModel->ProjectName = $project_name;
+        $LogModel->ProjectStatus = $status;
         $LogModel->addNewRec();
+
         return $LogModel ? true : false;
     }
 
@@ -64,11 +64,7 @@ class Logs extends BaseModel
         $project->ProjectStatus = $status;
         $project->updateRec();
 
-        if ($project) {
-            return $project;
-        } else {
-            return false;
-        }
+        return $project ?: false;
     }
 
     public function getProjectById($project_id)
@@ -86,7 +82,12 @@ class Logs extends BaseModel
     public function deleteRec($id)
     {
         $param = array(':id' => $id);
-        return $this->pm->run("DELETE FROM " . $this->getTableName() . " WHERE BorrowedBookID = :id", $param);
+        return $this->pm->run("DELETE FROM " . $this->getTableName() . " WHERE id = :id", $param);
+    }
+
+    public function getLastInsertId()
+    {
+        return $this->pm->lastInsertId();
     }
     public function getCompleted()
 {

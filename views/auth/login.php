@@ -61,18 +61,22 @@ require_once('../../config.php');
                 </div>
             <!-- /Register -->
         </div>
-    </div>
-        <div id="pending-message" class="card text-center" style="display: none;">
-            <div class="card-body">
-                <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
-                <h4 class="mb-2">Access Denied</h4>
-                <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
-            </div>
-            <div class="mb-3">
-                <button type="button" id="back-home" class="btn btn-primary btn-sm">Back To The Login</button>
-            </div>
+</div>
+    <div id="pending-message" class="card text-center" style="display: none;">
+        <div class="card-body">
+            <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
+            <h4 class="mb-2 text-danger">Your Account is on Pending</h4>
+            <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
         </div>
-    </div>        
+        <div class="mb-3 d-flex justify-content-center gap-2">
+            <button type="button" id="back-home" class="btn btn-primary btn-sm">Back To The Login</button>
+            <button type="button" id="contact-hr" class="btn btn-primary btn-sm">Contact HR</button>
+        </div>
+    </div>
+</div>
+
+</div>
+       
 </div>
 <!-- / Content -->
 

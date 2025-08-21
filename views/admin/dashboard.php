@@ -16,31 +16,19 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
 }
 
 ?>
-<!-- Content wrapper -->
+
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-        <!-- Project Logs -->
         <h4 class="fw-bold py-3 mb-4">
             My Projects
             <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-project">
                 Add Project
             </button>
         </h4>
-
-        <!-- Search -->
-        <div class="row m-3">
-            <div class="col-6">
-                <div class="d-flex align-items-center m-3">
-                    <i class="bx bx-search fs-4 lh-0"></i>
-                    <input type="text" id="searchInput" class="form-control border-0 shadow-none" placeholder="Search" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Projects Table -->
         <div class="card">
+            <h5 class="card-header"></h5>
             <div class="table-responsive text-nowrap">
-                <table class="table">
+                <table class="table projectTable">
                     <thead>
                         <tr>
                             <th>Project</th>
@@ -65,13 +53,13 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                         <span class="badge bg-danger"><?= $LD['status'] ?></span>
                                     <?php endif; ?>
                                 </td>
-                                                            <td>
-                                <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
-                                    class="btn rounded-pill btn-outline-primary"
-                                    target="_blank">
-                                    Show
-                                </a>
-                            </td>
+                                <td>
+                                    <a href="../ProjectDetails.php?id=<?= $LD['id']; ?>"
+                                        class="btn rounded-pill btn-outline-primary"
+                                        target="_blank">
+                                        Show
+                                    </a>
+                                </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
                                     <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
@@ -82,7 +70,6 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                 </table>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -117,21 +104,49 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                     value="create_project">
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div id="alert-container"></div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div id="additional-fields">
+
+                        <div class="mb-3">
+                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
+                            <select class="form-select" id="ProjectStatus" aria-label="Default select example" name="status" required>
+                                <option value="idle">Idle</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="finished">Finished</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectImagesTitle" class="form-label">Project Image Title</label>
+                            <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
+                        </div>
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="projectImagesDescription" class="form-label">Project Images Description</label>
+                                <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="projectImages" class="form-label">Upload Project Images</label>
+                                <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                            </div>
+
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
-                </div>
+
+                        <!-- Project Image Upload Fields -->
+
+                        <div class="mb-3 mt-3">
+                            <div id="alert-container"></div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <div id="additional-fields">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
+                    </div>
             </form>
         </div>
     </div>

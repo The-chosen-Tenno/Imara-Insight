@@ -1,11 +1,4 @@
 $(document).ready(function () {
-    $("#searchInput").on("input", function () {
-        var term = $(this).val().toLowerCase();
-        $("tbody tr").each(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(term) > -1);
-        });
-    });
-
     $('#create-project').on('click', function () {
         var form = $('#create-form')[0];
         if (!form.checkValidity() || !form.reportValidity())
