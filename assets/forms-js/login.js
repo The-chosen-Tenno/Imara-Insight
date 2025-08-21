@@ -1,86 +1,54 @@
 $(document).ready(function () {
-    $("#formAuthentication").on("submit", function (event) {
-        event.preventDefault(); // stop normal form submit
+    $('#formAuthentication').on('submit', function (e) {
+        e.preventDefault();
 
-        // Clear old error messages
-        $(".error-message").remove();
+        let email = $('#email').val().trim();
+        let password = $('#password').val().trim();
+        let error = false;
 
-        const form = this;
-        const url = $(form).attr("action");
-        const email = $("#email").val().trim();
-        const password = $("#password").val().trim();
-        let isValid = true;
+        $('#password-error').text('');
 
-        // --- Validation ---
-        if (email === "") {
-            $("#email").after('<span class="error-message" style="color: red;">Type Email!</span>');
-            isValid = false;
-        } else {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                $("#email").after('<span class="error-message" style="color: red;">Enter a valid Email!</span>');
-                isValid = false;
-            }
+        // Basic validation
+        if (!email || !password) {
+            $('#password-error').text('Please enter both email and password.');
+            error = true;
         }
 
-        if (password === "") {
-            $("#password-error").after('<span class="error-message" style="color: red;">Enter Password!</span>');
-            isValid = false;
-        }
-
-        if (!isValid) {
-            return; // stop here if validation failed
-        }
-
-        // --- Submit via AJAX ---
-        var formData = new FormData(form);
+        if (error) return;
 
         $.ajax({
-            url: url,
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: "json",
-            success: function (response) {
-                if (response.success) {
-                    // success → redirect
-                    if (response.redirect) {
-                        window.location.href = response.redirect;
-                    } else {
-                        location.reload(); // fallback
-                    }
-                } else if (response.message === "pending") {
-                    // pending → show block message
-                    $(".authentication-inner").hide();
-                    $("#pending-message").show();
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: { Email: email, Password: password },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    window.location.href = res.redirect;
                 } else {
-                    // invalid login
-                    $("#password-error").after(
-                        '<span class="error-message" style="color: red;">' + response.message + "</span>"
-                    );
+                    if (res.message === 'pending') {
+                        $('#login-card').fadeOut(200, function() {
+                            $('#pending-card').fadeIn(200);
+                        });
+                    } else {
+                        $('#password-error').text(res.message);
+                    }
                 }
             },
-            error: function (error) {
-                console.error("Error submitting the form:", error);
-                alert("Something went wrong. Please try again.");
-            },
-            complete: function (response) {
-                console.log("Request complete:", response);
+            error: function () {
+                $('#password-error').text('Something went wrong. Try again.');
             }
         });
     });
 
-    $(document).ready(function () {
-    $("#contact-hr").on("click", function () {
-        window.location.href = "mailto:hr@gmail.com?subject=Account Pending Approval&body=Hello HR,%0D%0A%0D%0AMy account is pending approval. Please review.%0D%0A%0D%0AThank you.";
+    // Back to login
+    $('#back-home').on('click', function () {
+        $('#pending-card').fadeOut(200, function() {
+            $('#login-card').fadeIn(200);
+        });
     });
-});
 
-
-    // Back to login button
-    $("#back-home").on("click", function () {
-        $("#pending-message").hide();
-        $(".authentication-inner").show();
+    // Contact HR
+    $('#contact-hr').on('click', function () {
+        alert('Please contact your HR department.');
     });
 });

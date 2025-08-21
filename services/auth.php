@@ -8,24 +8,20 @@ $sm = AppManager::getSM();
 $email = $_POST['Email'] ?? '';
 $password = $_POST['Password'] ?? '';
 
-$param = array(':Email' => $email);
+$param = [':Email' => $email];
 $user = $pm->run("SELECT * FROM users WHERE email = :Email", $param, true);
 
-if ($user != null) {
-    // Check status first
-    if ($user['status'] !== 'confirmed') {
-        if (password_verify($password, $user['password'])) {
+if ($user) {
+    if (password_verify($password, $user['password'])) {
+        if ($user['status'] !== 'confirmed') {
             echo json_encode([
                 "success" => false,
                 "message" => "pending"
             ]);
             exit;
         }
-    }
 
-    // Verify password
-    if (password_verify($password, $user['password'])) {
-        // Set session
+        // login success
         $sm->setAttribute("userId", $user['id']);
         $sm->setAttribute("fullName", $user['full_name']);
         $sm->setAttribute("userName", $user['user_name']);
@@ -40,15 +36,14 @@ if ($user != null) {
     } else {
         echo json_encode([
             "success" => false,
-            "message" => "Invalid username or password!"
+            "message" => "Invalid email or password"
         ]);
         exit;
     }
 } else {
     echo json_encode([
         "success" => false,
-        "message" => "Invalid username or password!"
+        "message" => "Invalid email or password"
     ]);
     exit;
 }
-
