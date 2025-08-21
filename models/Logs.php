@@ -88,4 +88,14 @@ class Logs extends BaseModel
         $param = array(':id' => $id);
         return $this->pm->run("DELETE FROM " . $this->getTableName() . " WHERE BorrowedBookID = :id", $param);
     }
+    public function getCompleted()
+{
+    return $this->pm->run("
+        SELECT * 
+        FROM " . $this->getTableName() . " 
+        WHERE status = 'finished'
+        ORDER BY last_updated DESC
+    ");
+}
+
 }
