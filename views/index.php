@@ -5,7 +5,6 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../helpers/AppManager.php';
 require_once __DIR__ . '/../models/BaseModel.php';
 
-// Initialize variables with default values
 $logs_data = [];
 $images = [];
 $projectImages = [];
@@ -14,11 +13,10 @@ $error = '';
 try {
     $project_logs = new Logs();
     $logs_data = $project_logs->getCompleted() ?: [];
-    
+
     $imgModel = new ProjectImageModel();
     $images = $imgModel->getAll() ?: [];
 
-    // Group images by project_id
     foreach ($images as $img) {
         if (isset($img['project_id'])) {
             $projectImages[$img['project_id']][] = $img;
@@ -40,7 +38,6 @@ try {
     <title>Imara Enterprise - Software Development & Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <style>
@@ -66,15 +63,13 @@ try {
         .scroll-indicator div {
             background-color: #0ff;
         }
-        
-        /* Focus styles for accessibility */
+
         button:focus-visible,
         a:focus-visible {
             outline: 2px solid #0ff;
             outline-offset: 2px;
         }
-        
-        /* Reduced motion for accessibility */
+
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
@@ -87,7 +82,6 @@ try {
 
 <body>
 
-    <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-950 opacity-95"></div>
@@ -102,7 +96,6 @@ try {
                 We create cutting-edge solutions that bridge the gap between intelligent automation and powerful software development
             </p>
 
-            <!-- Feature Buttons -->
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12" data-aos="zoom-in" data-aos-delay="600">
                 <div class="flex items-center gap-3 px-6 py-3 bg-purple-900/50 rounded-full backdrop-blur-sm hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -122,7 +115,6 @@ try {
                 </div>
             </div>
 
-            <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="800">
                 <a href="#projects" class="inline-flex items-center justify-center gap-2 font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 h-11 rounded-md text-lg px-8 transition-all duration-300">
                     Explore Our Work
@@ -134,7 +126,6 @@ try {
             </div>
         </div>
 
-        <!-- Scroll Down Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
             <div class="w-6 h-10 border-2 border-cyan-400 rounded-full flex justify-center">
                 <div class="w-1 h-3 rounded-full mt-2 animate-pulse bg-cyan-400"></div>
@@ -143,7 +134,6 @@ try {
     </section>
 
 
-    <!-- Projects Section -->
     <section id="projects" class="py-20 px-4 bg-gray-900">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
@@ -159,7 +149,6 @@ try {
                 </div>
             <?php endif; ?>
 
-            <!-- Filter Buttons -->
             <div class="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up" data-aos-delay="400">
                 <button data-type="all"
                     class="filter-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-cyan-500 text-white hover:bg-cyan-500/90 h-10 px-4 py-2"
@@ -178,7 +167,6 @@ try {
                 </button>
             </div>
 
-            <!-- Projects Grid -->
             <?php if (empty($logs_data)): ?>
                 <div class="text-center py-12">
                     <p class="text-gray-400 text-lg">No projects available at the moment. Please check back later.</p>
@@ -187,11 +175,10 @@ try {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php foreach ($logs_data as $project): ?>
                         <?php
-                        // Get first image if available
                         $imagePath = "../assets/img/defaultProject.jpeg";
                         $altText = "Default project image";
                         $imageCount = 0;
-                        
+
                         if (!empty($projectImages[$project['id']])) {
                             $lastImg = end($projectImages[$project['id']]);
                             $imagePath = "../uploads/projects/" . htmlspecialchars($lastImg['file_path']);
@@ -199,17 +186,17 @@ try {
                             $imageCount = count($projectImages[$project['id']]);
                         }
                         ?>
-                        <div class="rounded-lg border border-gray-700 bg-gray-800 text-white shadow-sm project-card group transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20"
+                        <div class="rounded-lg border border-gray-700 bg-gray-800 text-white shadow-2xl project-card group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_25px_50px_rgba(0,255,255,0.3)]"
                             data-project-type="<?= htmlspecialchars($project['project_type']) ?>">
-                            <div class="relative overflow-hidden rounded-t-lg mb-4 cursor-pointer project-image-container" 
-                                 data-project-id="<?= $project['id'] ?>">
+                            <div class="relative overflow-hidden rounded-t-lg mb-4 cursor-pointer project-image-container"
+                                data-project-id="<?= $project['id'] ?>">
                                 <img src="<?= $imagePath ?>" alt="<?= $altText ?>"
                                     class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                                     loading="lazy">
                                 <?php if ($imageCount > 0): ?>
-                                <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                                    <?= $imageCount ?> image<?= $imageCount > 1 ? 's' : '' ?>
-                                </div>
+                                    <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                                        <?= $imageCount ?> image<?= $imageCount > 1 ? 's' : '' ?>
+                                    </div>
                                 <?php endif; ?>
                                 <div class="absolute top-3 right-3">
                                     <div class="inline-flex items-center rounded-full border border-purple-700 px-2.5 py-0.5 text-xs font-semibold bg-purple-500/20 text-purple-300">

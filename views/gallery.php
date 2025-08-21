@@ -5,16 +5,13 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../helpers/AppManager.php';
 require_once __DIR__ . '/../models/BaseModel.php';
 
-// Get project ID from URL
 $project_id = isset($_GET['project_id']) ? (int)$_GET['project_id'] : 0;
 
-// Initialize variables
 $project = null;
 $images = [];
 $error = '';
 
 try {
-    // Get project details
     $project_logs = new Logs();
     $all_projects = $project_logs->getCompleted() ?: [];
     
@@ -28,7 +25,6 @@ try {
     if (!$project) {
         $error = "Project not found.";
     } else {
-        // Get images for this project
         $imgModel = new ProjectImageModel();
         $all_images = $imgModel->getAll() ?: [];
         
@@ -47,7 +43,6 @@ try {
     error_log("Error loading project data: " . $e->getMessage());
 }
 
-// If no project found, redirect to main page after 3 seconds
 if (!$project) {
     header("Refresh: 3; url=index.php");
 }
@@ -68,7 +63,6 @@ if (!$project) {
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         }
 
-        /* Masonry layout for larger screens */
         @media (min-width: 1024px) {
             .gallery-grid {
                 columns: 3;
@@ -115,7 +109,6 @@ if (!$project) {
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
         }
 
-        /* Smooth animation */
         @keyframes smoothFadeUp {
             0% {
                 opacity: 0;
@@ -149,7 +142,6 @@ if (!$project) {
     </div>
     <?php else: ?>
     <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
         <div class="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
             <a href="index.php"
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 py-2">
@@ -202,14 +194,12 @@ if (!$project) {
             </div>
         </div>
 
-        <!-- Error Message -->
         <?php if ($error): ?>
         <div class="bg-red-900/50 text-red-200 p-4 rounded-lg mb-8 text-center" role="alert">
             <?php echo htmlspecialchars($error); ?>
         </div>
         <?php endif; ?>
 
-        <!-- Gallery Grid -->
         <?php if (!empty($images)): ?>
         <div class="gallery-grid">
             <?php foreach ($images as $index => $image): ?>

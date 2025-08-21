@@ -141,8 +141,6 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         </div>
                     </div>
 
-                    <!-- Project Image Upload Fields -->
-
                     <div class="mb-3 mt-3">
                         <div id="alert-container"></div>
                     </div>
