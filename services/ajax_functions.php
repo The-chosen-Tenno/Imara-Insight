@@ -337,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $reason_type = $_POST['reason_type'];
         $other_reason = $_POST['other_reason'];
-        $half_day = $_POST['half_day'];
+        $half_day = $_POST['half_day'] ?? null;
         $date_off = $_POST['date_off'];
         $description = $_POST['description'];
         $user_id = $_POST['user_id'];
