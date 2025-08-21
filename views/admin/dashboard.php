@@ -2,14 +2,16 @@
 require_once('../layouts/header.php');
 include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
+include BASE_PATH . '/models/Sub-Assignees.php';
 
 $projectLogs = new Logs();
 $logsData = $projectLogs->getByUserId($userId);
 
-
 $userDetails = new User();
 $loginUserDetails = $userDetails->getById($userId);
 $UserData = $userDetails->getAll();
+
+$sub_assignee_details = new SubAssignee();
 
 if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) {
     dd('Access Denied...');
@@ -62,7 +64,15 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                                 </td>
                                 <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                                 <td>
-                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>"><i class="bx bx-edit-alt me-1"></i></a>
+                                    <a class=" edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-edit-alt me-1"></i>
+                                    </a>
+                                    <a class="add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-user-plus"></i>
+                                    </a>
+                                    <a class="remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= $LD['id']; ?>">
+                                        <i class="bx bx-user-minus"></i>
+                                    </a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -131,27 +141,26 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         </div>
                     </div>
 
-                        <!-- Project Image Upload Fields -->
+                    <!-- Project Image Upload Fields -->
 
-                        <div class="mb-3 mt-3">
-                            <div id="alert-container"></div>
-                        </div>
-                        <div class="mb-3 mt-3">
-                            <div id="additional-fields">
-                            </div>
+                    <div class="mb-3 mt-3">
+                        <div id="alert-container"></div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="additional-fields">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Close
-                        </button>
-                        <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary ms-2" id="create-project">Create</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="edit-project-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -239,17 +248,62 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
     </div>
 </div>
 
+<div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="add-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Add Sub-assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Project Members</label>
+                        <select id="multiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
+                        </select>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="alert-container"></div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="additional-fields"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary ms-2" id="add-sub-assignee">add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="remove-sub-assignee-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="remove-sub-assignee-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Sub-assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="project_id" id="removeProjectId">
+                    <label class="form-label">Assigned Sub-assignees</label>
+                    <select id="removeMultiSelect" name="user_id[]" multiple="multiple" style="width:100%;">
+                    </select>
+                    <input type="hidden" name="action" value="remove_sub_assignee">
+                    <div id="remove-alert-container" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="remove-sub-assignee">Remove</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <?php
 require_once('../layouts/footer.php');
 ?>
 <script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
-<script>
-    $(document).ready(function() {
-        $("#searchInput").on("input", function() {
-            var searchTerm = $(this).val().toLowerCase();
-            $("tbody tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
-            });
-        });
-    });
-</script>

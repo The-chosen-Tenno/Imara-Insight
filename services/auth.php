@@ -34,7 +34,7 @@ if ($user != null) {
 
         echo json_encode([
             "success" => true,
-            "redirect" => "../../index.php"
+            header('Location: ../index.php')
         ]);
         exit;
     } else {
@@ -51,4 +51,3 @@ if ($user != null) {
     ]);
     exit;
 }
-
