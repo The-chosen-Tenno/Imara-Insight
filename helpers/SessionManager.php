@@ -63,4 +63,16 @@ class SessionManager
             return false;
         }
     }
+
+
+    public function destroy()
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    session_unset();     // remove all session variables
+    session_destroy();   // destroy the session
+}
+
+    
 }
