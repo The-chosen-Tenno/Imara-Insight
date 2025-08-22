@@ -40,7 +40,10 @@ $(document).ready(function () {
                             $('#username-error').text(response.message);
                         } else if (response.field === 'email') {
                             $('#email-error').text(response.message);
-                        } else {
+                        } else if (response.field ==='password'){
+                            $('#password-error').text(response.message);
+                        } 
+                          else {
                             $('#createUserForm').prepend(
                                 '<div class="alert alert-danger" role="alert">' + response.message + '</div>'
                             );
@@ -57,14 +60,6 @@ $(document).ready(function () {
         } else {
             form.reportValidity();
         }
-
-
-                // Password validation
-        var password = $('#password').val();
-        if (password.length < 6) {
-            $('#password-error').text('Password must be at least 6 characters long.');
-            return;
-         }
 
         // // Optional: strong password check (uppercase, lowercase, number, special char)
         // var strongPasswordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$/;

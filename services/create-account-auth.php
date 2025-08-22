@@ -48,6 +48,14 @@ try {
             exit;
         }
 
+        if (strlen($Password) < 6) {
+            echo json_encode([
+            'success' => false,
+            'field' => 'password',
+            'message' => 'Password must be at least 6 characters long.'
+            ]);
+            exit;
+            }
         
         $sql = "INSERT INTO users (full_name, user_name, email, Password) 
                 VALUES (:FullName, :UserName, :Email, :Password)";
@@ -65,14 +73,7 @@ try {
         exit; 
     }
 
-            if (strlen($Password) < 6) {
-            echo json_encode([
-            'success' => false,
-            'field' => 'password',
-            'message' => 'Password must be at least 6 characters long.'
-            ]);
-            exit;
-            }
+            
 
             
 //             if (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).+$/', $Password)) {
