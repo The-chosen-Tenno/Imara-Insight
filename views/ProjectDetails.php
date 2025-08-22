@@ -276,7 +276,7 @@ function build_img_src(string $base, string $file): string
         AOS.init({
             duration: 1000,
             easing: 'ease-in-out',
-            once: true, // run animation only once
+            once: true, 
         });
     </script>
 </body>
