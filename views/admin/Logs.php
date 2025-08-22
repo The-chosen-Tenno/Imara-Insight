@@ -47,17 +47,19 @@ if (!isset($permission)) dd('Access Denied...!');
                         $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
                     ?>
                         <tr>
-                            <td><?= $user_names[$LD['user_id']] ?? '' ?></td>
+                            <td>
+                                <span class="badge text-bg-info d-block mb-1">
+                                    <?= $user_names[$LD['user_id']] ?? '' ?>
+                                </span>
+                            </td>
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?>
                             </td>
                             <td>
-                                <div class="overflow-auto" style="max-height:70px;">
                                     <?php foreach ($sub_assignee_data as $sub_id): ?>
                                         <span class="badge bg-secondary d-block mb-1">
                                             <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
                                         </span>
                                     <?php endforeach; ?>
-                                </div>
                             </td>
                             <td>
                                 <?php if ($LD['status'] == 'finished'): ?>

@@ -52,13 +52,11 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                             <tr>
                                 <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                                 <td>
-                                    <div class="overflow-auto" style="max-height:70px;">
-                                        <?php foreach ($sub_assignee_data as $sub_id): ?>
-                                            <span class="badge bg-secondary d-block mb-1">
-                                                <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
-                                            </span>
-                                        <?php endforeach; ?>
-                                    </div>
+                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                        <span class="badge bg-secondary d-block mb-1">
+                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                        </span>
+                                    <?php endforeach; ?>
                                 </td>
                                 <td>
                                     <?php if ($LD['status'] === 'finished'): ?>
@@ -119,31 +117,31 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                             $project = $projectLogs->getById($SAP['project_id']);
                             $sub_assignees = $sub_assignee_details->getAllByProjectId($project['id']);
                         ?>
-                        <tr>
-                            <td><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
-                            <td>
-                                <span class="badge bg-primary">
-                                    <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
-                                </span>
-                            </td>
-                            <td>
-                                <?php if ($project['status'] === 'finished'): ?>
-                                    <span class="badge bg-success"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php elseif ($project['status'] === 'in_progress'): ?>
-                                    <span class="badge bg-primary">In Progress</span>
-                                <?php elseif ($project['status'] === 'idle'): ?>
-                                    <span class="badge bg-dark"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php elseif ($project['status'] === 'cancelled'): ?>
-                                    <span class="badge bg-danger"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn rounded-pill btn-outline-primary" target="_blank">
-                                    Show
-                                </a>
-                            </td>
-                            <td><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
-                        </tr>
+                            <tr>
+                                <td><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if ($project['status'] === 'finished'): ?>
+                                        <span class="badge bg-success"><?= htmlspecialchars($project['status']) ?></span>
+                                    <?php elseif ($project['status'] === 'in_progress'): ?>
+                                        <span class="badge bg-primary">In Progress</span>
+                                    <?php elseif ($project['status'] === 'idle'): ?>
+                                        <span class="badge bg-dark"><?= htmlspecialchars($project['status']) ?></span>
+                                    <?php elseif ($project['status'] === 'cancelled'): ?>
+                                        <span class="badge bg-danger"><?= htmlspecialchars($project['status']) ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn rounded-pill btn-outline-primary" target="_blank">
+                                        Show
+                                    </a>
+                                </td>
+                                <td><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
