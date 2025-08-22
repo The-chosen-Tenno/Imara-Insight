@@ -71,7 +71,6 @@ require_once('../../config.php');
                     <p class="mb-4">Your account is not approved yet. Please contact the administrator.</p>
                     <div class="d-flex justify-content-center gap-2">
                         <button type="button" id="back-home" class="btn btn-primary btn-sm">Back To Login</button>
-                        <button type="button" id="contact-hr" class="btn btn-primary btn-sm">Contact HR</button>
                     </div>
                 </div>
             </div>
