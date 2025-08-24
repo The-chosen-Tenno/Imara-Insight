@@ -39,12 +39,14 @@ CREATE TABLE leave_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     reason_type VARCHAR(255) NOT NULL,
-    other_reason VARCHAR(255),
+    other_reason VARCHAR(255) DEFAULT NULL,
     date_off DATE NOT NULL,
-    half_day ENUM('first', 'second') DEFAULT NULL,
+    leave_duration ENUM('full','half') NOT NULL DEFAULT 'full',
+    half_day ENUM('first','second') DEFAULT NULL,
     description TEXT NOT NULL,
-    status ENUM('approved', 'denied', 'pending') DEFAULT 'pending',
+    status ENUM('approved','denied','pending') DEFAULT 'pending',
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

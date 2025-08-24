@@ -336,24 +336,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
     try {
         $reason_type = $_POST['reason_type'];
-        $other_reason = $_POST['other_reason'];
-        $half_day = $_POST['half_day'] ?? null;
+        $other_reason = $_POST['other_reason'] ?? null;
+        $leave_duration = $_POST['leave_duration'] ?? 'full'; // New: full/half
+        $half_day = $_POST['half_day'] ?? null; // only relevant if leave_duration = half
         $date_off = $_POST['date_off'];
         $description = $_POST['description'];
         $user_id = $_POST['user_id'];
 
+        // If leave_duration is full, ignore half_day
+        if ($leave_duration === 'full') {
+            $half_day = null;
+        }
+
         $leaveModel = new Leave();
-        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $half_day, $date_off, $description, $user_id);
+        $requested = $leaveModel->createLeaveReq(
+            $reason_type,
+            $other_reason,
+            $leave_duration,
+            $half_day,
+            $date_off,
+            $description,
+            $user_id
+        );
+
         if ($requested) {
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. Leave may already exist!']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 // approve leave request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
     try {

@@ -10,7 +10,10 @@ $user_details = new User();
 $user_data = $user_details->getAll();
 $sub_assignee_details = new SubAssignee();
 
-if (!isset($permission)) dd('Access Denied...!');
+if (!isset($permission)) {
+    header('Location: views/admin/Authorization.php');
+    exit;
+};
 ?>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> </span> Project Logs
@@ -55,11 +58,11 @@ if (!isset($permission)) dd('Access Denied...!');
                             <td><?= htmlspecialchars($LD['project_name'] ?? '') ?>
                             </td>
                             <td>
-                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
-                                        <span class="badge bg-secondary d-block mb-1">
-                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
-                                        </span>
-                                    <?php endforeach; ?>
+                                <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                    <span class="badge bg-secondary d-block mb-1">
+                                        <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                    </span>
+                                <?php endforeach; ?>
                             </td>
                             <td>
                                 <?php if ($LD['status'] == 'finished'): ?>

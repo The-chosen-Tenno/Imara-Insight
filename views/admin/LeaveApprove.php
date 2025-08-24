@@ -32,20 +32,36 @@ $user_data = $userDetails->getAll();
                             <div class="col-sm-8">
                                 <div class="card-body py-2 px-3">
                                     <h2 class="card-title text-primary fw-bold mb-1 custom-title">
-                                        <?= htmlspecialchars($full_name[$pending['user_id']]) ?>
                                     </h2>
                                     <dl class="row mb-2 dl-custom">
-                                        <dt class="col-sm-2">Fullname:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['user_id']) ?></dd>
+                                        <dt class="col-sm-3">Full Name:</dt>
+                                        <dd class="col-sm-9"><?= htmlspecialchars($full_name[$pending['user_id']]) ?></dd>
 
-                                        <dt class="col-sm-2">Date Off:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['date_off']) ?></dd>
+                                        <dt class="col-sm-3">Date Off:</dt>
+                                        <dd class="col-sm-9"><?= htmlspecialchars($pending['date_off']) ?></dd>
 
-                                        <dt class="col-sm-2">Reason:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['reason_type']) ?></dd>
+                                        <dt class="col-sm-3">Leave Duration:</dt>
+                                        <dd class="col-sm-9">
+                                            <?= $pending['leave_duration'] === 'half' ? 'Half Day' : 'Full Day' ?>
+                                        </dd>
 
-                                        <dt class="col-sm-2">Description:</dt>
-                                        <dd class="col-sm-10"><?= htmlspecialchars($pending['description']) ?></dd>
+                                        <?php if ($pending['leave_duration'] === 'half') : ?>
+                                            <dt class="col-sm-3">Half Day:</dt>
+                                            <dd class="col-sm-9">
+                                                <?= $pending['half_day'] === 'first' ? 'First Half' : 'Second Half' ?>
+                                            </dd>
+                                        <?php endif; ?>
+
+                                        <dt class="col-sm-3">Reason:</dt>
+                                        <dd class="col-sm-9">
+                                            <?= htmlspecialchars($pending['reason_type']) ?>
+                                            <?php if ($pending['reason_type'] === 'other') : ?>
+                                                (<?= htmlspecialchars($pending['other_reason']) ?>)
+                                            <?php endif; ?>
+                                        </dd>
+
+                                        <dt class="col-sm-3">Description:</dt>
+                                        <dd class="col-sm-9"><?= htmlspecialchars($pending['description']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
                                         <button

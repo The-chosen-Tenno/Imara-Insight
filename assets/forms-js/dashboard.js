@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+    // ================= CREATE PROJECT =================
     $('#create-project').on('click', function () {
         var form = $('#create-form')[0];
         if (!form.checkValidity() || !form.reportValidity())
@@ -24,22 +26,20 @@ $(document).ready(function () {
         });
     });
 
-    $('.edit-project-btn').on('click', async function () {
+    // ================= EDIT PROJECT =================
+    $(document).on('click', '.edit-project-btn', async function () {
         var id = $(this).data('id');
         $.ajax({
             url: $('#update-form').attr('action'),
             type: 'GET',
-            data: {
-                project_id: id,
-                action: 'get_project'
-            },
+            data: { project_id: id, action: 'get_project' },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
                     $('#ProjectId').val(res.data.id);
                     $('#UserID').val(res.data.user_id);
                     $('#ProjectName').val(res.data.project_name);
-                    $('#ProjectStatus').val(res.data.status);
+                    $('#ProjectStatusUpdate').val(res.data.status);
                     $('#edit-project-modal').modal('show');
                 } else {
                     showAlert(res.message, 'danger', 'edit-alert-container');
@@ -70,6 +70,7 @@ $(document).ready(function () {
         });
     });
 
+    // ================= ADD SUB-ASSIGNEE =================
     $('#add-sub-assignee-modal').on('shown.bs.modal', function () {
         $('#multiSelect').select2({
             placeholder: "Select project members",
@@ -86,21 +87,15 @@ $(document).ready(function () {
         $(this).find('form')[0].reset();
     });
 
-    $('.add-sub-assignee-btn').on('click', function () {
+    $(document).on('click', '.add-sub-assignee-btn', function () {
         var projectId = $(this).data('id');
         $('#add-sub-assignee-modal').data('project-id', projectId);
-
-        // clear old options
         $('#multiSelect').empty();
 
-        // fetch users not already in the project
         $.ajax({
             url: $('#add-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: {
-                action: 'get_available_sub_assignees',
-                project_id: projectId
-            },
+            data: { action: 'get_available_sub_assignees', project_id: projectId },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -162,21 +157,16 @@ $(document).ready(function () {
         });
     });
 
-    $('.remove-sub-assignee-btn').on('click', function () {
+    // ================= REMOVE SUB-ASSIGNEE =================
+    $(document).on('click', '.remove-sub-assignee-btn', function () {
         var projectId = $(this).data('id');
         $('#removeProjectId').val(projectId);
-
-        // clear old options
         $('#removeMultiSelect').empty();
 
-        // fetch current sub-assignees via AJAX
         $.ajax({
             url: $('#remove-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: {
-                action: 'get_sub_assignees',
-                project_id: projectId
-            },
+            data: { action: 'get_sub_assignees', project_id: projectId },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
