@@ -58,3 +58,12 @@ CREATE TABLE project_sub_assignees (
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (sub_assignee_id) REFERENCES users(id)
 );
+
+
+--updates
+ALTER TABLE leave_requests
+ADD COLUMN leave_duration ENUM('full','half') NOT NULL DEFAULT 'full' AFTER date_off;
+
+-- 2. Add the updated_at timestamp column to track edits
+ALTER TABLE leave_requests
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER uploaded_at;
