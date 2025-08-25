@@ -163,13 +163,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
-        $project_status = $_POST['status'] ?? 'in_progress'; // ✅ default fallback
+        $project_status = $_POST['status'] ?? 'in_progress'; 
 
         $logsModel = new Logs();
         $projectCreated = $logsModel->createProject($user_id, $project_name, $project_status);
 
         if ($projectCreated) {
-            $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
+            $project_id = $logsModel->getLastInsertId(); 
 
             // Optional image upload
             $titles = $_POST['project_images_title'] ?? [];

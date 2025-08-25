@@ -37,139 +37,375 @@ try {
     <meta name="description" content="Imara Enterprise - Innovation through code and automation. We create cutting-edge solutions that bridge the gap between intelligent automation and powerful software development.">
     <title>Imara Enterprise - Software Development & Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <style>
-        .bg-gradient-hero {
-            background: linear-gradient(135deg, rgba(15, 19, 19, 0.3), rgba(163, 0, 255, 0.3));
-        }
-
-        .button-glow:hover {
-            box-shadow: 0 0 10px #0ff, 0 0 20px #a300ff;
-        }
-
-        .badge-glow {
-            background-color: rgba(163, 0, 255, 0.2);
-            color: #0ff;
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6366f1;
+            --accent-color: #10b981;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
         }
 
         body {
-            background-color: #000000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(79,70,229,0.05)"/></svg>');
+            background-size: cover;
+            opacity: 0.7;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .project-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-automation {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #047857;
+        }
+
+        .tag-coding {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary-color);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #111827;
+            margin: 2% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 12px;
             color: #e5e7eb;
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .scroll-indicator div {
-            background-color: #0ff;
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
         }
 
-        button:focus-visible,
-        a:focus-visible {
-            outline: 2px solid #0ff;
-            outline-offset: 2px;
+        .close-modal:hover {
+            color: #bbb;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+        .gallery-grid {
+            columns: 3;
+            column-gap: 16px;
+        }
+
+        .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 16px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            border-radius: 12px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05) translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes smoothFadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: translateY(10px) scale(1.02);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-smooth {
+            animation: smoothFadeUp 1s ease-in-out forwards;
+        }
+
+        @media (max-width: 1023px) and (min-width: 640px) {
+            .gallery-grid {
+                columns: 2;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .gallery-grid {
+                columns: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                text-align: center;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 10px;
             }
         }
     </style>
 </head>
 
-<body>
-
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-950 opacity-95"></div>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar fixed w-full z-50 py-4 px-6 md:px-12">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.php" class="text-2xl font-bold gradient-text">Imara<span class="text-indigo-700">Soft</span></a>
+            <div class="hidden md:flex space-x-10">
+                <a href="index.php" class="text-gray-700 hover:text-indigo-600 font-medium">Home</a>
+                <a href="#projects" class="text-gray-700 hover:text-indigo-600 font-medium">Projects</a>
+                <a href="#about" class="text-gray-700 hover:text-indigo-600 font-medium">About</a>
+                <a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium">Contact</a>
+            </div>
+            <button class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
         </div>
+    </nav>
 
-        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white group" data-aos="fade-down" data-aos-delay="200">
-                Innovation Through<br>Code & Automation
-            </h1>
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <div id="modalContent"></div>
+        </div>
+    </div>
 
-            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="400">
-                We create cutting-edge solutions that bridge the gap between intelligent automation and powerful software development
-            </p>
-
-            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12" data-aos="zoom-in" data-aos-delay="600">
-                <div class="flex items-center gap-3 px-6 py-3 bg-purple-900/50 rounded-full backdrop-blur-sm hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <circle cx="12" cy="12" r="4"></circle>
-                        <path d="M12 2v2M12 22v-2M17 20.66l-1-1.73M11 10.27 7 3.34M20.66 17l-1.73-1M3.34 7l1.73 1M14 12h8M2 12h2M20.66 7l-1.73 1M3.34 17l1.73-1M17 3.34l-1 1.73M11 13.73l-4 6.93" />
-                    </svg>
-                    <span class="text-white font-medium">Smart Automation</span>
+    <!-- Hero Section -->
+    <section class="hero-section pt-32 pb-20 px-4 md:px-8">
+        <div class="container mx-auto max-w-6xl">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="hero-content md:w-1/2 mb-12 md:mb-0" data-aos="fade-right">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                        Transforming Ideas Into <span class="gradient-text">Digital Solutions</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8">
+                        We specialize in creating innovative software and automation solutions that help businesses thrive in the digital age.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="btn-primary text-white font-medium py-3 px-6 rounded-lg">
+                            View Our Work
+                        </a>
+                        <a href="#contact" class="border border-indigo-600 text-indigo-600 font-medium py-3 px-6 rounded-lg hover:bg-indigo-50 transition-colors">
+                            Get In Touch
+                        </a>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-3 px-6 py-3 bg-purple-900/50 rounded-full backdrop-blur-sm hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
-                    </svg>
-                    <span class="text-white font-medium">Custom Development</span>
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <div class="bg-white p-6 rounded-2xl shadow-xl">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-indigo-100 p-4 rounded-lg">
+                                <i class="fas fa-robot text-indigo-600 text-3xl mb-3"></i>
+                                <h3 class="font-semibold text-gray-800">Automation</h3>
+                                <p class="text-sm text-gray-600">Streamline processes</p>
+                            </div>
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <i class="fas fa-code text-green-600 text-3xl mb-3"></i>
+                                <h3 class="font-semibold text-gray-800">Development</h3>
+                                <p class="text-sm text-gray-600">Custom solutions</p>
+                            </div>
+                            <div class="bg-blue-100 p-4 rounded-lg">
+                                <i class="fas fa-mobile-alt text-blue-600 text-3xl mb-3"></i>
+                                <h3 class="font-semibold text-gray-800">Mobile Apps</h3>
+                                <p class="text-sm text-gray-600">iOS & Android</p>
+                            </div>
+                            <div class="bg-purple-100 p-4 rounded-lg">
+                                <i class="fas fa-cloud text-purple-600 text-3xl mb-3"></i>
+                                <h3 class="font-semibold text-gray-800">Cloud</h3>
+                                <p class="text-sm text-gray-600">Scalable infrastructure</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="800">
-                <a href="#projects" class="inline-flex items-center justify-center gap-2 font-medium text-white bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 h-11 rounded-md text-lg px-8 transition-all duration-300">
-                    Explore Our Work
-                </a>
-
-                <button class="inline-flex items-center justify-center gap-2 font-medium h-11 rounded-md text-lg px-8 border border-cyan-400 text-white hover:bg-cyan-500/20 hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300" onclick="alert('Contact feature coming soon!')">
-                    Get In Touch
-                </button>
-            </div>
-        </div>
-
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
-            <div class="w-6 h-10 border-2 border-cyan-400 rounded-full flex justify-center">
-                <div class="w-1 h-3 rounded-full mt-2 animate-pulse bg-cyan-400"></div>
             </div>
         </div>
     </section>
 
-
-    <section id="projects" class="py-20 px-4 bg-gray-900">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4" data-aos="fade-down">Our Projects</h2>
-                <p class="text-gray-400 text-lg max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-                    Explore our diverse portfolio of automation solutions and software development projects
-                </p>
-            </div>
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 md:px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl font-bold text-gray-800 section-title" data-aos="fade-down">Our Projects</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl" data-aos="fade-up">
+                Explore our portfolio of innovative solutions that demonstrate our expertise in software development and automation.
+            </p>
 
             <?php if ($error): ?>
-                <div class="bg-red-900/50 text-red-200 p-4 rounded-lg mb-8 text-center" role="alert">
+                <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-8 text-center" role="alert">
                     <?php echo htmlspecialchars($error); ?>
                 </div>
             <?php endif; ?>
 
-            <div class="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up" data-aos-delay="400">
-                <button data-type="all"
-                    class="filter-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-cyan-500 text-white hover:bg-cyan-500/90 h-10 px-4 py-2"
-                    aria-pressed="true">
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-3 mb-12" data-aos="fade-up">
+                <button data-type="all" class="filter-btn active px-5 py-2 rounded-full text-sm font-medium">
                     All Projects (<?= count($logs_data) ?>)
                 </button>
-                <button data-type="automation"
-                    class="filter-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 py-2"
-                    aria-pressed="false">
+                <button data-type="automation" class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gray-300">
                     Automation (<?= count(array_filter($logs_data, fn($p) => $p['project_type'] === 'automation')) ?>)
                 </button>
-                <button data-type="coding"
-                    class="filter-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 py-2"
-                    aria-pressed="false">
-                    Coding (<?= count(array_filter($logs_data, fn($p) => $p['project_type'] === 'coding')) ?>)
+                <button data-type="coding" class="filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gray-300">
+                    Development (<?= count(array_filter($logs_data, fn($p) => $p['project_type'] === 'coding')) ?>)
                 </button>
             </div>
 
             <?php if (empty($logs_data)): ?>
                 <div class="text-center py-12">
-                    <p class="text-gray-400 text-lg">No projects available at the moment. Please check back later.</p>
+                    <p class="text-gray-500 text-lg">No projects available at the moment. Please check back later.</p>
                 </div>
             <?php else: ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -186,51 +422,178 @@ try {
                             $imageCount = count($projectImages[$project['id']]);
                         }
                         ?>
-                        <div class="rounded-lg border border-gray-700 bg-gray-800 text-white shadow-2xl project-card group transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_25px_50px_rgba(0,255,255,0.3)]"
-                            data-project-type="<?= htmlspecialchars($project['project_type']) ?>">
-                            <div class="relative overflow-hidden rounded-t-lg mb-4 cursor-pointer project-image-container"
-                                data-project-id="<?= $project['id'] ?>">
+                        <div class="project-card bg-white" data-project-type="<?= htmlspecialchars($project['project_type']) ?>">
+                            <div class="relative overflow-hidden cursor-pointer group project-image-container" data-project-id="<?= $project['id'] ?>">
                                 <img src="<?= $imagePath ?>" alt="<?= $altText ?>"
-                                    class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                                    class="project-image w-full h-auto transform transition-transform duration-500 group-hover:scale-110"
                                     loading="lazy">
-                                <?php if ($imageCount > 0): ?>
-                                    <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                                        <?= $imageCount ?> image<?= $imageCount > 1 ? 's' : '' ?>
-                                    </div>
-                                <?php endif; ?>
-                                <div class="absolute top-3 right-3">
-                                    <div class="inline-flex items-center rounded-full border border-purple-700 px-2.5 py-0.5 text-xs font-semibold bg-purple-500/20 text-purple-300">
-                                        <?= ucfirst(htmlspecialchars($project['project_type'])) ?>
-                                    </div>
+
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                    <span class="text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                        View Project
+                                    </span>
                                 </div>
-                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="text-white font-medium">View Gallery</span>
+
+                                <div class="absolute top-3 right-3">
+                                    <span class="tag <?= $project['project_type'] === 'automation' ? 'tag-automation' : 'tag-coding' ?>">
+                                        <?= ucfirst(htmlspecialchars($project['project_type'])) ?>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="space-y-4 px-4 pb-4">
-                                <h3 class="text-xl font-semibold text-white group-hover:text-cyan-400 transition-all duration-300">
+
+                            <!-- Content -->
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">
                                     <?= htmlspecialchars($project['project_name']) ?>
                                 </h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">
-                                    Completed project finished on <?= date("F j, Y", strtotime($project['last_updated'])) ?>.
+                                <p class="text-gray-600 text-sm mb-4">
+                                    Completed on <?= date("F j, Y", strtotime($project['last_updated'])) ?>
                                 </p>
-                                <div class="flex gap-3 pt-2">
-                                    <button class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white shadow-md hover:shadow-cyan-500/20 transition-all duration-300"
-                                        onclick="alert('Code repository link coming soon!')">
-                                        Code
+                                <div class="flex justify-between items-center">
+                                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium" onclick="alert('Code repository link coming soon!')">
+                                        View Code
                                     </button>
-                                    <button class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md bg-cyan-600 text-white hover:bg-cyan-500 shadow-md hover:shadow-cyan-500/20 transition-all duration-300"
-                                        onclick="alert('Live demo coming soon!')">
+                                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded" onclick="alert('Live demo coming soon!')">
                                         Live Demo
                                     </button>
                                 </div>
                             </div>
                         </div>
+
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </div>
     </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 md:px-8 bg-gray-100">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <h2 class="text-3xl font-bold text-gray-800 section-title mb-6">About ImaraSoft</h2>
+                    <p class="text-gray-600 mb-6">
+                        We are a dedicated team of developers and automation specialists passionate about creating solutions that make a difference. With years of experience in the industry, we've helped numerous businesses transform their operations through technology.
+                    </p>
+                    <p class="text-gray-600 mb-8">
+                        Our approach combines technical expertise with a deep understanding of business needs, ensuring that every solution we deliver is both technically sound and strategically valuable.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-indigo-600 mb-2">50+</div>
+                            <div class="text-gray-600 text-sm">Projects Completed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-indigo-600 mb-2">5+</div>
+                            <div class="text-gray-600 text-sm">Years Experience</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-indigo-600 mb-2">100%</div>
+                            <div class="text-gray-600 text-sm">Client Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="bg-white p-2 rounded-2xl shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80" alt="Team working" class="rounded-lg w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section
+    <section id="contact" class="py-20 px-4 md:px-8 bg-white">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-3xl font-bold text-gray-800 section-title text-center mx-auto mb-2" data-aos="fade-down">Get In Touch</h2>
+            <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto" data-aos="fade-up">
+                Have a project in mind or need technical consultation? Reach out to us and let's discuss how we can help.
+            </p>
+            
+            <div class="bg-gray-50 rounded-2xl p-8 shadow-lg" data-aos="zoom-in">
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                        <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                        <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="button" onclick="alert('Contact form submission would be processed here.')" class="btn-primary text-white font-medium py-3 px-6 rounded-lg w-full md:w-auto">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Footer -->
+    <footer class="footer py-12 px-4 md:px-8">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-6">ImaraSoft</h3>
+                    <p class="text-gray-400 mb-6">
+                        Creating innovative solutions through code and automation.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-6">Services</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Web Development</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Automation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Mobile Apps</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cloud Solutions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-6">Contact Info</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-indigo-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">contact@imarsoft.net</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt text-indigo-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">+1 (123) 456-7890</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-indigo-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">Nairobi, Kenya</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; <?php echo date('Y'); ?> ImaraSoft. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
@@ -238,7 +601,7 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize AOS
             AOS.init({
-                duration: 1000,
+                duration: 2000,
                 easing: 'ease-out-cubic',
                 once: true,
                 mirror: false
@@ -254,14 +617,12 @@ try {
 
                     // Update active button state
                     buttons.forEach(b => {
-                        const isPressed = b === btn;
-                        b.setAttribute("aria-pressed", isPressed);
-                        if (isPressed) {
-                            b.classList.add("bg-cyan-500", "text-white");
-                            b.classList.remove("border", "border-gray-700", "bg-gray-800");
+                        if (b === btn) {
+                            b.classList.add("active", "text-white");
+                            b.classList.remove("border", "border-gray-300");
                         } else {
-                            b.classList.remove("bg-cyan-500", "text-white");
-                            b.classList.add("border", "border-gray-700", "bg-gray-800");
+                            b.classList.remove("active", "text-white");
+                            b.classList.add("border", "border-gray-300");
                         }
                     });
 
@@ -298,13 +659,74 @@ try {
                 });
             });
 
+            // Modal functionality
+            const modal = document.getElementById("galleryModal");
+            const modalContent = document.getElementById("modalContent");
+            const closeModal = document.querySelector(".close-modal");
+
             // Open gallery when project image is clicked
             document.querySelectorAll('.project-image-container').forEach(container => {
                 container.addEventListener('click', function() {
                     const projectId = this.getAttribute('data-project-id');
-                    window.open('gallery.php?project_id=' + projectId, '_blank');
+                    openGalleryModal(projectId);
                 });
             });
+
+            // Close modal when clicking on X
+            closeModal.addEventListener('click', function() {
+                modal.classList.remove('show');
+            });
+
+            // Close modal when clicking outside content
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+
+            // Function to open gallery modal
+            function openGalleryModal(projectId) {
+                // Show loading state
+                modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">Loading gallery...</p></div>';
+                modal.classList.add('show');
+
+                // Fetch project data via AJAX
+                fetch(`gallery.php?project_id=${projectId}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        // Extract just the gallery content from the response
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(data, 'text/html');
+
+                        // Get the project header and gallery grid
+                        const projectHeader = doc.querySelector('.container.mx-auto .flex.flex-col.md\\:flex-row');
+                        const galleryGrid = doc.querySelector('.gallery-grid');
+
+                        if (galleryGrid) {
+                            // Create modal content
+                            modalContent.innerHTML = '';
+
+                            if (projectHeader) {
+                                modalContent.appendChild(projectHeader.cloneNode(true));
+                            }
+
+                            if (galleryGrid) {
+                                modalContent.appendChild(galleryGrid.cloneNode(true));
+                            }
+
+                            // Reinitialize animations for the modal content
+                            document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                                item.style.animationDelay = `${index * 0.1}s`;
+                            });
+                        } else {
+                            modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">No images found for this project.</p></div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading gallery:', error);
+                        modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">Error loading gallery. Please try again.</p></div>';
+                    });
+            }
         });
     </script>
 
