@@ -142,25 +142,16 @@ if (!$project) {
     </div>
     <?php else: ?>
     <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
         <div class="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8">
-            <a href="index.php"
-                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white h-10 px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="w-4 h-4 mr-2">
-                    <path d="m12 19-7-7 7-7"></path>
-                    <path d="M19 12H5"></path>
-                </svg>
-                Back to Projects
-            </a>
 
             <div class="flex-1">
                 <div class="flex items-center gap-3 mb-2">
                     <h1 class="text-2xl md:text-3xl font-bold text-white"><?php echo htmlspecialchars($project['project_name']); ?></h1>
-                    <div
+                    <!-- <div
                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-purple-500/20 text-purple-300 border-purple-500/30">
                         <?php echo ucfirst(htmlspecialchars($project['project_type'])); ?>
-                    </div>
+                    </div> -->
                 </div>
                 <p class="text-gray-400 mb-4 max-w-3xl">
                     Completed project finished on <?php echo date("F j, Y", strtotime($project['last_updated'])); ?>.
@@ -173,24 +164,6 @@ if (!$project) {
                         class="inline-flex items-center rounded-full border border-gray-700 px-2.5 py-0.5 text-xs font-semibold text-gray-300"><?php echo count($images); ?>
                         Images</div>
                 </div>
-                <div class="flex gap-3">
-                    <button
-                        class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md border border-gray-700 bg-gray-800 hover:bg-gray-700 text-white"
-                        onclick="alert('Code repository link coming soon!')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="mr-2">
-                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
-                            <path d="M9 18c-4.51 2-5-2-7-2"></path>
-                        </svg>
-                        View Code
-                    </button>
-                    <button
-                        class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 px-3 rounded-md bg-cyan-600 text-white hover:bg-cyan-500"
-                        onclick="alert('Live demo coming soon!')">
-                        Live Demo
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -200,6 +173,7 @@ if (!$project) {
         </div>
         <?php endif; ?>
 
+        <!-- Gallery Grid -->
         <?php if (!empty($images)): ?>
         <div class="gallery-grid">
             <?php foreach ($images as $index => $image): ?>
