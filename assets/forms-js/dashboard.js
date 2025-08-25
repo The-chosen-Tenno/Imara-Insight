@@ -32,7 +32,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#update-form').attr('action'),
             type: 'GET',
-            data: { project_id: id, action: 'get_project' },
+            data: {
+                project_id: id,
+                action: 'get_project'
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -95,7 +98,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#add-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_available_sub_assignees', project_id: projectId },
+            data: {
+                action: 'get_available_sub_assignees',
+                project_id: projectId
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -166,7 +172,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#remove-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_sub_assignees', project_id: projectId },
+            data: {
+                action: 'get_sub_assignees',
+                project_id: projectId
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -209,4 +218,55 @@ $(document).ready(function () {
         });
     });
 
+    $('#project-images').on('change', function () {
+        var files = this.files;
+        var $descriptionsContainer = $('#image-descriptions-container');
+        $descriptionsContainer.empty();
+
+        $.each(files, function (index, file) {
+            var $div = $('<div class="mb-3 d-flex align-items-center"></div>');
+
+            // Thumbnail
+            var $img = $('<img class="me-2" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />');
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $img.attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+
+            // File name and description
+            var $info = $('<div class="flex-grow-1"></div>');
+            $info.append(`<div class="fw-semibold">${file.name}</div>`);
+            $info.append('<input type="text" class="form-control mt-1" name="project_images_description[]" placeholder="Image description" />');
+
+            $div.append($img).append($info);
+            $descriptionsContainer.append($div);
+        });
+    });
+
+$('#edit-project-images').on('change', function () {
+    var files = this.files;
+    var $descriptionsContainer = $('#edit-image-descriptions-container');
+    $descriptionsContainer.empty();
+
+    $.each(files, function (index, file) {
+        var $div = $('<div class="mb-3 d-flex align-items-center"></div>');
+
+        // Thumbnail
+        var $img = $('<img class="me-2" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />');
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $img.attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+
+        // File name + description
+        var $info = $('<div class="flex-grow-1"></div>');
+        $info.append(`<div class="fw-semibold">${file.name}</div>`);
+        $info.append('<input type="text" class="form-control mt-1" name="project_images_description[]" placeholder="Image description" />');
+
+        $div.append($img).append($info);
+        $descriptionsContainer.append($div);
+    });
+});
 });

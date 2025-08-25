@@ -76,9 +76,9 @@ class Logs extends BaseModel
     public function getByUserId($userId)
     {
         $param = array(':user_id' => $userId);
-        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id", $param);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id ORDER BY id DESC", $param);
     }
-
+    
     public function deleteRec($id)
     {
         $param = array(':id' => $id);
@@ -90,13 +90,12 @@ class Logs extends BaseModel
         return $this->pm->lastInsertId();
     }
     public function getCompleted()
-{
-    return $this->pm->run("
+    {
+        return $this->pm->run("
         SELECT * 
         FROM " . $this->getTableName() . " 
         WHERE status = 'finished'
         ORDER BY last_updated DESC
     ");
-}
-
+    }
 }

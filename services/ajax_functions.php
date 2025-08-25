@@ -10,6 +10,7 @@ require_once '../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
@@ -163,24 +164,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
-        $project_status = $_POST['status'] ?? 'in_progress'; // ✅ default fallback
+        $project_status = $_POST['status'] ?? 'in_progress';
 
         $logsModel = new Logs();
         $projectCreated = $logsModel->createProject($user_id, $project_name, $project_status);
 
         if ($projectCreated) {
-            $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
+            $project_id = $logsModel->getLastInsertId();
 
-            // Optional image upload
-            $titles = $_POST['project_images_title'] ?? [];
             $descriptions = $_POST['project_images_description'] ?? [];
             $uploadedData = [];
 
             if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
                 $uploadDir = __DIR__ . '/../uploads/projects/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
                 for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
                     $tmpName = $_FILES['project_images']['tmp_name'][$i];
@@ -194,7 +191,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if (move_uploaded_file($tmpName, $targetFilePath)) {
                         $uploadedData[] = [
                             'file' => $fileName,
-                            'title' => $titles[$i] ?? '',
                             'description' => $descriptions[$i] ?? ''
                         ];
                     }
