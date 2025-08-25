@@ -56,9 +56,7 @@ if (!isset($permission)) {
                             <td class="text-start">
                                 <?php if (!empty($sub_assignee_data)): ?>
                                     <?php foreach ($sub_assignee_data as $sub_id): ?>
-                                        <span class="badge rounded-pill bg-secondary me-1 mb-1">
-                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
-                                        </span>
+                                        <span class="badge rounded-pill bg-secondary me-1 mb-1"><?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?></span>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <span class="text-muted">None</span>
@@ -74,14 +72,10 @@ if (!isset($permission)) {
                                     default => 'bg-secondary'
                                 };
                                 ?>
-                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
-                                    <?= htmlspecialchars(str_replace('_', ' ', $LD['status'])) ?>
-                                </span>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2"><?= htmlspecialchars(str_replace('_', ' ', $LD['status'])) ?></span>
                             </td>
                             <td>
-                                <a href="../ProjectDetails.php?id=<?= (int)$LD['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">
-                                    Show
-                                </a>
+                                <a href="../ProjectDetails.php?id=<?= (int)$LD['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
                             </td>
                             <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                             <?php if ($permission == 'admin') { ?>
@@ -105,7 +99,6 @@ if (!isset($permission)) {
     </div>
 </div>
 
-
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -117,21 +110,32 @@ if (!isset($permission)) {
                 <div class="modal-body">
                     <div class="row">
                         <div class="mb-3">
-                            <label class="form-label" for="basic-default-password1">Project Name</label>
+                            <label class="form-label" for="project_name">Project Name</label>
                             <div class="input-group">
-                                <input class="form-control" type="text" value="" placeholder="Enter the Project Name" id="project_name" name="project_name" />
+                                <input class="form-control" type="text" placeholder="Enter the Project Name" id="project_name" name="project_name" />
                                 <input type="hidden" name="action" value="create_project">
                             </div>
                         </div>
-                        <div class="col">
-                            <label class="form-label" for="basic-default-password2">Assign To</label>
+                        <div class="col mb-3">
+                            <label class="form-label" for="CreateUserID">Assign To</label>
                             <div class="input-group">
-                                <select class="form-select" id="CreateUserID" aria-label="Default select example" name="user_id" required>
+                                <select class="form-select" id="CreateUserID" name="user_id" required>
                                     <?php foreach ($user_data as $full_name => $user) { ?>
                                         <option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sub-assignees</label>
+                            <select id="createSubAssigneeSelect" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label" for="ProjectType">Project Type</label>
+                            <select class="form-select" id="ProjectType" name="type" required>
+                                <option value="coding">Coding</option>
+                                <option value="automation">Automation</option>
+                            </select>
                         </div>
                     </div>
                     <div class="mb-3 mt-3">
@@ -172,7 +176,7 @@ if (!isset($permission)) {
                     </div>
                     <div class="row">
                         <div class="mb-3">
-                            <label for="exampleFormControlSelect1" class="form-label">Project Status</label>
+                            <label class="form-label">Project Status</label>
                             <select class="form-select" id="ProjectStatus" name="status" required>
                                 <option value="idle">Idle</option>
                                 <option value="in_progress">In Progress</option>
@@ -180,6 +184,13 @@ if (!isset($permission)) {
                                 <option value="cancelled">Cancelled</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col mb-3">
+                        <label class="form-label" for="ProjectTypeEdit">Project Type</label>
+                        <select class="form-select" id="ProjectTypeEdit" name="project_type" required>
+                            <option value="coding">Coding</option>
+                            <option value="automation">Automation</option>
+                        </select>
                     </div>
                     <div class="mb-3 mt-3">
                         <div id="alert-container"></div>

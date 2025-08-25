@@ -36,23 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Get user by ID
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user') {
-    try {
-        $user_id = $_GET['user_id'];
-        $userModel = new User();
-        $user = $userModel->getUserById($user_id);
-        if ($user) {
-            echo json_encode(['success' => true, 'message' => "User retrieved successfully!", 'data' => $user]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'User not found']);
-        }
-    } catch (PDOException $e) {
-        // Handle DB errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
+if (isset($_GET['action']) && $_GET['action'] === 'get_all_users') {
+    $users = (new User())->getAll();
+    echo json_encode(['success' => true, 'data' => $users]);
     exit;
 }
-
 // Update user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
     try {
@@ -164,14 +152,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
-        $project_status = $_POST['status'] ?? 'in_progress';
+        $project_type = $_POST['project_type'] ?? 'coding';
+        $project_status = $_POST['status'] ?? 'idle';
 
         $logsModel = new Logs();
-        $projectCreated = $logsModel->createProject($user_id, $project_name, $project_status);
+        $projectCreated = $logsModel->createProject($user_id, $project_name, $project_type, $project_status);
 
         if ($projectCreated) {
             $project_id = $logsModel->getLastInsertId();
 
+            // Handle sub-assignees
+            if (!empty($_POST['sub_assignees'])) {
+                $user_ids = $_POST['sub_assignees'];
+                $subAssigneeModel = new SubAssignee();
+                $successCount = 0;
+
+                foreach ($user_ids as $sub_id) {
+                    $added = $subAssigneeModel->createSubAssignee($project_id, $sub_id);
+                    if ($added) $successCount++;
+                }
+            }
+
+            // Handle images if provided
             $descriptions = $_POST['project_images_description'] ?? [];
             $uploadedData = [];
 
@@ -206,13 +208,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } else {
             echo json_encode(['success' => false, 'message' => 'Some error occurred while creating project']);
         }
+
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
-
-
 
 
 // Get project by ID

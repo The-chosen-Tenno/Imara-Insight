@@ -6,6 +6,7 @@ class Logs extends BaseModel
     public $ProjectID;
     public $UserID;
     public $ProjectName;
+    public $ProjectType;
     public $ProjectStatus;
     public $LastUpdated;
 
@@ -19,11 +20,12 @@ class Logs extends BaseModel
         $param = array(
             ':user_id' => $this->UserID,
             ':project_name' => $this->ProjectName,
-            ':status' => $this->ProjectStatus, // ✅ fixed
+            ':project_type' => $this->ProjectType,
+            ':status' => $this->ProjectStatus,
         );
         return $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . " (user_id, project_name, status) 
-             VALUES (:user_id, :project_name, :status)",
+            "INSERT INTO " . $this->getTableName() . " (user_id, project_name, project_type, status) 
+         VALUES (:user_id, :project_name, :project_type, :status)",
             $param
         );
     }
@@ -44,11 +46,12 @@ class Logs extends BaseModel
         );
     }
 
-    function createProject($user_id, $project_name, $status = 'in_progress') // ✅ fixed signature
+    function createProject($user_id, $project_name, $project_type, $status = 'in_progress') // ✅ fixed signature
     {
         $LogModel = new Logs();
         $LogModel->UserID = $user_id;
         $LogModel->ProjectName = $project_name;
+        $LogModel->ProjectType = $project_type;
         $LogModel->ProjectStatus = $status;
         $LogModel->addNewRec();
 
@@ -78,7 +81,7 @@ class Logs extends BaseModel
         $param = array(':user_id' => $userId);
         return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id ORDER BY id DESC", $param);
     }
-    
+
     public function deleteRec($id)
     {
         $param = array(':id' => $id);

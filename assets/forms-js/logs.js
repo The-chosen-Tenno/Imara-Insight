@@ -41,6 +41,7 @@ $(document).ready(function () {
                     $('#ProjectName').val(res.data.project_name);
                     $('#ProjectStatus').val(res.data.status);
                     $('#edit-project-modal').modal('show');
+                    $('#ProjectTypeEdit').val(res.data.project_type);
                 } else {
                     showAlert(res.message, 'danger', 'edit-alert-container');
                 }
@@ -215,6 +216,40 @@ $(document).ready(function () {
                     $('#remove-sub-assignee-modal').modal('hide');
                     setTimeout(() => location.reload(), 1000);
                 }
+            }
+        });
+    });
+    $('#add-project').on('shown.bs.modal', function () {
+        // Initialize select2
+        $('#createSubAssigneeSelect').select2({
+            placeholder: "Select sub-assignees",
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownParent: $('#add-project')
+        });
+
+        // Fetch all users for sub-assignee select
+        $.ajax({
+            url: $('#create-form').attr('action'),
+            type: 'GET',
+            data: {
+                action: 'get_all_users'
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#createSubAssigneeSelect').empty();
+                    res.data.forEach(user => {
+                        $('#createSubAssigneeSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
+                    });
+                    $('#createSubAssigneeSelect').trigger('change'); // refresh select2
+                } else {
+                    showAlert(res.message, 'danger', 'alert-container');
+                }
+            },
+            error: function () {
+                showAlert('Failed to fetch users.', 'danger', 'alert-container');
             }
         });
     });
