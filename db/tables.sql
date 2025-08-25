@@ -13,6 +13,11 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+--  new colomn 
+ALTER TABLE users
+ADD COLUMN user_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active' AFTER role;
+
+
 CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,

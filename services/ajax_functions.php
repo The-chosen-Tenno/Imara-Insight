@@ -100,6 +100,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+// user status change 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user_status') {
+    try {
+        $id = $_POST['user_id'] ?? null;
+        $user_status = $_POST['user_status'] ?? null;
+// print_r($_POST);
+// die()
+        if (!$id || !$user_status) {
+            echo json_encode(['success' => false, 'message' => 'Missing user ID or status']);
+            exit;
+        }
+
+        $userModel = new User();
+        $updated   = $userModel->updateUserStatus($id, $user_status);
+        if ($updated) {
+            echo json_encode(['success' => true, 'message' => "User status updated successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'User not found or update failed!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
     try {

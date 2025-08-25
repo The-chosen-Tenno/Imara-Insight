@@ -40,6 +40,8 @@ $data = $userModel->getAll();
                         <th>User Name</th>
                         <th>Full Name</th>
                         <th>Email</th>
+                        <th>Status</th>
+                        <th>Change Status</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -54,6 +56,26 @@ $data = $userModel->getAll();
                             <td><strong><?= htmlspecialchars($user['UserName'] ?? $user['user_name'] ?? '') ?></strong></td>
                             <td><?= htmlspecialchars($user['FulltName'] ?? $user['full_name'] ?? '') ?></td>
                             <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>
+                            <td>
+                                <?php if (($user['user_status'] ?? $user['status'] ?? '') === 'active'): ?>
+                                <span class="badge bg-success">Active</span>
+                                <?php elseif (($user['user_status'] ?? $user['status'] ?? '') === 'inactive'): ?>
+                                <span class="badge bg-danger">Inactive</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+
+
+                                        <button class="btn btn-sm btn-warning change-status-btn"
+        data-id="<?= $user['id'] ?>"
+        data-status="<?= $user['status'] ?>">
+    Change Status
+</button>
+
+
+                            </td>
+
+
                         </tr>
                     <?php endforeach; ?>
 
@@ -63,8 +85,44 @@ $data = $userModel->getAll();
     </div>
 </div>
 
-<?php require_once('../layouts/footer.php'); ?>
+<!-- Change Status Modal -->
+<div class="modal fade" id="edit-user_status-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
+    <input type="hidden" id="UserID" name="user_id"> <!-- ✅ store user id -->
+    <div class="modal-header">
+        <h5 class="modal-title">Update Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="exampleFormControlSelect1" class="form-label">User Status</label>
+                           <select class="form-select" id="user_Status" name="user_status" required>
+                                <option value="active">active</option>
+                                <option value="inactive">inactive</option>
+                            </select>
 
+                        </div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="alert-container"></div>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <div id="additional-fields"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary ms-2" id="update_user_status">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/users.js') ?>"></script>
 
 <!-- Inline script for search filter -->
