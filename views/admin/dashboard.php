@@ -119,7 +119,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     ?>
                         <tr>
                             <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
-                            
+
                             <!-- Other Sub-Assignees column -->
                             <td>
                                 <?php foreach ($sub_assignees as $sub_id): ?>
@@ -185,7 +185,17 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         <input type="hidden" name="user_id" value="<?= (int) $loginUserDetails['id'] ?>">
                         <input type="hidden" name="action" value="create_project">
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label">Sub-assignees</label>
+                        <select id="createSubAssigneeSelect" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
+                    </div>
+                    <div class="col mb-3">
+                        <label class="form-label" for="ProjectType">Project Type</label>
+                        <select class="form-select" id="ProjectType" name="type" required>
+                            <option value="coding">Coding</option>
+                            <option value="automation">Automation</option>
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Project Status</label>
                         <select class="form-select" id="ProjectStatusCreate" name="status" required>
