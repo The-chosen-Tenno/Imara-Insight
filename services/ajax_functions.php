@@ -152,12 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
-<<<<<<< HEAD
-        $project_type = $_POST['project_type'] ?? 'coding';
+        $project_type = $_POST['type'] ?? 'coding';
         $project_status = $_POST['status'] ?? 'idle';
-=======
-        $project_status = $_POST['status'] ?? 'in_progress'; // ✅ default fallback
->>>>>>> 8927a6e811da710a940980a7afc58bebac89561a
 
         $logsModel = new Logs();
         $projectCreated = $logsModel->createProject($user_id, $project_name, $project_type, $project_status);

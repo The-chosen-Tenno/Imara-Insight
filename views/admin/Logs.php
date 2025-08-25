@@ -5,7 +5,7 @@ include BASE_PATH . '/models/Users.php';
 include BASE_PATH . '/models/Sub-Assignees.php';
 
 $project_logs = new Logs();
-$logs_data = $project_logs->getAll();
+$logs_data = $project_logs->getAllByDesc();
 $user_details = new User();
 $user_data = $user_details->getAll();
 $sub_assignee_details = new SubAssignee();
@@ -112,7 +112,7 @@ if (!isset($permission)) {
                         <div class="mb-3">
                             <label class="form-label" for="project_name">Project Name</label>
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter the Project Name" id="project_name" name="project_name" />
+                                <input class="form-control" type="text" placeholder="Enter the Project Name" id="project_name" name="project_name" required />
                                 <input type="hidden" name="action" value="create_project">
                             </div>
                         </div>
