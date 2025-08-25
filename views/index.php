@@ -301,21 +301,53 @@ try {
 </head>
 
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="navbar fixed w-full z-50 py-4 px-6 md:px-12">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.php" class="text-2xl font-bold gradient-text">Imara<span class="text-indigo-700">Soft</span></a>
-            <div class="hidden md:flex space-x-10">
-                <a href="index.php" class="text-gray-700 hover:text-indigo-600 font-medium">Home</a>
-                <a href="#projects" class="text-gray-700 hover:text-indigo-600 font-medium">Projects</a>
-                <a href="#about" class="text-gray-700 hover:text-indigo-600 font-medium">About</a>
-                <a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium">Contact</a>
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-md z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+
+                <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-800 hover:text-blue-600 transition">
+                <img src="../assets/img/favicon/favicon.png" alt="ImaraSoft Logo" class="h-8 w-8 object-contain">
+                <span>ImaraSoft</span>
+            </a>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 text-gray-700 font-medium">
+                    <a href="#hero" class="hover:text-blue-600 transition relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-blue-600 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                        Home
+                    </a>
+                    <a href="#projects" class="hover:text-blue-600 transition relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-blue-600 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                        Projects
+                    </a>
+                    <a href="#about" class="hover:text-blue-600 transition relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-blue-600 after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full">
+                        About
+                    </a>
+                    <!-- <a href="#contact" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition transform hover:scale-105">
+                        Contact
+                    </a> -->
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn" class="md:hidden text-gray-800 focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+
             </div>
-            <button class="md:hidden text-gray-700">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md shadow-lg flex flex-col space-y-4 px-6 py-4">
+            <a href="#hero" class="hover:text-blue-600 transition">Home</a>
+            <a href="#projects" class="hover:text-blue-600 transition">Projects</a>
+            <a href="#about" class="hover:text-blue-600 transition">About</a>
+            <!-- <a href="#contact" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition transform hover:scale-105 text-center">
+                Contact
+            </a> -->
         </div>
     </nav>
+
 
     <!-- Gallery Modal -->
     <div id="galleryModal" class="modal">
@@ -326,7 +358,7 @@ try {
     </div>
 
     <!-- Hero Section -->
-    <section class="hero-section pt-32 pb-20 px-4 md:px-8">
+    <section id="hero" class="hero-section pt-32 pb-20 px-4 md:px-8">
         <div class="container mx-auto max-w-6xl">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="hero-content md:w-1/2 mb-12 md:mb-0" data-aos="fade-right">
@@ -449,14 +481,7 @@ try {
                                 <p class="text-gray-600 text-sm mb-4">
                                     Completed on <?= date("F j, Y", strtotime($project['last_updated'])) ?>
                                 </p>
-                                <div class="flex justify-between items-center">
-                                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium" onclick="alert('Code repository link coming soon!')">
-                                        View Code
-                                    </button>
-                                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded" onclick="alert('Live demo coming soon!')">
-                                        Live Demo
-                                    </button>
-                                </div>
+
                             </div>
                         </div>
 
@@ -502,98 +527,6 @@ try {
         </div>
     </section>
 
-    <!-- Contact Section
-    <section id="contact" class="py-20 px-4 md:px-8 bg-white">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-3xl font-bold text-gray-800 section-title text-center mx-auto mb-2" data-aos="fade-down">Get In Touch</h2>
-            <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto" data-aos="fade-up">
-                Have a project in mind or need technical consultation? Reach out to us and let's discuss how we can help.
-            </p>
-            
-            <div class="bg-gray-50 rounded-2xl p-8 shadow-lg" data-aos="zoom-in">
-                <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
-                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                        <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <button type="button" onclick="alert('Contact form submission would be processed here.')" class="btn-primary text-white font-medium py-3 px-6 rounded-lg w-full md:w-auto">
-                            Send Message
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Footer -->
-    <footer class="footer py-12 px-4 md:px-8">
-        <div class="container mx-auto max-w-6xl">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-6">ImaraSoft</h3>
-                    <p class="text-gray-400 mb-6">
-                        Creating innovative solutions through code and automation.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-6">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
-                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
-                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-6">Services</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Web Development</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Automation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Mobile Apps</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cloud Solutions</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-6">Contact Info</h4>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope text-indigo-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">contact@imarsoft.net</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-phone-alt text-indigo-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">+1 (123) 456-7890</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-indigo-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">Nairobi, Kenya</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
-                <p>&copy; <?php echo date('Y'); ?> ImaraSoft. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
@@ -683,7 +616,6 @@ try {
                     modal.classList.remove('show');
                 }
             });
-
             // Function to open gallery modal
             function openGalleryModal(projectId) {
                 // Show loading state
@@ -726,6 +658,21 @@ try {
                         console.error('Error loading gallery:', error);
                         modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">Error loading gallery. Please try again.</p></div>';
                     });
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Shrink navbar on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg', 'py-1');
+            } else {
+                navbar.classList.remove('shadow-lg', 'py-1');
             }
         });
     </script>
