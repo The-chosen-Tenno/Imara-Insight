@@ -8,10 +8,15 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') DEFAULT 'user',
+    user_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     status ENUM('confirmed', 'declined', 'pending') DEFAULT 'pending',
     photo VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+--  new colomn 
+ALTER TABLE users
+ADD COLUMN user_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active' AFTER role;
+
 
 CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -10,6 +10,7 @@ class User extends BaseModel
     private $email;
     private $password;
     public $photo;
+    public $user_status;
 
     function getTableName()
     {
@@ -99,22 +100,26 @@ class User extends BaseModel
         }
     }
 
-    protected function addNewRec()
-    {
-        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $param = [
-            ':full_name' => $this->full_name,
-            ':user_name' => $this->user_name,
-            ':email' => $this->email,
-            ':password' => $this->password,
-            ':role' => $this->role,
-            ':status' => $this->status,
-        ];
-        return $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . "(full_name,user_name,password, role, email,status) values(:full_name,:user_name,:password,:role,:email,:status)",
-            $param
-        );
-    }
+   protected function addNewRec()
+{
+    $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+    $param = [
+        ':full_name'   => $this->full_name,
+        ':user_name'   => $this->user_name,
+        ':email'       => $this->email,
+        ':password'    => $this->password,
+        ':role'        => $this->role,
+        ':status'      => $this->status,
+        ':user_status' => $this->user_status ?? 'active', // default active
+    ];
+    return $this->pm->run(
+        "INSERT INTO " . $this->getTableName() . " 
+        (full_name,user_name,password,role,email,status,user_status) 
+        VALUES (:full_name,:user_name,:password,:role,:email,:status,:user_status)",
+        $param
+    );
+}
+
 
     protected function updateRec()
     {
@@ -157,6 +162,18 @@ class User extends BaseModel
         $result = $user->updateStatus();
         return $result !== false;
     }
+
+public function updateUserStatus($user_id, $status) {
+    $sql = "UPDATE " . $this->getTableName() . " SET user_status = :status WHERE id = :id";
+    $params = [
+        ':status' => $status,
+        ':id'     => $user_id
+    ];
+    $result = $this->pm->run($sql, $params);
+    return $result > 0 ;
+}
+
+
 
     function updateStatus()
     {

@@ -41,6 +41,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_all_users') {
     echo json_encode(['success' => true, 'data' => $users]);
     exit;
 }
+
 // Update user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user') {
     try {
@@ -89,6 +90,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     exit;
 }
+// user status change 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_user_status') {
+    try {
+        $id = $_POST['user_id'] ?? null;
+        $user_status = $_POST['user_status'] ?? null;
+// print_r($_POST);
+// die()
+        if (!$id || !$user_status) {
+            echo json_encode(['success' => false, 'message' => 'Missing user ID or status']);
+            exit;
+        }
+
+        $userModel = new User();
+        $updated   = $userModel->updateUserStatus($id, $user_status);
+        if ($updated) {
+            echo json_encode(['success' => true, 'message' => "User status updated successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'User not found or update failed!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+// Get user by ID (AJAX)
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user_by_id') {
+    try {
+        $user_id = $_GET['user_id'];
+        $userModel = new User();
+        $user = $userModel->getUserById($user_id);
+
+        if ($user) {
+            echo json_encode([
+                'success' => true,
+                'message' => "User retrieved successfully!",
+                'data' => $user   // ✅ return full user, not just the ID
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error selecting user ID'
+            ]);
+        }
+    } catch (PDOException $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+    exit;
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_user') {
     try {
