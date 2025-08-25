@@ -48,6 +48,7 @@
 <script>
 $(document).ready(function() {
     $('.projectTable').DataTable({
+        "order": [],
         pageLength: 10,
     });
 });

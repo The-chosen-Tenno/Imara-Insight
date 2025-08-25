@@ -78,6 +78,7 @@ class PersistanceManager
                 password VARCHAR(255) NOT NULL,
                 role ENUM('user','admin') DEFAULT 'user',
                 status ENUM('confirmed','declined','pending') DEFAULT 'pending',
+                user_status ENUM('active','inactive') DEFAULT 'active',
                 photo VARCHAR(255) DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",

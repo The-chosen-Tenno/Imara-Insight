@@ -57,7 +57,7 @@ require_once('../../config.php');
 
                     <p class="text-center">
                         <span>New on our platform?</span>
-                        <a href="../auth/create-account.php">CREATE</a>
+                        <a href="../auth/create-account.php">Create</a>
                     </p>
                 </div>
             </div>

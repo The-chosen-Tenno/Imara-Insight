@@ -3,7 +3,7 @@ require_once('../layouts/header.php');
 include BASE_PATH . '/models/Users.php';
 
 $userDetails = new User();
-$loginUserDetails = $userDetails->getById($userId);
+$loginUserDetails = $userDetails->getUserById($userId);
 
 if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 ?>
@@ -47,7 +47,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                     justify-content: center;
                 ">
                                 <img src="<?= !empty($loginUserDetails['photo'])
-                                                ? url( $loginUserDetails['photo'])
+                                                ? url($loginUserDetails['photo'])
                                                 : url('assets/img/illustrations/default-profile-picture.png') ?>"
                                     style="
                             width: 100%;
@@ -69,77 +69,49 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
         <div class="modal-content">
             <form id="update-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Update User</h5>
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <h5 class="modal-title">Update User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input
-                        type="hidden"
-                        name="action"
-                        value="update_user">
-                    <input
-                        type="hidden"
-                        required
-                        id="user_id"
-                        name="ID"
-                        class="form-control" />
+                    <input type="hidden" name="action" value="update_user">
+                    <input type="hidden" id="user_id" name="ID" />
+
                     <div class="row">
                         <div class="col mb-3">
-                            <label for="nameWithTitle" class="form-label">User Name</label>
-                            <input
-                                type="text"
-                                required
-                                id="user_name"
-                                name="UserName"
-                                class="form-control"
-                                placeholder="Enter Name" />
+                            <label class="form-label">User Name</label>
+                            <input type="text" id="user_name" name="UserName" class="form-control" required placeholder="Enter Name" />
                         </div>
                     </div>
 
-                    <div class="row ">
+                    <div class="row">
                         <div class="col mb-3">
-                            <label for="emailWithTitle" class="form-label">Email</label>
-                            <input
-                                required
-                                type="text"
-                                name="Email"
-                                id="email"
-                                class="form-control"
-                                placeholder="xxxx@xxx.xx" />
+                            <label class="form-label">Email</label>
+                            <input type="text" id="email" name="Email" class="form-control" required placeholder="xxxx@xxx.xx" />
                         </div>
                     </div>
-                    <div class="row ">
+
+                    <div class="row">
                         <div class="col mb-3">
-                            <label for="profileImage" class="form-label">Profile Image</label>
-                            <input
-                                type="file"
-                                name="Photo"
-                                id="profileImage"
-                                class="form-control"
-                                 />
+                            <label class="form-label">Profile Image</label>
+                            <input type="file" name="Photo" id="profileImage" class="form-control" />
+                            <!-- Preview -->
+                            <img id="profileImagePreview" src="" alt="Profile Preview" style="max-width:100px; margin-top:10px; display:none;">
                         </div>
                     </div>
-                    <div class="mb-3 mt-3">
-                        <div id="edit-additional-fields">
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <div id="edit-alert-container"></div>
-                    </div>
+
+                    <div class="mb-3 mt-3" id="edit-additional-fields"></div>
+                    <div class="mb-3 mt-3" id="edit-alert-container"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal"> Close</button>
+                    <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="update-user">Update</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <?php
 require_once('../layouts/footer.php');
 ?>
-<script src="<?= asset('assets/forms-js/users.js')?>"></script>
+<script src="<?= asset('assets/forms-js/profile.js') ?>"></script>
