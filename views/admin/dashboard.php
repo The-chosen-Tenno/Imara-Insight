@@ -20,137 +20,155 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
 ?>
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">
-            My Projects
-            <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-project">
-                Add Project
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">My Projects</h4>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-project">
+                <i class="bx bx-plus me-1"></i> Add Project
             </button>
-        </h4>
-        <div class="card">
-            <h5 class="card-header"></h5>
-            <div class="table-responsive text-nowrap">
-                <table class="table projectTable">
-                    <thead>
-                        <tr>
-                            <th>Project</th>
-                            <th>Sub-Assignee</th>
-                            <th>Status</th>
-                            <th>Photos</th>
-                            <th>Last Update</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $user_names = [];
-                        foreach ($UserData as $user) {
-                            $user_names[$user['id']] = $user['full_name'];
-                        }
-                        foreach ($logsData as $LD):
-                            $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
-                        ?>
-                            <tr>
-                                <td><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
-                                <td>
-                                    <div class="overflow-auto" style="max-height:70px;">
-                                        <?php foreach ($sub_assignee_data as $sub_id): ?>
-                                            <span class="badge bg-secondary d-block mb-1">
-                                                <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
-                                            </span>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php if ($LD['status'] === 'finished'): ?>
-                                        <span class="badge bg-success"><?= htmlspecialchars($LD['status']) ?></span>
-                                    <?php elseif ($LD['status'] === 'in_progress'): ?>
-                                        <span class="badge bg-primary">In Progress</span>
-                                    <?php elseif ($LD['status'] === 'idle'): ?>
-                                        <span class="badge bg-dark"><?= htmlspecialchars($LD['status']) ?></span>
-                                    <?php elseif ($LD['status'] === 'cancelled'): ?>
-                                        <span class="badge bg-danger"><?= htmlspecialchars($LD['status']) ?></span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="../ProjectDetails.php?id=<?= (int) $LD['id']; ?>"
-                                        class="btn rounded-pill btn-outline-primary" target="_blank">
-                                        Show
-                                    </a>
-                                </td>
-                                <td><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
-                                <td>
-                                    <a class="edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int) $LD['id']; ?>">
-                                        <i class="bx bx-edit-alt me-1"></i>
-                                    </a>
-                                    <a class="add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
-                                        <i class="bx bx-user-plus"></i>
-                                    </a>
-                                    <a class="remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
-                                        <i class="bx bx-user-minus"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-
-                </table>
-            </div>
         </div>
-    </div>
-</div>
-<div class="content-wrapper">
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4">Sub-Assigned Projects</h4>
-        <div class="card">
-            <div class="table-responsive text-nowrap">
-                <table class="table projectTable">
-                    <thead>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle text-center projectTable">
+                <thead class="table-dark text-uppercase small">
+                    <tr>
+                        <th class="text-start ps-3">Project</th>
+                        <th>Sub-Assignee</th>
+                        <th>Status</th>
+                        <th>Photos</th>
+                        <th>Last Update</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $user_names = [];
+                    foreach ($UserData as $user) {
+                        $user_names[$user['id']] = $user['user_name'];
+                    }
+                    foreach ($logsData as $LD):
+                        $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
+                    ?>
                         <tr>
-                            <th>Project</th>
-                            <th>Main Assignee</th>
-                            <th>Status</th>
-                            <th>Photos</th>
-                            <th>Last Update</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($subAssignedProjects as $SAP):
-                            $project = $projectLogs->getById($SAP['project_id']);
-                            $sub_assignees = $sub_assignee_details->getAllByProjectId($project['id']);
-                        ?>
-                        <tr>
-                            <td><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
+                            <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                             <td>
-                                <span class="badge bg-primary">
-                                    <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
+                                <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                    <span class="badge rounded-pill bg-secondary me-1 mb-1">
+                                        <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                    </span>
+                                <?php endforeach; ?>
+                            </td>
+                            <td>
+                                <?php
+                                $statusClass = match ($LD['status']) {
+                                    'finished' => 'bg-success',
+                                    'in_progress' => 'bg-primary',
+                                    'idle' => 'bg-dark text-white',
+                                    'cancelled' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                ?>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
+                                    <?= htmlspecialchars(str_replace('_', ' ', $LD['status'])) ?>
                                 </span>
                             </td>
                             <td>
-                                <?php if ($project['status'] === 'finished'): ?>
-                                    <span class="badge bg-success"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php elseif ($project['status'] === 'in_progress'): ?>
-                                    <span class="badge bg-primary">In Progress</span>
-                                <?php elseif ($project['status'] === 'idle'): ?>
-                                    <span class="badge bg-dark"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php elseif ($project['status'] === 'cancelled'): ?>
-                                    <span class="badge bg-danger"><?= htmlspecialchars($project['status']) ?></span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn rounded-pill btn-outline-primary" target="_blank">
+                                <a href="../ProjectDetails.php?id=<?= (int) $LD['id']; ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">
                                     Show
                                 </a>
                             </td>
-                            <td><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
+                            <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
+                            <td>
+                                <a class="text-warning me-1 edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int) $LD['id']; ?>">
+                                    <i class="bx bx-edit-alt"></i>
+                                </a>
+                                <a class="text-success me-1 add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
+                                    <i class="bx bx-user-plus"></i>
+                                </a>
+                                <a class="text-danger remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
+                                    <i class="bx bx-user-minus"></i>
+                                </a>
+                            </td>
                         </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">Sub-Assigned Projects</h4>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle text-center projectTable">
+                <thead class="table-dark text-uppercase small">
+                    <tr>
+                        <th class="text-start ps-3">Project</th>
+                        <th>Other Sub-Assignees</th>
+                        <th>Main Assignee</th>
+                        <th>Status</th>
+                        <th>Photos</th>
+                        <th>Last Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($subAssignedProjects as $SAP):
+                        $project = $projectLogs->getById($SAP['project_id']);
+                        $sub_assignees = $sub_assignee_details->getAllByProjectId($project['id']);
+                    ?>
+                        <tr>
+                            <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
+
+                            <!-- Other Sub-Assignees column -->
+                            <td>
+                                <?php foreach ($sub_assignees as $sub_id): ?>
+                                    <span class="badge rounded-pill bg-secondary me-1 mb-1">
+                                        <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                    </span>
+                                <?php endforeach; ?>
+                            </td>
+
+                            <!-- Main Assignee -->
+                            <td>
+                                <span class="badge bg-info d-block mb-1">
+                                    <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
+                                </span>
+                            </td>
+
+                            <!-- Status -->
+                            <td>
+                                <?php
+                                $statusClass = match ($project['status']) {
+                                    'finished' => 'bg-success',
+                                    'in_progress' => 'bg-primary',
+                                    'idle' => 'bg-dark text-white',
+                                    'cancelled' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                ?>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
+                                    <?= htmlspecialchars(str_replace('_', ' ', $project['status'])) ?>
+                                </span>
+                            </td>
+
+                            <!-- Photos -->
+                            <td>
+                                <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">
+                                    Show
+                                </a>
+                            </td>
+
+                            <!-- Last Update -->
+                            <td class="text-muted"><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!-- ADD PROJECT MODAL -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -167,7 +185,17 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         <input type="hidden" name="user_id" value="<?= (int) $loginUserDetails['id'] ?>">
                         <input type="hidden" name="action" value="create_project">
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label">Sub-assignees</label>
+                        <select id="createSubAssigneeSelect" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
+                    </div>
+                    <div class="col mb-3">
+                        <label class="form-label" for="ProjectType">Project Type</label>
+                        <select class="form-select" id="ProjectType" name="type" required>
+                            <option value="coding">Coding</option>
+                            <option value="automation">Automation</option>
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Project Status</label>
                         <select class="form-select" id="ProjectStatusCreate" name="status" required>
@@ -179,19 +207,11 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Project Image Title</label>
-                        <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Project Images Description</label>
-                        <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
-                    </div>
-
-                    <div class="mb-3">
                         <label class="form-label">Upload Project Images</label>
-                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
+                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple id="project-images" />
                     </div>
+
+                    <div id="image-descriptions-container" class="mb-3"></div>
 
                     <div id="create-alert-container" class="mt-3"></div>
                 </div>
@@ -233,19 +253,11 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Project Image Title</label>
-                        <input type="text" class="form-control" name="project_images_title[]" placeholder="Image title" />
+                        <label class="form-label">Upload Project Images</label>
+                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple id="edit-project-images" />
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Project Images Description</label>
-                        <input type="text" class="form-control" name="project_images_description[]" placeholder="Image description" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Project Images</label>
-                        <input type="file" class="form-control" name="project_images[]" accept="image/*" multiple />
-                    </div>
+                    <div id="edit-image-descriptions-container" class="mb-3"></div>
 
                     <div id="update-alert-container" class="mt-3"></div>
                 </div>
@@ -257,6 +269,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
         </div>
     </div>
 </div>
+
 
 <!-- ADD SUB-ASSIGNEE MODAL -->
 <div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">

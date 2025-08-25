@@ -48,8 +48,8 @@
 <script>
 $(document).ready(function() {
     $('.projectTable').DataTable({
+        "order": [],
         pageLength: 10,
-        order: [[3, 'desc']]
     });
 });
 </script>

@@ -41,6 +41,7 @@ $(document).ready(function () {
                     $('#ProjectName').val(res.data.project_name);
                     $('#ProjectStatus').val(res.data.status);
                     $('#edit-project-modal').modal('show');
+                    $('#ProjectTypeEdit').val(res.data.project_type);
                 } else {
                     showAlert(res.message, 'danger', 'edit-alert-container');
                 }
@@ -219,4 +220,54 @@ $(document).ready(function () {
         });
     });
 
+    $('#add-project').on('shown.bs.modal', function () {
+        // Initialize sub-assignees select2 (multiple)
+        $('#createSubAssigneeSelect').select2({
+            placeholder: "Select sub-assignees",
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownParent: $('#add-project')
+        });
+
+        // Initialize main assignee select2 (single)
+        $('#CreateUserID').select2({
+            placeholder: "Select assignee",
+            width: '100%',
+            allowClear: true, // optional, allows deselect
+            dropdownParent: $('#add-project')
+        });
+
+        // Fetch all users for sub-assignee select
+        $.ajax({
+            url: $('#create-form').attr('action'),
+            type: 'GET',
+            data: {
+                action: 'get_all_users'
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    // Populate sub-assignees
+                    $('#createSubAssigneeSelect').empty();
+                    res.data.forEach(user => {
+                        $('#createSubAssigneeSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
+                    });
+                    $('#createSubAssigneeSelect').trigger('change'); // refresh select2
+
+                    // Populate main assignee
+                    $('#CreateUserID').empty();
+                    res.data.forEach(user => {
+                        $('#CreateUserID').append(`<option value="${user.id}">${user.full_name}</option>`);
+                    });
+                    $('#CreateUserID').trigger('change'); // refresh select2
+                } else {
+                    showAlert(res.message, 'danger', 'alert-container');
+                }
+            },
+            error: function () {
+                showAlert('Failed to fetch users.', 'danger', 'alert-container');
+            }
+        });
+    });
 });

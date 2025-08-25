@@ -1,18 +1,18 @@
 $(document).ready(function () {
 
     $('#create').on('click', function () {
-        var form = $('#create-form')[0]; // Get the form element
+        var form = $('#create-form')[0]; 
         if (!form) {
             console.log('Something went wrong..');
             return;
         }
 
         var url = $('#create-form').attr('action');
-        if (form.checkValidity()) { // Only submit if the form is valid
-            var formData = new FormData(form); // Prepare form data
+        if (form.checkValidity()) { 
+            var formData = new FormData(form);
 
             $.ajax({
-                url: url, // Target URL (ajax_functions.php)
+                url: url,
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -45,7 +45,6 @@ $(document).ready(function () {
         await getUserById(user_id);
     })
 
-    // Change from #edit-user_status-btn to .edit-user_status-btn
 $(document).on('click', '.edit-user_status-btn', function () {
     var id = $(this).data('id');
     $.ajax({
@@ -55,8 +54,8 @@ $(document).on('click', '.edit-user_status-btn', function () {
         dataType: 'json',
         success: function (res) {
             if (res.success) {
-                $('#UserID').val(res.data.user_id); // ✅ hidden input exists now
-                $('#user_Status').val(res.data.user_status); // preselect
+                $('#UserID').val(res.data.user_id);
+                $('#user_Status').val(res.data.user_status); 
                 $('#edit-user_status-modal').modal('show');
             } else {
                 showAlert(res.message, 'danger', 'edit-alert-container');
@@ -65,25 +64,20 @@ $(document).on('click', '.edit-user_status-btn', function () {
     });
 });
 
-// When "Change Status" button is clicked
 $(document).on('click', '.change-status-btn', function () {
     let userId = $(this).data('id');
     let userStatus = $(this).data('status');
 
-    // Fill hidden input and dropdown
     $('#UserID').val(userId);
     $('#user_Status').val(userStatus);
 
-    // Open modal
     $('#edit-user_status-modal').modal('show');
 });
 
 
-// ✅ Handle Update Status Button click
 $('#update_user_status').on('click', function (e) {
     e.preventDefault();
 
-    // Debug log to check values
     console.log("Sending:", {
         action: 'update_user_status',
         user_id: $('#UserID').val(),
@@ -178,13 +172,12 @@ $('#update_user_status').on('click', function (e) {
                     var user_id = response.data.id;
                     var username = response.data.user_name;
                     var email = response.data.email;
-                    var user_status = response.data.user_status; // 👈 get user_status
+                    var user_status = response.data.user_status;
 
                     $('#edit-user-modal #user_id').val(user_id);
                     $('#edit-user-modal #user_name').val(username);
                     $('#edit-user-modal #email').val(email);
 
-                    // 👇 Add status dropdown dynamically
                     var statusDropdown = `
                         <div class="mb-3">
                             <label for="user_status" class="form-label">Status</label>

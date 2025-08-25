@@ -5,63 +5,64 @@ class Leave extends BaseModel
 {
     public $reason_type;
     public $other_reason;
+    public $leave_duration;
     public $half_day;
     public $date_off;
     public $description;
     public $user_id;
     public $status;
+
+
     function getTableName()
     {
         return 'leave_requests';
     }
 
-    function createLeaveReq($reason_type, $other_reason, $half_day, $date_off, $description, $user_id)
+    function createLeaveReq($reason_type, $other_reason, $leave_duration, $half_day, $date_off, $description, $user_id)
     {
         $leaveModel = new Leave();
         $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
         if ($existingLeave) {
             return false;
         }
+
         $leave = new Leave();
         $leave->reason_type = $reason_type;
         $leave->other_reason = $other_reason;
-        $leave->half_day = $half_day;
+        $leave->leave_duration = $leave_duration;
+        // Only use half_day if leave_duration is half
+        $leave->half_day = ($leave_duration === 'half') ? $half_day : null;
         $leave->date_off = $date_off;
         $leave->description = $description;
         $leave->user_id = $user_id;
         $leave->addNewRec();
-        if ($leave) {
-            return $leave;
-        } else {
-            return false;
-        }
-    }
 
-    function updateUser()
-    {
+        return $leave ? $leave : false;
     }
-
 
     protected function addNewRec()
     {
         $param = [
-            ':reason_type' => $this->reason_type,
-            ':other_reason' => $this->other_reason,
-            ':half_day' => $this->half_day,
-            ':date_off' => $this->date_off,
-            ':description' => $this->description,
-            ':user_id' => $this->user_id,
+            ':reason_type'    => $this->reason_type,
+            ':other_reason'   => $this->other_reason,
+            ':leave_duration' => $this->leave_duration,
+            ':half_day'       => $this->half_day,
+            ':date_off'       => $this->date_off,
+            ':description'    => $this->description,
+            ':user_id'        => $this->user_id,
         ];
-        $result = $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . "(reason_type,other_reason,half_day,date_off, description, user_id) values(:reason_type,:other_reason,:half_day,:date_off,:description,:user_id)",
-            $param
-        );
-        return  $result;
+
+        $query = "INSERT INTO " . $this->getTableName() . "
+        (reason_type, other_reason, leave_duration, half_day, date_off, description, user_id)
+        VALUES
+        (:reason_type, :other_reason, :leave_duration, :half_day, :date_off, :description, :user_id)";
+
+        return $this->pm->run($query, $param);
     }
 
-    protected function updateRec()
-    {
-    }
+
+
+    protected function updateRec() {}
 
     function approveLeave($id)
     {

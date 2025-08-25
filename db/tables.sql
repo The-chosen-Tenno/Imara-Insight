@@ -44,12 +44,14 @@ CREATE TABLE leave_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     reason_type VARCHAR(255) NOT NULL,
-    other_reason VARCHAR(255),
+    other_reason VARCHAR(255) DEFAULT NULL,
     date_off DATE NOT NULL,
-    half_day ENUM('first', 'second') DEFAULT NULL,
+    leave_duration ENUM('full','half') NOT NULL DEFAULT 'full',
+    half_day ENUM('first','second') DEFAULT NULL,
     description TEXT NOT NULL,
-    status ENUM('approved', 'denied', 'pending') DEFAULT 'pending',
+    status ENUM('approved','denied','pending') DEFAULT 'pending',
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -61,3 +63,12 @@ CREATE TABLE project_sub_assignees (
     FOREIGN KEY (project_id) REFERENCES projects(id),
     FOREIGN KEY (sub_assignee_id) REFERENCES users(id)
 );
+
+
+--updates
+ALTER TABLE leave_requests
+ADD COLUMN leave_duration ENUM('full','half') NOT NULL DEFAULT 'full' AFTER date_off;
+
+-- 2. Add the updated_at timestamp column to track edits
+ALTER TABLE leave_requests
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER uploaded_at;

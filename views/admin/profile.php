@@ -3,7 +3,7 @@ require_once('../layouts/header.php');
 include BASE_PATH . '/models/Users.php';
 
 $userDetails = new User();
-$loginUserDetails = $userDetails->getById($userId);
+$loginUserDetails = $userDetails->getUserById($userId);
 
 if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 ?>
