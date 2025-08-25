@@ -80,15 +80,23 @@ if (!isset($permission)) {
                             <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                             <?php if ($permission == 'admin') { ?>
                                 <td>
-                                    <a class="text-warning me-1 edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int)$LD['id'] ?>">
-                                        <i class="bx bx-edit-alt"></i>
-                                    </a>
-                                    <a class="text-success me-1 add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>">
-                                        <i class="bx bx-user-plus"></i>
-                                    </a>
-                                    <a class="text-danger remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>">
-                                        <i class="bx bx-user-minus"></i>
-                                    </a>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a class="text-warning edit-project-btn"
+                                            data-bs-toggle="modal" data-bs-target="#edit-project-modal"
+                                            data-id="<?= (int)$LD['id'] ?>">
+                                            <i class="bx bx-edit-alt"></i>
+                                        </a>
+                                        <a class="text-success add-sub-assignee-btn"
+                                            data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal"
+                                            data-id="<?= (int)$LD['id'] ?>">
+                                            <i class="bx bx-user-plus"></i>
+                                        </a>
+                                        <a class="text-danger remove-sub-assignee-btn"
+                                            data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal"
+                                            data-id="<?= (int)$LD['id'] ?>">
+                                            <i class="bx bx-user-minus"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             <?php } ?>
                         </tr>
