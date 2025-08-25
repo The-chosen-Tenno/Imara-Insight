@@ -101,7 +101,7 @@ $(document).ready(function () {
             type: 'GET',
             data: {
                 user_id: id,
-                action: 'get_user'
+                action: 'get_user_by_id'
             }, // Form data
             dataType: 'json',
             success: function (response) {
@@ -138,6 +138,7 @@ $(document).ready(function () {
 
 
     }
+    
     $('.delete-user-btn').on('click', async function () {
         var user_id = $(this).data('id');
         var is_confirm = confirm('Are you sure,Do you want to delete?');

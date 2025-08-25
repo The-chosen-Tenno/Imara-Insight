@@ -234,6 +234,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['ac
     exit;
 }
 
+// Get user by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user_by_id') {
+    try {
+        $user_id = $_GET['user_id'];
+        $userModel = new User();
+        $user = $userModel->getUserById($user_id);
+        if ($user) {
+            echo json_encode(['success' => true, 'message' => "User retrieved successfully!", 'data' => $user]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error selecting user ID']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+
 // Update project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
     try {
