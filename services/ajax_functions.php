@@ -10,6 +10,7 @@ require_once '../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 // Create user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'admin_create_user') {
     try {
@@ -163,24 +164,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
-        $project_status = $_POST['status'] ?? 'in_progress'; 
+        $project_status = $_POST['status'] ?? 'in_progress'; // ✅ default fallback
 
         $logsModel = new Logs();
         $projectCreated = $logsModel->createProject($user_id, $project_name, $project_status);
 
         if ($projectCreated) {
-            $project_id = $logsModel->getLastInsertId(); 
+            $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
 
-            // Optional image upload
-            $titles = $_POST['project_images_title'] ?? [];
             $descriptions = $_POST['project_images_description'] ?? [];
             $uploadedData = [];
 
             if (isset($_FILES['project_images']) && !empty($_FILES['project_images']['name'][0])) {
                 $uploadDir = __DIR__ . '/../uploads/projects/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
                 for ($i = 0; $i < count($_FILES['project_images']['name']); $i++) {
                     $tmpName = $_FILES['project_images']['tmp_name'][$i];
@@ -194,7 +191,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if (move_uploaded_file($tmpName, $targetFilePath)) {
                         $uploadedData[] = [
                             'file' => $fileName,
-                            'title' => $titles[$i] ?? '',
                             'description' => $descriptions[$i] ?? ''
                         ];
                     }
@@ -336,24 +332,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
     try {
         $reason_type = $_POST['reason_type'];
-        $other_reason = $_POST['other_reason'];
-        $half_day = $_POST['half_day'] ?? null;
+        $other_reason = $_POST['other_reason'] ?? null;
+        $leave_duration = $_POST['leave_duration'] ?? 'full'; // New: full/half
+        $half_day = $_POST['half_day'] ?? null; // only relevant if leave_duration = half
         $date_off = $_POST['date_off'];
         $description = $_POST['description'];
         $user_id = $_POST['user_id'];
 
+        // If leave_duration is full, ignore half_day
+        if ($leave_duration === 'full') {
+            $half_day = null;
+        }
+
         $leaveModel = new Leave();
-        $requested = $leaveModel->createLeaveReq($reason_type, $other_reason, $half_day, $date_off, $description, $user_id);
+        $requested = $leaveModel->createLeaveReq(
+            $reason_type,
+            $other_reason,
+            $leave_duration,
+            $half_day,
+            $date_off,
+            $description,
+            $user_id
+        );
+
         if ($requested) {
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to request leave. Leave may already exist!']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 // approve leave request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
     try {

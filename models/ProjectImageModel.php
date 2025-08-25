@@ -21,25 +21,24 @@ class ProjectImageModel extends BaseModel
         return false;
     }
 
-    public function saveProjectImages($project_id, $images)
-    {
-        foreach ($images as $img) {
-            $params = [
-                ':project_id' => $project_id,
-                ':title' => $img['title'],
-                ':description' => $img['description'],
-                ':file_path' => $img['file'],
-            ];
+public function saveProjectImages($project_id, $images)
+{
+    foreach ($images as $img) {
+        $params = [
+            ':project_id' => $project_id,
+            ':description' => $img['description'],
+            ':file_path' => $img['file'],
+        ];
 
-            $this->pm->run(
-                "INSERT INTO " . $this->getTableName() . " 
-                 (project_id, title, description, file_path) 
-                 VALUES (:project_id, :title, :description, :file_path)",
-                $params
-            );
-        }
-        return true;
+        $this->pm->run(
+            "INSERT INTO " . $this->getTableName() . " 
+             (project_id, description, file_path) 
+             VALUES (:project_id, :description, :file_path)",
+            $params
+        );
     }
+    return true;
+}
 
     public function getImagebyProjectId($project_id)
     {

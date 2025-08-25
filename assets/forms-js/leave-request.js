@@ -1,14 +1,17 @@
 $(document).ready(function () {
     $('#reason_type').on('change', function () {
-        if ($(this).val() === 'half_day') {
-            $('#half_day_off').show().find('input').attr('required', true);
-        } else {
-            $('#half_day_off').hide().find('input').removeAttr('required');
-        }
         if ($(this).val() === 'other') {
             $('#other_reason_div').show().find('input').attr('required', true);
         } else {
             $('#other_reason_div').hide().find('input').removeAttr('required');
+        }
+    });
+
+    $('#leave_duration').on('change', function () {
+        if ($(this).val() === 'half') {
+            $('#half_day_off').show().find('input').attr('required', true);
+        } else {
+            $('#half_day_off').hide().find('input').removeAttr('required');
         }
     });
 
@@ -56,6 +59,7 @@ $(document).ready(function () {
         $('#leave-success-message').hide();
         $('#leave-request-form')[0].reset();
         $('#other_reason_div').hide().find('input').removeAttr('required');
+        $('#half_day_off').hide().find('input').removeAttr('required');
         $('#leave-request-form').show();
     });
 
@@ -77,15 +81,10 @@ $(document).ready(function () {
                     setTimeout(function () {
                         location.reload();
                     }, 1000);
-                } else {
-                    showAlert(response.message, response.success ? 'primary' : 'danger', 'delete-alert-container');
                 }
             },
             error: function (error) {
                 console.error('Error Accepting the Account:', error);
-            },
-            complete: function (response) {
-                console.log('Request complete:', response);
             }
         });
     });
@@ -108,15 +107,10 @@ $(document).ready(function () {
                     setTimeout(function () {
                         location.reload();
                     }, 1000);
-                } else {
-                    showAlert(response.message, response.success ? 'primary' : 'danger', 'delete-alert-container');
                 }
             },
             error: function (error) {
                 console.error('Error declining the Account:', error);
-            },
-            complete: function (response) {
-                console.log('Request complete:', response);
             }
         });
     });
