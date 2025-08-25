@@ -90,3 +90,72 @@
             </div>
         </div>
     </footer> -->
+
+
+       <section id="projects" class="py-20 px-4 md:px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl font-bold text-gray-800 section-title" data-aos="fade-down">Our Projects</h2>
+            <p class="text-gray-600 mb-12 max-w-2xl" data-aos="fade-up">
+                Explore our portfolio of innovative solutions that demonstrate our expertise in software development and automation.
+            </p>
+
+            <?php if ($error): ?>
+                <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-8 text-center" role="alert">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+            <?php if (empty($logs_data)): ?>
+                <div class="text-center py-12">
+                    <p class="text-gray-500 text-lg">No projects available at the moment. Please check back later.</p>
+                </div>
+            <?php else: ?>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <?php foreach ($logs_data as $project): ?>
+                        <?php
+                        $imagePath = "../assets/img/defaultProject.jpeg";
+                        $altText = "Default project image";
+                        $imageCount = 0;
+
+                        if (!empty($projectImages[$project['id']])) {
+                            $lastImg = end($projectImages[$project['id']]);
+                            $imagePath = "../uploads/projects/" . htmlspecialchars($lastImg['file_path']);
+                            $altText = htmlspecialchars($project['project_name']) . " project image";
+                            $imageCount = count($projectImages[$project['id']]);
+                        }
+                        ?>
+                        <div class="project-card bg-white" data-project-type="<?= htmlspecialchars($project['project_type']) ?>">
+                            <div class="relative overflow-hidden cursor-pointer group project-image-container" data-project-id="<?= $project['id'] ?>">
+                                <img src="<?= $imagePath ?>" alt="<?= $altText ?>"
+                                    class="project-image w-full h-auto transform transition-transform duration-500 group-hover:scale-110"
+                                    loading="lazy">
+
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                    <span class="text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                        View Project
+                                    </span>
+                                </div>
+
+                                <div class="absolute top-3 right-3">
+                                    <span class="tag <?= $project['project_type'] === 'automation' ? 'tag-automation' : 'tag-coding' ?>">
+                                        <?= ucfirst(htmlspecialchars($project['project_type'])) ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                                    <?= htmlspecialchars($project['project_name']) ?>
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4">
+                                    Completed on <?= date("F j, Y", strtotime($project['last_updated'])) ?>
+                                </p>
+
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
