@@ -54,10 +54,8 @@ $user_data = $userDetails->getAll();
 
                                         <dt class="col-sm-3">Reason:</dt>
                                         <dd class="col-sm-9">
-                                            <?= htmlspecialchars($pending['reason_type']) ?>
-                                            <?php if ($pending['reason_type'] === 'other') : ?>
-                                                (<?= htmlspecialchars($pending['other_reason']) ?>)
-                                            <?php endif; ?>
+                                            <?= htmlspecialchars($pending['reason_type']) ?> - 
+                                            <?= htmlspecialchars($pending['leave_note']) ?>
                                         </dd>
 
                                         <dt class="col-sm-3">Description:</dt>

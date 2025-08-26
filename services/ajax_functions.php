@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Get user by ID
 if (isset($_GET['action']) && $_GET['action'] === 'get_all_users') {
-    $users = (new User())->getAll();
+    $users = (new User())->getAllActive();
     echo json_encode(['success' => true, 'data' => $users]);
     exit;
 }
@@ -403,7 +403,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'request_leave') {
     try {
         $reason_type = $_POST['reason_type'];
-        $other_reason = $_POST['other_reason'] ?? null;
+        $leave_note = $_POST['leave_note'] ?? null;
         $leave_duration = $_POST['leave_duration'] ?? 'full'; // New: full/half
         $half_day = $_POST['half_day'] ?? null; // only relevant if leave_duration = half
         $date_off = $_POST['date_off'];
@@ -418,7 +418,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $leaveModel = new Leave();
         $requested = $leaveModel->createLeaveReq(
             $reason_type,
-            $other_reason,
+            $leave_note,
             $leave_duration,
             $half_day,
             $date_off,
@@ -582,7 +582,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_available_sub_assignees')
         $assignedIds = $subAssigneeModel->getAllByProjectId($project_id); // existing sub-assignees
 
         $userModel = new User();
-        $allUsers = $userModel->getAll();
+        $allUsers = $userModel->getAllActive();
 
         $data = [];
         foreach ($allUsers as $u) {

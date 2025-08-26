@@ -13,9 +13,9 @@ if (empty($username)) {
 }
 
 if ($role === "admin") {
-    header('Location: views/admin/Authorization.php');
+    header('Location: views/system/Authorization.php');
     exit;
 } else {
-    header('Location: views/admin/dashboard.php');
+    header('Location: views/system/dashboard.php');
     exit;
 }

@@ -44,7 +44,7 @@ CREATE TABLE leave_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     reason_type VARCHAR(255) NOT NULL,
-    other_reason VARCHAR(255) DEFAULT NULL,
+    leave_note VARCHAR(255) DEFAULT NULL,
     date_off DATE NOT NULL,
     leave_duration ENUM('full','half') NOT NULL DEFAULT 'full',
     half_day ENUM('first','second') DEFAULT NULL,
@@ -76,6 +76,6 @@ ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIME
 ALTER TABLE projects
 ADD COLUMN project_description TEXT DEFAULT NULL AFTER project_name;
 
+ALTER TABLE leave_requests
+ADD COLUMN leave_note VARCHAR(255) DEFAULT NULL;
 
-ALTER TABLE projects
-ADD COLUMN due_date TIMESTAMP NULL DEFAULT NULL AFTER last_updated;

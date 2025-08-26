@@ -4,7 +4,7 @@ require_once 'BaseModel.php';
 class Leave extends BaseModel
 {
     public $reason_type;
-    public $other_reason;
+    public $leave_note;
     public $leave_duration;
     public $half_day;
     public $date_off;
@@ -18,7 +18,7 @@ class Leave extends BaseModel
         return 'leave_requests';
     }
 
-    function createLeaveReq($reason_type, $other_reason, $leave_duration, $half_day, $date_off, $description, $user_id)
+    function createLeaveReq($reason_type, $leave_note, $leave_duration, $half_day, $date_off, $description, $user_id)
     {
         $leaveModel = new Leave();
         $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
@@ -28,7 +28,7 @@ class Leave extends BaseModel
 
         $leave = new Leave();
         $leave->reason_type = $reason_type;
-        $leave->other_reason = $other_reason;
+        $leave->leave_note = $leave_note;
         $leave->leave_duration = $leave_duration;
         // Only use half_day if leave_duration is half
         $leave->half_day = ($leave_duration === 'half') ? $half_day : null;
@@ -44,7 +44,7 @@ class Leave extends BaseModel
     {
         $param = [
             ':reason_type'    => $this->reason_type,
-            ':other_reason'   => $this->other_reason,
+            ':leave_note'   => $this->leave_note,
             ':leave_duration' => $this->leave_duration,
             ':half_day'       => $this->half_day,
             ':date_off'       => $this->date_off,
@@ -53,9 +53,9 @@ class Leave extends BaseModel
         ];
 
         $query = "INSERT INTO " . $this->getTableName() . "
-        (reason_type, other_reason, leave_duration, half_day, date_off, description, user_id)
+        (reason_type, leave_note, leave_duration, half_day, date_off, description, user_id)
         VALUES
-        (:reason_type, :other_reason, :leave_duration, :half_day, :date_off, :description, :user_id)";
+        (:reason_type, :leave_note, :leave_duration, :half_day, :date_off, :description, :user_id)";
 
         return $this->pm->run($query, $param);
     }
