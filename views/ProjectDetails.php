@@ -247,7 +247,7 @@ if (stripos($project_type, 'automation') !== false) {
                         <?= h($status_text) ?>
                     </span>
                     <?php if ($tag_class): ?>
-                        <span class="tag <?= $tag_class ?>"><?= h($project_type) ?></span>
+                        <span class="tag <?= $tag_class ?> mb-5"><?= h($project_type) ?></span>
                     <?php endif; ?>
                 </div>
 

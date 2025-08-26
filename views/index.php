@@ -179,76 +179,6 @@ try {
             transform: translateY(-3px);
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            overflow: auto;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.show {
-            display: block;
-            opacity: 1;
-        }
-
-        .modal-content {
-            position: relative;
-            background-color: #111827;
-            margin: 2% auto;
-            padding: 20px;
-            width: 90%;
-            max-width: 1200px;
-            border-radius: 12px;
-            color: #e5e7eb;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .close-modal:hover {
-            color: #bbb;
-        }
-
-        .gallery-grid {
-            columns: 3;
-            column-gap: 16px;
-        }
-
-        .gallery-item {
-            break-inside: avoid;
-            margin-bottom: 16px;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            border-radius: 12px;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05) translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
-        }
-
         @keyframes smoothFadeUp {
             0% {
                 opacity: 0;
@@ -270,18 +200,6 @@ try {
             animation: smoothFadeUp 1s ease-in-out forwards;
         }
 
-        @media (max-width: 1023px) and (min-width: 640px) {
-            .gallery-grid {
-                columns: 2;
-            }
-        }
-
-        @media (max-width: 639px) {
-            .gallery-grid {
-                columns: 1;
-            }
-        }
-
         @media (max-width: 768px) {
             .hero-content {
                 text-align: center;
@@ -289,12 +207,6 @@ try {
 
             .project-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 95%;
-                margin: 5% auto;
-                padding: 10px;
             }
         }
     </style>
@@ -347,15 +259,6 @@ try {
             </a> -->
         </div>
     </nav>
-
-
-    <!-- Gallery Modal -->
-    <div id="galleryModal" class="modal">
-        <span class="close-modal">&times;</span>
-        <div class="modal-content">
-            <div id="modalContent"></div>
-        </div>
-    </div>
 
     <!-- Hero Section -->
     <section id="hero" class="hero-section pt-32 pb-20 px-4 md:px-8">
@@ -455,23 +358,25 @@ try {
                         }
                         ?>
                         <div class="project-card bg-white" data-project-type="<?= htmlspecialchars($project['project_type']) ?>">
-                            <div class="relative overflow-hidden cursor-pointer group project-image-container" data-project-id="<?= $project['id'] ?>">
-                                <img src="<?= $imagePath ?>" alt="<?= $altText ?>"
-                                    class="project-image w-full h-auto transform transition-transform duration-500 group-hover:scale-110"
-                                    loading="lazy">
+                            <a href="ProjectDetails.php?id=<?= $project['id'] ?>" target="_blank" class="block">
+                                <div class="relative overflow-hidden cursor-pointer group project-image-container" data-project-id="<?= $project['id'] ?>">
+                                    <img src="<?= $imagePath ?>" alt="<?= $altText ?>"
+                                        class="project-image w-full h-auto transform transition-transform duration-500 group-hover:scale-110"
+                                        loading="lazy">
 
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                                    <span class="text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                                        View Project
-                                    </span>
-                                </div>
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                        <span class="text-white font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                            View Project Details
+                                        </span>
+                                    </div>
 
-                                <div class="absolute top-3 right-3">
-                                    <span class="tag <?= $project['project_type'] === 'automation' ? 'tag-automation' : 'tag-coding' ?>">
-                                        <?= ucfirst(htmlspecialchars($project['project_type'])) ?>
-                                    </span>
+                                    <div class="absolute top-3 right-3">
+                                        <span class="tag <?= $project['project_type'] === 'automation' ? 'tag-automation' : 'tag-coding' ?>">
+                                            <?= ucfirst(htmlspecialchars($project['project_type'])) ?>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
 
                             <!-- Content -->
                             <div class="p-6">
@@ -481,10 +386,8 @@ try {
                                 <p class="text-gray-600 text-sm mb-4">
                                     Completed on <?= date("F j, Y", strtotime($project['last_updated'])) ?>
                                 </p>
-
                             </div>
                         </div>
-
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
@@ -526,7 +429,6 @@ try {
             </div>
         </div>
     </section>
-
 
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
@@ -592,88 +494,20 @@ try {
                 });
             });
 
-            // Modal functionality
-            const modal = document.getElementById("galleryModal");
-            const modalContent = document.getElementById("modalContent");
-            const closeModal = document.querySelector(".close-modal");
-
-            // Open gallery when project image is clicked
-            document.querySelectorAll('.project-image-container').forEach(container => {
-                container.addEventListener('click', function() {
-                    const projectId = this.getAttribute('data-project-id');
-                    openGalleryModal(projectId);
-                });
+            // Mobile menu toggle
+            document.getElementById('menu-btn').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
             });
 
-            // Close modal when clicking on X
-            closeModal.addEventListener('click', function() {
-                modal.classList.remove('show');
-            });
-
-            // Close modal when clicking outside content
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
+            // Shrink navbar on scroll
+            window.addEventListener('scroll', function() {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg', 'py-1');
+                } else {
+                    navbar.classList.remove('shadow-lg', 'py-1');
                 }
             });
-            // Function to open gallery modal
-            function openGalleryModal(projectId) {
-                // Show loading state
-                modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">Loading gallery...</p></div>';
-                modal.classList.add('show');
-
-                // Fetch project data via AJAX
-                fetch(`gallery.php?project_id=${projectId}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        // Extract just the gallery content from the response
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(data, 'text/html');
-
-                        // Get the project header and gallery grid
-                        const projectHeader = doc.querySelector('.container.mx-auto .flex.flex-col.md\\:flex-row');
-                        const galleryGrid = doc.querySelector('.gallery-grid');
-
-                        if (galleryGrid) {
-                            // Create modal content
-                            modalContent.innerHTML = '';
-
-                            if (projectHeader) {
-                                modalContent.appendChild(projectHeader.cloneNode(true));
-                            }
-
-                            if (galleryGrid) {
-                                modalContent.appendChild(galleryGrid.cloneNode(true));
-                            }
-
-                            // Reinitialize animations for the modal content
-                            document.querySelectorAll('.gallery-item').forEach((item, index) => {
-                                item.style.animationDelay = `${index * 0.1}s`;
-                            });
-                        } else {
-                            modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">No images found for this project.</p></div>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading gallery:', error);
-                        modalContent.innerHTML = '<div class="text-center py-12"><p class="text-white">Error loading gallery. Please try again.</p></div>';
-                    });
-            }
-        });
-
-        // Mobile menu toggle
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
-        // Shrink navbar on scroll
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg', 'py-1');
-            } else {
-                navbar.classList.remove('shadow-lg', 'py-1');
-            }
         });
     </script>
 
