@@ -74,6 +74,7 @@ $(document).ready(function () {
                     $('#ProjectId').val(res.data.id);
                     $('#UserID').val(res.data.user_id);
                     $('#ProjectName').val(res.data.project_name);
+                    $('#DescriptionUpdate').val(res.data.description);
                     $('#ProjectStatusUpdate').val(res.data.status);
                     $('#edit-project-modal').modal('show');
                 } else {

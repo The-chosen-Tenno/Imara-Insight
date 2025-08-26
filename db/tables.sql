@@ -22,6 +22,7 @@ CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     project_name VARCHAR(150) NOT NULL,
+    description VARCHAR(255) NOT NULL,
     project_type ENUM('automation', 'coding') DEFAULT NULL,
     status ENUM('finished', 'idle', 'in_progress', 'cancelled') DEFAULT 'in_progress',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -74,7 +75,7 @@ ALTER TABLE leave_requests
 ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER uploaded_at;
 
 ALTER TABLE projects
-ADD COLUMN project_description TEXT DEFAULT NULL AFTER project_name;
+ADD COLUMN description TEXT DEFAULT NULL AFTER project_name;
 
 ALTER TABLE leave_requests
 ADD COLUMN leave_note VARCHAR(255) DEFAULT NULL;
