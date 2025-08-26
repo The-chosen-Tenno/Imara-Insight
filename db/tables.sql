@@ -78,3 +78,5 @@ ADD COLUMN project_description TEXT DEFAULT NULL AFTER project_name;
 
 ALTER TABLE leave_requests
 ADD COLUMN leave_note VARCHAR(255) DEFAULT NULL;
+
+ass
