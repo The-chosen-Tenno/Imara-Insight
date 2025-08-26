@@ -50,8 +50,9 @@ $data = $userModel->getAll();
                             <td>
                                 <button class="btn btn-sm btn-warning change-status-btn"
                                         data-id="<?= $user['id'] ?>"
-                                            data-status="<?= $user['status'] ?>">Change
+                                        data-status="<?= $user['user_status'] ?>">Change
                                 </button>
+
                             </td>
                             <?php } ?>
                         </tr>

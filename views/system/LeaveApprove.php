@@ -8,6 +8,9 @@ $leave = $leaveDetails->getLeavebyStatus();
 
 $userDetails = new User();
 $user_data = $userDetails->getAll();
+if ($permission !== 'admin') {
+    die('Access Denied...!');
+}
 ?>
 
 <div class="content-wrapper">

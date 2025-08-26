@@ -4,16 +4,24 @@ include BASE_PATH . '/helpers/AppManager.php';
 
 $sm = AppManager::getSM();
 
-$userId = $sm->getAttribute("userId");
-$username = $sm->getAttribute("userName");
-$fullName = $sm->getAttribute("fullName");
+// 🔒 Default: require authentication
+$requireAuth = $requireAuth ?? true; 
+
+$userId     = $sm->getAttribute("userId");
+$username   = $sm->getAttribute("userName");
+$fullName   = $sm->getAttribute("fullName");
 $permission = $sm->getAttribute("role");
-$photo = $sm->getAttribute("userPhoto");
+$photo      = $sm->getAttribute("userPhoto");
+
+// ✅ Redirect to login if auth required and user not logged in
+if ($requireAuth && !$userId) {
+    header("Location: " . url("views/auth/login.php"));
+    exit();
+}
 
 // Extract the last filename from the URL
-$currentUrl = $_SERVER['SCRIPT_NAME'];
+$currentUrl      = $_SERVER['SCRIPT_NAME'];
 $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
-
 ?>
 
 <!DOCTYPE html>
@@ -151,7 +159,6 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                         <img src="<?= $photo ? url($photo) : url('assets/img/illustrations/default-profile-picture.png') ?>"
                                             alt
                                             class="w-px-40 h-px-40 object-cover rounded-circle" />
-
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -182,12 +189,9 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                             <span class="align-middle">
                                                 Logout
                                             </span>
-                                            <form id="logout-form" action="<?= url('services/logout.php') ?>" method="POST" class="d-none">
-
-                                            </form>
+                                            <form id="logout-form" action="<?= url('services/logout.php') ?>" method="POST" class="d-none"></form>
                                         </a>
                                     </li>
-
                                 </ul>
                             </li>
                             <!--/ User -->
