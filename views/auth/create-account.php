@@ -11,7 +11,7 @@ require_once('../../config.php');
             <div class="card-body">
 
             <div class="app-brand justify-content-center mb-6">
-                <a href="../admin/dashboard.php" class="app-brand-link gap-2">
+                <a href="../system/dashboard.php" class="app-brand-link gap-2">
                   <span class="app-brand-text demo text-heading fw-bold">Imara-Insight</span>
                 </a>
               </div>

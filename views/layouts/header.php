@@ -69,7 +69,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
         <div class="layout-container">
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="<?= url('/views/admin/dashboard.php') ?>" class="app-brand-link">
+                    <a href="<?= url('/views/system/dashboard.php') ?>" class="app-brand-link">
                         <span class="app-brand-logo demo">
                             <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" style="width: 35px; height: 35px;">
                         </span>
@@ -86,13 +86,13 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                 <ul class="menu-inner py-1">
                     <?php if (($permission === "admin")) : ?>
                         <li class="menu-item <?= $currentFilename === "Authorization.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/Authorization.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/Authorization.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user-check"></i>
                                 <div data-i18n="appointments">Authorization</div>
                             </a>
                         </li>
                         <li class="menu-item <?= $currentFilename === "LeaveApprove.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/LeaveApprove.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/LeaveApprove.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-calendar-check"></i>
                                 <div data-i18n="appointments">Leave Approvals</div>
                             </a>
@@ -100,7 +100,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php endif; ?>
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/dashboard.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/dashboard.php') ?>" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-home-alt"></i>
                                 <div data-i18n="appointments">Dashboard</div>
                             </a>
@@ -108,13 +108,13 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php endif; ?>
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "logs.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/logs.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/logs.php') ?>" class="menu-link">
                                 <i class='menu-icon tf-icons bx bxs-coin-stack'></i>
                                 <div data-i18n="Analytics">Logs</div>
                             </a>
                         </li>
                         <li class="menu-item <?= $currentFilename === "leaveRequest.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/leaveRequest.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/leaveRequest.php') ?>" class="menu-link">
                                 <i class='menu-icon tf-icons bx bxs-calendar-x'></i>
                                 <div data-i18n="Analytics">Request Leave</div>
                             </a>
@@ -122,7 +122,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                     <?php endif; ?>
                     <?php if (isset($permission)) : ?>
                         <li class="menu-item <?= $currentFilename === "users.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/admin/users.php') ?>" class="menu-link">
+                            <a href="<?= url('views/system/users.php') ?>" class="menu-link">
                                 <i class="menu-icon bx bx-user"></i>
                                 <div data-i18n="Analytics">Employees</div>
                             </a>
@@ -156,7 +156,7 @@ $currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="<?= url('views/admin/profile.php') ?>">
+                                        <a class="dropdown-item" href="<?= url('views/system/profile.php') ?>">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
