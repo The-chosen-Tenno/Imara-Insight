@@ -151,7 +151,7 @@ $users = $userDetails->getUserbyStatus();
                         <div class="mb-3">
                             <label for="exampleFormControlSelect1" class="form-label">Role</label>
                             <select class="form-select" id="permission" aria-label="Default select example" name="role" required>
-                                <option value="member">Member</option>
+                                <option value="user">User</option>
                                 <option value="admin">Admin</option>
                             </select>
                         </div>
