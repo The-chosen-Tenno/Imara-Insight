@@ -124,6 +124,10 @@ if (!isset($permission)) {
                                 <input type="hidden" name="action" value="create_project">
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label"> Project description</label>
+                            <textarea id="description" name="description" rows="4" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
+                        </div>
                         <div class="col mb-3">
                             <label class="form-label" for="CreateUserID">Assign To</label>
                             <div class="input-group">
@@ -181,6 +185,10 @@ if (!isset($permission)) {
                                 <input type="hidden" name="action" value="update_project" />
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"> Project description</label>
+                        <textarea id="DescriptionUpdate" name="description" rows="4" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
                     </div>
                     <div class="row">
                         <div class="mb-3">

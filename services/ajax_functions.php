@@ -203,11 +203,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $user_id = $_POST['user_id'];
         $project_name = $_POST['project_name'];
+        $description = $_POST['description'];
         $project_type = $_POST['type'] ?? 'coding';
         $project_status = $_POST['status'] ?? 'idle';
 
         $logsModel = new Logs();
-        $projectCreated = $logsModel->createProject($user_id, $project_name, $project_type, $project_status);
+        $projectCreated = $logsModel->createProject($user_id, $project_name, $description, $project_type, $project_status);
 
         if ($projectCreated) {
             $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
@@ -259,7 +260,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } else {
             echo json_encode(['success' => false, 'message' => 'Some error occurred while creating project']);
         }
-
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
@@ -310,10 +310,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $project_id = $_POST['project_id'];
         $user_id = $_POST['user_id'];
         $projectName = $_POST['project_name'];
+        $description = $_POST['description'];
         $project_status = $_POST['status'];
 
         $logsModel = new Logs();
-        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $project_status);
+        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $description, $project_status);
         if ($updated) {
             echo json_encode(['success' => true, 'message' => "Project updated successfully!"]);
         } else {
@@ -325,16 +326,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Update project user and upload images (admin)
+// Update project user and upload images (user)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
     try {
         $project_id = $_POST['project_id'];
         $user_id = $_POST['user_id'];
         $projectName = $_POST['project_name'];
+        $description = $_POST['description'];
         $project_status = $_POST['status'];
 
         $logsModel = new Logs();
-        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $project_status);
+        $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $description, $project_status);
 
         // Prepare arrays for titles and descriptions
         $titles = $_POST['project_images_title'] ?? [];

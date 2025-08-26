@@ -186,6 +186,10 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         <input type="hidden" name="action" value="create_project">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label"> Project description</label>
+                        <textarea id="description" name="description" rows="4" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Sub-assignees</label>
                         <select id="createSubAssigneeSelect" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
                     </div>
@@ -241,7 +245,10 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                         <input type="hidden" name="user_id" id="UserID" required />
                         <input type="hidden" name="action" value="update_project_user" />
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label"> Project description</label>
+                        <textarea id="DescriptionUpdate" name="description" rows="4" class="form-control" placeholder="Provide details or additional info here..." required></textarea>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Project Status</label>
                         <select class="form-select" id="ProjectStatusUpdate" name="status" required>

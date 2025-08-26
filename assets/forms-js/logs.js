@@ -40,6 +40,7 @@ $(document).ready(function () {
                     $('#UserID').val(res.data.user_id);
                     $('#ProjectName').val(res.data.project_name);
                     $('#ProjectStatus').val(res.data.status);
+                    $('#DescriptionUpdate').val(res.data.description);
                     $('#edit-project-modal').modal('show');
                     $('#ProjectTypeEdit').val(res.data.project_type);
                 } else {

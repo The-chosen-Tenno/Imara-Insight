@@ -7,6 +7,7 @@ class Logs extends BaseModel
     public $UserID;
     public $ProjectName;
     public $ProjectType;
+    public $Description;
     public $ProjectStatus;
     public $LastUpdated;
 
@@ -20,12 +21,13 @@ class Logs extends BaseModel
         $param = array(
             ':user_id' => $this->UserID,
             ':project_name' => $this->ProjectName,
+            ':description' => $this->Description,
             ':project_type' => $this->ProjectType,
             ':status' => $this->ProjectStatus,
         );
         return $this->pm->run(
-            "INSERT INTO " . $this->getTableName() . " (user_id, project_name, project_type, status) 
-         VALUES (:user_id, :project_name, :project_type, :status)",
+            "INSERT INTO " . $this->getTableName() . " (user_id, project_name, description, project_type, status) 
+         VALUES (:user_id, :project_name, :description, :project_type, :status)",
             $param
         );
     }
@@ -33,24 +35,27 @@ class Logs extends BaseModel
     protected function updateRec()
     {
         $param = array(
+            ':user_id' => $this->UserID,
             ':project_id' => $this->ProjectID,
             ':project_name' => $this->ProjectName,
-            ':status' => $this->ProjectStatus, // ✅ fixed
+            ':description' => $this->Description,
+            ':status' => $this->ProjectStatus,
         );
 
         return $this->pm->run(
             "UPDATE " . $this->getTableName() . " 
-             SET project_name = :project_name, status = :status
-             WHERE id = :project_id",
+             SET project_name = :project_name, status = :status, description = :description
+             WHERE id = :project_id AND user_id = :user_id",
             $param
         );
     }
 
-    function createProject($user_id, $project_name, $project_type, $status = 'in_progress') // ✅ fixed signature
+    function createProject($user_id, $project_name, $description, $project_type, $status = 'in_progress') // ✅ fixed signature
     {
         $LogModel = new Logs();
         $LogModel->UserID = $user_id;
         $LogModel->ProjectName = $project_name;
+        $LogModel->Description = $description;
         $LogModel->ProjectType = $project_type;
         $LogModel->ProjectStatus = $status;
         $LogModel->addNewRec();
@@ -58,12 +63,13 @@ class Logs extends BaseModel
         return $LogModel ? true : false;
     }
 
-    function updateProject($project_id, $user_id, $project_name, $status)
+    function updateProject($project_id, $user_id, $project_name, $description, $status)
     {
         $project = new Logs();
         $project->ProjectID = $project_id;
         $project->UserID = $user_id;
         $project->ProjectName = $project_name;
+        $project->Description = $description;
         $project->ProjectStatus = $status;
         $project->updateRec();
 
