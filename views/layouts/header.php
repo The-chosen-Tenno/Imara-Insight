@@ -4,7 +4,7 @@ include BASE_PATH . '/helpers/AppManager.php';
 
 $sm = AppManager::getSM();
 
-$requireAuth = $requireAuth ?? true; 
+$requireAuth = $requireAuth ?? true;
 
 $userId     = $sm->getAttribute("userId");
 $username   = $sm->getAttribute("userName");
@@ -18,7 +18,7 @@ if ($requireAuth && !$userId) {
 }
 
 $currentUrl      = $_SERVER['SCRIPT_NAME'];
-$currentFilename = basename($currentUrl); 
+$currentFilename = basename($currentUrl);
 ?>
 
 <!DOCTYPE html>
@@ -172,6 +172,19 @@ $currentFilename = basename($currentUrl);
                                                 <div class="flex-grow-1">
                                                     <span class="fw-semibold d-block"><?= $username ?></span>
                                                     <small class="text-muted text-capitalize"><?= $permission ?></small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="../personalportfolio.php?id=<?= $userId ?>" target="_blank">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3 d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
+                                                    <i class="bx bx-briefcase fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">Portfolio</span>
+                                                    <small class="text-muted">View your works</small>
                                                 </div>
                                             </div>
                                         </a>
