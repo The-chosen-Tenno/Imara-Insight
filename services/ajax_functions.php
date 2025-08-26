@@ -95,8 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $id = $_POST['user_id'] ?? null;
         $user_status = $_POST['user_status'] ?? null;
-// print_r($_POST);
-// die()
         if (!$id || !$user_status) {
             echo json_encode(['success' => false, 'message' => 'Missing user ID or status']);
             exit;

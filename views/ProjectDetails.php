@@ -70,6 +70,14 @@ function build_img_src(string $base, string $file): string
     $file = ltrim($file, '/\\');
     return $base . $file;
 }
+
+// Determine tag class based on project type
+$tag_class = '';
+if (stripos($project_type, 'automation') !== false) {
+    $tag_class = 'tag-automation';
+} elseif (stripos($project_type, 'coding') !== false || stripos($project_type, 'development') !== false) {
+    $tag_class = 'tag-coding';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,13 +101,14 @@ function build_img_src(string $base, string $file): string
             --secondary-color: #6366f1;
             --accent-color: #10b981;
             --dark-color: #1f2937;
-            --light-color: #f9fafb;
+            --light-color: #ffffff; /* Changed to white */
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #374151;
             line-height: 1.6;
+            background-color: #ffffff; /* Full white background */
         }
 
         .gradient-text {
@@ -114,6 +123,7 @@ function build_img_src(string $base, string $file): string
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff; /* White background for cards */
         }
 
         .project-card:hover {
@@ -161,6 +171,7 @@ function build_img_src(string $base, string $file): string
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff; /* White background */
         }
 
         .info-card:hover {
@@ -173,6 +184,7 @@ function build_img_src(string $base, string $file): string
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff; /* White background */
         }
 
         .screenshot-card:hover {
@@ -208,34 +220,84 @@ function build_img_src(string $base, string $file): string
         .animate-smooth {
             animation: smoothFadeUp 1s ease-in-out forwards;
         }
+
+        /* Navigation styles */
+        .navbar {
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 
-    <body class="bg-white min-h-screen">
-    <div class="pt-24 pb-12 px-4 md:px-8">
+<body class="bg-white min-h-screen"> <!-- Changed to bg-white -->
+    <div class="pt-5 pb-5 px-4 md:px-8">
         <div class="container mx-auto max-w-6xl">
-            
             <!-- Project Header -->
-            <div class="p-6 md:p-8 mb-8 border-b border-gray-200" data-aos="fade-up">
-    <div class="flex items-center gap-3">
-        <h2 class="text-3xl font-bold text-gray-800 section-title" data-aos="fade-down">
-            <?= h($project_name) ?>
-        </h2>
+            <div class="p-6 md:p-8 mb-8 bg-white rounded-xl shadow-sm" data-aos="fade-up">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <h2 class="text-3xl font-bold text-gray-800 section-title">
+                        <?= h($project_name) ?>
+                    </h2>
+                    <span class=" inline-block px-3 py-1 mb-5 text-sm font-medium rounded-full <?= $status_class ?>">
+                        <?= h($status_text) ?>
+                    </span>
+                    <?php if ($tag_class): ?>
+                        <span class="tag <?= $tag_class ?>"><?= h($project_type) ?></span>
+                    <?php endif; ?>
+                </div>
 
-        <span class="inline-block px-3 py-1 text-sm font-medium rounded-full <?= $status_class ?>">
-            <?= h($status_text) ?>
-        </span>
-    </div>
+                <p class="text-gray-600 mt-4 max-w-2xl" data-aos="fade-up">
+                    <?= h($desc) ?>
+                </p>
 
-    <p class="text-gray-600 mt-4 max-w-2xl" data-aos="fade-up">
-        <?= h($desc) ?>
-    </p>
-</div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div class="info-card bg-white p-5 border border-gray-100" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center">
+                            <div class="bg-indigo-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-user text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Assigned To</p>
+                                <p class="font-medium"><?= h($assigned_name) ?></p>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Project Details (Full White Background) -->
-            <section class="p-6 md:p-8" data-aos="fade-up">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 section-title mb-6" data-aos="fade-down">
-                    Project Details
+                    <div class="info-card bg-white p-5 border border-gray-100" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-calendar text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Due Date</p>
+                                <p class="font-medium"><?= h($due_date) ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card bg-white p-5 border border-gray-100" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-sync-alt text-purple-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Last Updated</p>
+                                <p class="font-medium"><?= h($last_updated) ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Screenshots -->
+            <section class="p-6 md:p-8 bg-white rounded-xl shadow-sm" data-aos="fade-up">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 section-title mb-6">
+                    Project Screenshots
                 </h2>
 
                 <?php if (!empty($images)): ?>
@@ -247,11 +309,9 @@ function build_img_src(string $base, string $file): string
                             $title    = $img['title'] ?? 'Screenshot';
                             $imgDesc  = $img['description'] ?? '';
                             ?>
-                            <!-- Card -->
-                            <div class="rounded-xl overflow-hidden group border border-gray-200 shadow-sm"
+                            <!-- Screenshot Card -->
+                            <div class="rounded-xl overflow-hidden group border border-gray-200 shadow-sm screenshot-card"
                                 data-aos="fade-up" data-aos-delay="<?= $i * 100 ?>">
-                                
-                                <!-- Image Container -->
                                 <div class="relative overflow-hidden cursor-pointer">
                                     <?php if ($imgSrc): ?>
                                         <img src="<?= h($imgSrc) ?>" alt="<?= h($title) ?>"
@@ -262,10 +322,7 @@ function build_img_src(string $base, string $file): string
                                             <i class="fas fa-image text-4xl"></i>
                                         </div>
                                     <?php endif; ?>
-
                                 </div>
-
-                                <!-- Content -->
                                 <div class="p-5">
                                     <h3 class="font-semibold text-lg mb-2 text-gray-800"><?= h($title) ?></h3>
                                     <?php if (!empty($imgDesc)): ?>
@@ -286,35 +343,19 @@ function build_img_src(string $base, string $file): string
     </div>
 
 
-
-        <!-- AOS JS -->
-        <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize AOS
-                AOS.init({
-                    duration: 1000,
-                    easing: 'ease-out-cubic',
-                    once: true,
-                    mirror: false
-                });
-
-                // Mobile menu toggle
-                document.getElementById('menu-btn').addEventListener('click', function() {
-                    document.getElementById('mobile-menu').classList.toggle('hidden');
-                });
-
-                // Shrink navbar on scroll
-                window.addEventListener('scroll', function() {
-                    const navbar = document.getElementById('navbar');
-                    if (window.scrollY > 50) {
-                        navbar.classList.add('shadow-lg', 'py-1');
-                    } else {
-                        navbar.classList.remove('shadow-lg', 'py-1');
-                    }
-                });
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS
+            AOS.init({
+                duration: 1000,
+                easing: 'ease-out-cubic',
+                once: true,
+                mirror: false
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 
 </html>
