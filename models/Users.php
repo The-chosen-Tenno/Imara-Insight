@@ -38,7 +38,7 @@ class User extends BaseModel
         }
     }
 
-        function createUserByAdmin($full_name, $user_name, $email, $password, $role)
+    function createUserByAdmin($full_name, $user_name, $email, $password, $role)
     {
         $userModel = new User();
         $existingUser = $userModel->getUserByUsernameOrEmail($user_name, $email);
@@ -100,25 +100,25 @@ class User extends BaseModel
         }
     }
 
-   protected function addNewRec()
-{
-    $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-    $param = [
-        ':full_name'   => $this->full_name,
-        ':user_name'   => $this->user_name,
-        ':email'       => $this->email,
-        ':password'    => $this->password,
-        ':role'        => $this->role,
-        ':status'      => $this->status,
-        ':user_status' => $this->user_status ?? 'active', // default active
-    ];
-    return $this->pm->run(
-        "INSERT INTO " . $this->getTableName() . " 
+    protected function addNewRec()
+    {
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+        $param = [
+            ':full_name'   => $this->full_name,
+            ':user_name'   => $this->user_name,
+            ':email'       => $this->email,
+            ':password'    => $this->password,
+            ':role'        => $this->role,
+            ':status'      => $this->status,
+            ':user_status' => $this->user_status ?? 'active', // default active
+        ];
+        return $this->pm->run(
+            "INSERT INTO " . $this->getTableName() . " 
         (full_name,user_name,password,role,email,status,user_status) 
         VALUES (:full_name,:user_name,:password,:role,:email,:status,:user_status)",
-        $param
-    );
-}
+            $param
+        );
+    }
 
 
     protected function updateRec()
@@ -163,15 +163,16 @@ class User extends BaseModel
         return $result !== false;
     }
 
-public function updateUserStatus($user_id, $status) {
-    $sql = "UPDATE " . $this->getTableName() . " SET user_status = :status WHERE id = :id";
-    $params = [
-        ':status' => $status,
-        ':id'     => $user_id
-    ];
-    $result = $this->pm->run($sql, $params);
-    return $result > 0 ;
-}
+    public function updateUserStatus($user_id, $status)
+    {
+        $sql = "UPDATE " . $this->getTableName() . " SET user_status = :status WHERE id = :id";
+        $params = [
+            ':status' => $status,
+            ':id'     => $user_id
+        ];
+        $result = $this->pm->run($sql, $params);
+        return $result > 0;
+    }
 
 
 
@@ -246,5 +247,13 @@ public function updateUserStatus($user_id, $status) {
     {
         $result = $this->pm->run('SELECT MAX(id) as lastInsertedId FROM users', null, true);
         return $result['lastInsertedId'] ?? 100;
+    }
+    public function getAllActive()
+    {
+        return $this->pm->run(
+            "SELECT * FROM " . $this->getTableName() . " 
+     WHERE user_status = 'active' 
+     ORDER BY id DESC"
+        );
     }
 }

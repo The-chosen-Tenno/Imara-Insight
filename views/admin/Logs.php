@@ -7,7 +7,7 @@ include BASE_PATH . '/models/Sub-Assignees.php';
 $project_logs = new Logs();
 $logs_data = $project_logs->getAllByDesc();
 $user_details = new User();
-$user_data = $user_details->getAll();
+$user_data = $user_details->getAllActive();
 $sub_assignee_details = new SubAssignee();
 
 if (!isset($permission)) {

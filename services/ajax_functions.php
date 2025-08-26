@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Get user by ID
 if (isset($_GET['action']) && $_GET['action'] === 'get_all_users') {
-    $users = (new User())->getAll();
+    $users = (new User())->getAllActive();
     echo json_encode(['success' => true, 'data' => $users]);
     exit;
 }
@@ -584,7 +584,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_available_sub_assignees')
         $assignedIds = $subAssigneeModel->getAllByProjectId($project_id); // existing sub-assignees
 
         $userModel = new User();
-        $allUsers = $userModel->getAll();
+        $allUsers = $userModel->getAllActive();
 
         $data = [];
         foreach ($allUsers as $u) {

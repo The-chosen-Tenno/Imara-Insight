@@ -43,7 +43,7 @@ require_once('../../config.php');
                 </div>
                 <div class="mb-6">
                   <label for="email" class="form-label">Email</label>
-                  <input type="text" 
+                  <input type="email" 
                   class="form-control" 
                   id="email" 
                   Required 
