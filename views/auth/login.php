@@ -48,7 +48,8 @@ require_once('../../config.php');
                                     aria-describedby="password" />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
-                            <div class="mb-3" id="password-error"></div>
+                            <div class="mb-3 text-danger" id="password-error"></div>
+
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit" id="login">Sign in</button>

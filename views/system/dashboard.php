@@ -50,7 +50,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                     ?>
                         <tr>
                             <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
-                            <td>
+                            <td class="text-start">
                                 <?php foreach ($sub_assignee_data as $sub_id): ?>
                                     <span class="badge rounded-pill bg-secondary me-1 mb-1">
                                         <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
@@ -78,15 +78,31 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                             </td>
                             <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
                             <td>
-                                <a class="text-warning me-1 edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int) $LD['id']; ?>">
-                                    <i class="bx bx-edit-alt"></i>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a class="text-warning me-1 edit-project-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#edit-project-modal" 
+                                data-id="<?= (int) 
+                                $LD['id']; ?>">
+                                <i class="bx bx-edit-alt"></i>
                                 </a>
-                                <a class="text-success me-1 add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
-                                    <i class="bx bx-user-plus"></i>
+
+                                <a class="text-success me-1 add-sub-assignee-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#add-sub-assignee-modal" 
+                                data-id="<?= (int) 
+                                $LD['id']; ?>">
+                                <i class="bx bx-user-plus"></i>
                                 </a>
-                                <a class="text-danger remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int) $LD['id']; ?>">
-                                    <i class="bx bx-user-minus"></i>
+
+                                <a class="text-danger remove-sub-assignee-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#remove-sub-assignee-modal" 
+                                data-id="<?= (int) 
+                                $LD['id']; ?>">
+                                <i class="bx bx-user-minus"></i>
                                 </a>
+                            </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -121,7 +137,7 @@ if (!isset($permission) || ($permission !== 'user' && $permission !== 'admin')) 
                             <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
 
                             <!-- Other Sub-Assignees column -->
-                            <td>
+                            <td class="text-start">
                                 <?php foreach ($sub_assignees as $sub_id): ?>
                                     <span class="badge rounded-pill bg-secondary me-1 mb-1">
                                         <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>

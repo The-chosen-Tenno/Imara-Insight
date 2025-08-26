@@ -4,7 +4,6 @@ include BASE_PATH . '/helpers/AppManager.php';
 
 $sm = AppManager::getSM();
 
-// 🔒 Default: require authentication
 $requireAuth = $requireAuth ?? true; 
 
 $userId     = $sm->getAttribute("userId");
@@ -13,15 +12,13 @@ $fullName   = $sm->getAttribute("fullName");
 $permission = $sm->getAttribute("role");
 $photo      = $sm->getAttribute("userPhoto");
 
-// ✅ Redirect to login if auth required and user not logged in
 if ($requireAuth && !$userId) {
     header("Location: " . url("views/auth/login.php"));
     exit();
 }
 
-// Extract the last filename from the URL
 $currentUrl      = $_SERVER['SCRIPT_NAME'];
-$currentFilename = basename($currentUrl);  // e.g., "dashboard.php"
+$currentFilename = basename($currentUrl); 
 ?>
 
 <!DOCTYPE html>

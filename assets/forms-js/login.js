@@ -8,13 +8,12 @@ $(document).ready(function () {
 
         $('#password-error').text('');
 
-        // Basic validation
         if (!email || !password) {
             $('#password-error').text('Please enter both email and password.');
             error = true;
         }
 
-        if (error) return;
+        if (error) return;  
 
         $.ajax({
             url: $(this).attr('action'),
