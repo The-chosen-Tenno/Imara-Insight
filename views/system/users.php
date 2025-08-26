@@ -23,6 +23,7 @@ $data = $userModel->getAll();
                         <th class="text-start ps-3">User Name</th>
                         <th>Full Name</th>
                         <th>Email</th>
+                        <th>portfolio</th>
                         <th>Status</th>
                         <?php if ($permission == 'admin') { ?><th>Change Status</th><?php } ?>
                     </tr>
@@ -46,6 +47,9 @@ $data = $userModel->getAll();
                                 <span class="badge bg-danger">Inactive</span>
                                 <?php endif; ?>
                             </td>
+                             <td>
+                                <a href="../personalportfolio.php?id=<?= (int)$user['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
+                            </td>
                             <?php if ($permission == 'admin') { ?>
                             <td>
                                 <button class="btn btn-sm btn-warning change-status-btn"
@@ -53,6 +57,7 @@ $data = $userModel->getAll();
                                             data-status="<?= $user['status'] ?>">Change
                                 </button>
                             </td>
+
                             <?php } ?>
                         </tr>
                     <?php endforeach; ?>
