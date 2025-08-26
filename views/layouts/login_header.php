@@ -59,6 +59,8 @@ include __DIR__ . '/../../config.php';
     <!-- Page CSS -->
     <!-- Page -->
     <link rel=" stylesheet" href="<?= asset('assets/vendor/css/pages/page-auth.css') ?>" />
+    <!-- Tailwind -->
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <!-- Helpers -->
     <script src=" <?= asset('assets/vendor/js/helpers.js') ?>">
     </script>

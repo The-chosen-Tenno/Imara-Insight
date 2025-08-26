@@ -67,146 +67,94 @@ $currentFilename = basename($currentUrl);
     <script src="<?= asset('assets/js/config.js') ?>"></script>
 </head>
 
-
 <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
-                    <a href="<?= url('/views/system/dashboard.php') ?>" class="app-brand-link">
-                        <span class="app-brand-logo demo">
-                            <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" style="width: 35px; height: 35px;">
-                        </span>
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize">Imara-Insight</span>
-                    </a>
-
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            <!-- Sidebar -->
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme p-3">
+                <div class="app-brand mb-4 text-center">
+                    <a href="<?= url('/views/system/dashboard.php') ?>" class="d-flex flex-column align-items-center text-decoration-none">
+                        <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" width="50" height="50" class="mb-2">
+                        <span class="fw-bold fs-5 text-capitalize">Imara-Insight</span>
                     </a>
                 </div>
 
-                <div class="menu-inner-shadow"></div>
+                <div class="d-flex flex-column gap-1">
+                    <?php if ($permission === "admin") : ?>
+                        <a href="<?= url('views/system/Authorization.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Authorization.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                            <i class="bx bx-user-check me-2"></i> Authorization
+                        </a>
+                        <a href="<?= url('views/system/LeaveApprove.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveApprove.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                            <i class="bx bx-calendar-check me-2"></i> Leave Approvals
+                        </a>
+                    <?php endif; ?>
 
-                <ul class="menu-inner py-1">
-                    <?php if (($permission === "admin")) : ?>
-                        <li class="menu-item <?= $currentFilename === "Authorization.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/Authorization.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-user-check"></i>
-                                <div data-i18n="appointments">Authorization</div>
-                            </a>
-                        </li>
-                        <li class="menu-item <?= $currentFilename === "LeaveApprove.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/LeaveApprove.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-calendar-check"></i>
-                                <div data-i18n="appointments">Leave Approvals</div>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (isset($permission)) : ?>
-                        <li class="menu-item <?= $currentFilename === "dashboard.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/dashboard.php') ?>" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-home-alt"></i>
-                                <div data-i18n="appointments">Dashboard</div>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (isset($permission)) : ?>
-                        <li class="menu-item <?= $currentFilename === "logs.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/logs.php') ?>" class="menu-link">
-                                <i class='menu-icon tf-icons bx bxs-coin-stack'></i>
-                                <div data-i18n="Analytics">Logs</div>
-                            </a>
-                        </li>
-                        <li class="menu-item <?= $currentFilename === "leaveRequest.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/leaveRequest.php') ?>" class="menu-link">
-                                <i class='menu-icon tf-icons bx bxs-calendar-x'></i>
-                                <div data-i18n="Analytics">Request Leave</div>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (isset($permission)) : ?>
-                        <li class="menu-item <?= $currentFilename === "users.php" ? 'active' : '' ?> ">
-                            <a href="<?= url('views/system/users.php') ?>" class="menu-link">
-                                <i class="menu-icon bx bx-user"></i>
-                                <div data-i18n="Analytics">Employees</div>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
+                    <a href="<?= url('views/system/dashboard.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "dashboard.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                        <i class="bx bx-home-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="<?= url('views/system/logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                        <i class="bx bxs-coin-stack me-2"></i> Logs
+                    </a>
+                    <a href="<?= url('views/system/leaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "leaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                        <i class="bx bxs-calendar-x me-2"></i> Request Leave
+                    </a>
+                    <a href="<?= url('views/system/users.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "users.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                        <i class="bx bx-user me-2"></i> Employees
+                    </a>
+                </div>
             </aside>
-            <!-- / Menu -->
-            <!-- Layout container -->
+            <!-- /Sidebar -->
+
+            <!-- Layout page -->
             <div class="layout-page">
                 <!-- Navbar -->
-
-                <nav
-                    class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-                    id="layout-navbar">
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
+
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <img src="<?= $photo ? url($photo) : url('assets/img/illustrations/default-profile-picture.png') ?>"
-                                            alt
-                                            class="w-px-40 h-px-40 object-cover rounded-circle" />
-                                    </div>
+                            <!-- User Dropdown -->
+                            <!-- User Dropdown -->
+                            <div class="dropdown ms-auto">
+                                <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown">
+                                    <img src="<?= $photo ? url($photo) : url('assets/img/illustrations/default-profile-picture.png') ?>"
+                                        alt="<?= $username ?>" class="rounded-circle" width="40" height="40">
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="<?= url('views/system/profile.php') ?>">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
-                                                    <div class="avatar avatar-online">
-                                                        <img src="<?= $photo ? url($photo) : url('assets/img/illustrations/default-profile-picture.png') ?>"
-                                                            alt
-                                                            class="w-px-40 h-px-40 object-cover rounded-circle" />
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block"><?= $username ?></span>
-                                                    <small class="text-muted text-capitalize"><?= $permission ?></small>
-                                                </div>
+                                        <a class="dropdown-item d-flex align-items-center" href="<?= url('views/system/profile.php') ?>">
+                                            <img src="<?= $photo ? url($photo) : url('assets/img/illustrations/default-profile-picture.png') ?>"
+                                                alt="<?= $username ?>" class="rounded-circle me-2" width="35" height="35">
+                                            <div>
+                                                <div class="fw-semibold"><?= $username ?></div>
+                                                <small class="text-muted text-capitalize"><?= $permission ?></small>
                                             </div>
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="../personalportfolio.php?id=<?= $userId ?>" target="_blank">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3 d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
-                                                    <i class="bx bx-briefcase fs-4"></i>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">Portfolio</span>
-                                                    <small class="text-muted">View your works</small>
-                                                </div>
-                                            </div>
+                                        <a class="dropdown-item d-flex align-items-center" href="../personalportfolio.php?id=<?= $userId ?>" target="_blank">
+                                            <i class="bx bx-briefcase me-2"></i> Portfolio
                                         </a>
                                     </li>
                                     <li>
-                                        <div class="dropdown-divider"></div>
+                                        <hr class="dropdown-divider">
                                     </li>
-
                                     <li>
-                                        <a class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">
-                                                Logout
-                                            </span>
+                                        <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="bx bx-power-off me-2"></i> Logout
                                             <form id="logout-form" action="<?= url('services/logout.php') ?>" method="POST" class="d-none"></form>
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
-                            <!--/ User -->
+                            </div>
+
+                            <!-- /User Dropdown -->
                         </ul>
                     </div>
                 </nav>
-
-                <!-- / Navbar -->
+</body>
