@@ -1,12 +1,4 @@
 $(document).ready(function () {
-    $('#reason_type').on('change', function () {
-        if ($(this).val() === 'other') {
-            $('#other_reason_div').show().find('input').attr('required', true);
-        } else {
-            $('#other_reason_div').hide().find('input').removeAttr('required');
-        }
-    });
-
     $('#leave_duration').on('change', function () {
         if ($(this).val() === 'half') {
             $('#half_day_off').show().find('input').attr('required', true);

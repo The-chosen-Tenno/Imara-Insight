@@ -10,14 +10,13 @@ if (!isset($permission)) dd('Access Denied...!');
             <div class="card p-4">
                 <form id="leave-request-form" action="<?= url('services/ajax_functions.php') ?>" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="request_leave" />
-                    
+
                     <h2 class="fw-bold mb-4 text-center">Submit Leave Request</h2>
                     <p class="text-center mb-4">From sick days to personal time, we're here to make your leave easy!</p>
 
                     <div class="row gy-3">
-                        <!-- Leave Type -->
-                        <div class="col-12 mb-3">
-                            <label for="reason_type" class="form-label d-block text-center">Choose a request Reason</label>
+                        <div class="col-md-6 mb-3">
+                            <label for="reason_type" class="form-label d-block text-center">Leave Type</label>
                             <select id="reason_type" name="reason_type" class="form-select" required>
                                 <option value="" disabled selected>-- Select Leave Type --</option>
                                 <option value="sick">Sick Leave</option>
@@ -27,21 +26,19 @@ if (!isset($permission)) dd('Access Denied...!');
                             </select>
                         </div>
 
-                        <!-- Other Reason -->
-                        <div class="col-12 mb-3" id="other_reason_div" style="display:none;">
-                            <label for="other_reason" class="form-label d-block text-center">Specify Other Reason</label>
-                            <input type="text" id="other_reason" name="other_reason" class="form-control" placeholder="Type your reason here">
+                        <div class="col-md-6 mb-3">
+                            <label for="leave_note" class="form-label d-block text-center">Reason for Leave</label>
+                            <input type="text" id="leave_note" name="leave_note" class="form-control" placeholder="Leave Note">
                         </div>
 
-                        <!-- Date -->
+                        <!-- Leave Date + Duration side by side -->
                         <div class="col-md-6 mb-3">
-                            <label for="date_off" class="form-label text-center d-block">Leave Date</label>
+                            <label for="date_off" class="form-label d-block text-center">Leave Date</label>
                             <input type="date" id="date_off" name="date_off" class="form-control" required />
                         </div>
 
-                        <!-- Duration: Full / Half -->
                         <div class="col-md-6 mb-3">
-                            <label for="leave_duration" class="form-label text-center d-block">Duration</label>
+                            <label for="leave_duration" class="form-label d-block text-center">Duration</label>
                             <select id="leave_duration" name="leave_duration" class="form-select" required>
                                 <option value="full" selected>Full Day</option>
                                 <option value="half">Half Day</option>
@@ -71,6 +68,7 @@ if (!isset($permission)) dd('Access Denied...!');
 
                         <input type="hidden" name="user_id" value="<?= $userId ?>">
                     </div>
+
 
                     <!-- Submit -->
                     <div class="mt-4 text-center">
