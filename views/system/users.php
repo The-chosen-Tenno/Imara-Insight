@@ -39,16 +39,16 @@ $data = $userModel->getAll();
                                 : url('assets/img/illustrations/default-profile-picture.png') ?>" alt="Profile" style="width:50px;height:50px;border-radius:50%;"></td>
                             <td><strong><?= htmlspecialchars($user['UserName'] ?? $user['user_name'] ?? '') ?></strong></td>
                             <td><?= htmlspecialchars($user['FulltName'] ?? $user['full_name'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($user['Email'] ?? $user['email'] ?? '') ?></td>                            
+                             <td>
+                                <a href="../personalportfolio.php?id=<?= (int)$user['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
+                            </td>
                             <td>
                                 <?php if (($user['user_status'] ?? $user['status'] ?? '') === 'active'): ?>
                                 <span class="badge bg-success">Active</span>
                                 <?php elseif (($user['user_status'] ?? $user['status'] ?? '') === 'inactive'): ?>
                                 <span class="badge bg-danger">Inactive</span>
                                 <?php endif; ?>
-                            </td>
-                             <td>
-                                <a href="../personalportfolio.php?id=<?= (int)$user['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
                             </td>
                             <?php if ($permission == 'admin') { ?>
                             <td>
