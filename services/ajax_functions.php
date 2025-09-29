@@ -7,6 +7,7 @@ require_once '../models/Sub-Assignees.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
 require_once '../vendor/autoload.php';
+require_once '../models/Tags.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -608,5 +609,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_available_sub_assignees')
     }
     exit;
 }
+
+//  Get All Tags
+
+if (isset($_GET['action']) && $_GET['action'] === 'get_all_tags') {
+    $tags = (new Tags())->getAllTags();
+    echo json_encode(['success' => true, 'data' => $tags]);
+    exit;
+}
+
 
 dd('Access denied..!');

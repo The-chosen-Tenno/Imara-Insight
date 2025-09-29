@@ -3,12 +3,19 @@ require_once('../layouts/header.php');
 include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
 include BASE_PATH . '/models/Sub-Assignees.php';
+include BASE_PATH . '/models/Tags.php';
 
 $project_logs = new Logs();
 $logs_data = $project_logs->getAllByDesc();
+
 $user_details = new User();
 $user_data = $user_details->getAllActive();
+
 $sub_assignee_details = new SubAssignee();
+
+$tag = new Tags();
+$all_tag = $tag->getAllTagByName();
+
 
 if (!isset($permission)) {
     header('Location: views/system/Authorization.php');
@@ -32,6 +39,7 @@ if (!isset($permission)) {
                     <tr>
                         <th>Assigned To</th>
                         <th class="text-start ps-3">Project</th>
+                        <th>Tags</th>
                         <th>Sub-Assignees</th>
                         <th>Status</th>
                         <th>Photos</th>
@@ -53,6 +61,15 @@ if (!isset($permission)) {
                                 <span class="badge bg-info d-block mb-1"><?= htmlspecialchars($user_names[$LD['user_id']] ?? 'Unknown') ?></span>
                             </td>
                             <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
+                            <td class="text-start">
+                                <?php if (!empty($sub_assignee_data)): ?>
+                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
+                                        <span class="badge rounded-pill bg-label-primary me-1 mb-1"><?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?></span>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <span class="text-muted">None</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-start">
                                 <?php if (!empty($sub_assignee_data)): ?>
                                     <?php foreach ($sub_assignee_data as $sub_id): ?>
@@ -137,6 +154,10 @@ if (!isset($permission)) {
                                     <?php } ?>
                                 </select>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <select id="addTags" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sub-assignees</label>

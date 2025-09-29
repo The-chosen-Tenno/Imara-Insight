@@ -222,53 +222,55 @@ $(document).ready(function () {
     });
 
     $('#add-project').on('shown.bs.modal', function () {
-        // Initialize sub-assignees select2 (multiple)
-        $('#createSubAssigneeSelect').select2({
-            placeholder: "Select sub-assignees",
-            width: '100%',
-            allowClear: true,
-            closeOnSelect: false,
-            dropdownParent: $('#add-project')
-        });
 
-        // Initialize main assignee select2 (single)
-        $('#CreateUserID').select2({
-            placeholder: "Select assignee",
-            width: '100%',
-            allowClear: true, // optional, allows deselect
-            dropdownParent: $('#add-project')
-        });
+        // Generic function to initialize a Select2 dropdown
+        function initSelect2(selector, placeholder, multiple = false) {
+            $(selector).select2({
+                placeholder: placeholder,
+                width: '100%',
+                allowClear: true,
+                closeOnSelect: !multiple,
+                dropdownParent: $('#add-project')
+            });
+        }
 
-        // Fetch all users for sub-assignee select
-        $.ajax({
-            url: $('#create-form').attr('action'),
-            type: 'GET',
-            data: {
-                action: 'get_all_users'
-            },
-            dataType: 'json',
-            success: function (res) {
-                if (res.success) {
-                    // Populate sub-assignees
-                    $('#createSubAssigneeSelect').empty();
-                    res.data.forEach(user => {
-                        $('#createSubAssigneeSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
-                    });
-                    $('#createSubAssigneeSelect').trigger('change'); // refresh select2
-
-                    // Populate main assignee
-                    $('#CreateUserID').empty();
-                    res.data.forEach(user => {
-                        $('#CreateUserID').append(`<option value="${user.id}">${user.full_name}</option>`);
-                    });
-                    $('#CreateUserID').trigger('change'); // refresh select2
-                } else {
-                    showAlert(res.message, 'danger', 'alert-container');
+        // Generic function to fetch data and populate a Select2
+        function populateSelect2(selector, action) {
+            $.ajax({
+                url: $('#create-form').attr('action'),
+                type: 'GET',
+                data: {
+                    action: action
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.success) {
+                        const $select = $(selector);
+                        $select.empty();
+                        res.data.forEach(item => {
+                            $select.append(`<option value="${item.id}">${item.full_name || item.name}</option>`);
+                        });
+                        $select.trigger('change'); // refresh select2
+                    } else {
+                        showAlert(res.message, 'danger', 'alert-container');
+                    }
+                },
+                error: function () {
+                    showAlert(`Failed to fetch ${action.replace('get_all_', '')}.`, 'danger', 'alert-container');
                 }
-            },
-            error: function () {
-                showAlert('Failed to fetch users.', 'danger', 'alert-container');
-            }
-        });
+            });
+        }
+
+        // Initialize Select2s
+        initSelect2('#createSubAssigneeSelect', 'Select sub-assignees', true);
+        initSelect2('#CreateUserID', 'Select assignee');
+        initSelect2('#addTags', 'Tags', true);
+
+        // Populate Select2s with AJAX
+        populateSelect2('#createSubAssigneeSelect', 'get_all_users');
+        populateSelect2('#CreateUserID', 'get_all_users');
+        populateSelect2('#addTags', 'get_all_tags');
+
     });
+
 });

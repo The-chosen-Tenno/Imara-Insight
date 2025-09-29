@@ -65,6 +65,20 @@ CREATE TABLE project_sub_assignees (
     FOREIGN KEY (sub_assignee_id) REFERENCES users(id)
 );
 
+CREATE TABLE tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE project_tags (
+    project_id INT,
+    tag_id INT,
+    PRIMARY KEY(project_id, tag_id),
+    FOREIGN KEY(project_id) REFERENCES projects(id),
+    FOREIGN KEY(tag_id) REFERENCES tags(id)
+);
+
+
 
 --updates
 ALTER TABLE leave_requests
