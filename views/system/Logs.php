@@ -4,6 +4,7 @@ include BASE_PATH . '/models/Logs.php';
 include BASE_PATH . '/models/Users.php';
 include BASE_PATH . '/models/Sub-Assignees.php';
 include BASE_PATH . '/models/Tags.php';
+include BASE_PATH . '/models/ProjectTags.php';
 
 $project_logs = new Logs();
 $logs_data = $project_logs->getAllByDesc();
@@ -13,8 +14,11 @@ $user_data = $user_details->getAllActive();
 
 $sub_assignee_details = new SubAssignee();
 
+$project_tags = new ProjectTags();
+
+
 $tag = new Tags();
-$all_tag = $tag->getAllTagByName();
+$all_tag = $tag->getAllTags();
 
 
 if (!isset($permission)) {
@@ -53,8 +57,15 @@ if (!isset($permission)) {
                     foreach ($user_data as $user) {
                         $user_names[$user['id']] = $user['user_name'];
                     }
-                    foreach ($logs_data as $LD):
+
+                    $tag_names = [];
+                    foreach ($all_tag as $tags) {
+                        $tag_names[$tags['id']] = $tags['name'];
+                    }
+
+                    foreach ($logs_data as $LD) {
                         $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
+                        $tag_for_project   = $project_tags->getAllTagByProjectId($LD['id']);
                     ?>
                         <tr>
                             <td>
@@ -62,9 +73,9 @@ if (!isset($permission)) {
                             </td>
                             <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
                             <td class="text-start">
-                                <?php if (!empty($sub_assignee_data)): ?>
-                                    <?php foreach ($sub_assignee_data as $sub_id): ?>
-                                        <span class="badge rounded-pill bg-label-primary me-1 mb-1"><?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?></span>
+                                <?php if (!empty($tag_for_project)): ?>
+                                    <?php foreach ($tag_for_project as $tag_id): ?>
+                                        <span class="badge rounded-pill bg-label-primary me-1 mb-1"><?= htmlspecialchars($tag_names[$tag_id] ?? 'Unknown') ?></span>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <span class="text-muted">None</span>
@@ -117,8 +128,9 @@ if (!isset($permission)) {
                                 </td>
                             <?php } ?>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </tbody>
+
             </table>
         </div>
     </div>
@@ -157,7 +169,7 @@ if (!isset($permission)) {
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Tags</label>
-                            <select id="addTags" name="sub_assignees[]" multiple="multiple" style="width:100%;"></select>
+                            <select id="addTags" name="tags[]" multiple="multiple" style="width:100%;"></select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Sub-assignees</label>

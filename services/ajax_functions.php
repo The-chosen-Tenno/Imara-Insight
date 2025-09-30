@@ -6,8 +6,10 @@ require_once '../models/Logs.php';
 require_once '../models/Sub-Assignees.php';
 require_once '../models/ProjectImageModel.php';
 require_once '../models/Leave.php';
-require_once '../vendor/autoload.php';
 require_once '../models/Tags.php';
+require_once '../models/ProjectTags.php';
+require_once '../vendor/autoload.php';
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -212,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $projectCreated = $logsModel->createProject($user_id, $project_name, $description, $project_type, $project_status);
 
         if ($projectCreated) {
-            $project_id = $logsModel->getLastInsertId(); // ✅ always get last inserted ID
+            $project_id = $logsModel->getLastInsertId();
 
             // Handle sub-assignees
             if (!empty($_POST['sub_assignees'])) {
@@ -222,6 +224,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 foreach ($user_ids as $sub_id) {
                     $added = $subAssigneeModel->createSubAssignee($project_id, $sub_id);
+                    if ($added) $successCount++;
+                }
+            }
+
+            // Handle Tags
+            if (!empty($_POST['tags'])) {
+                $tags_ids = $_POST['tags'];
+                $tagsModel = new ProjectTags();
+                $successCount = 0;
+
+                foreach ($tags_ids as $tag) {
+                    $added = $tagsModel->createProjectTags($project_id, $tag);
                     if ($added) $successCount++;
                 }
             }
