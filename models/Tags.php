@@ -11,22 +11,24 @@ class Tags extends BaseModel
         return 'tags';
     }
 
-    function createTag($name)
-    {
-        $tagModel = new Tags();
-        $existingTag = $tagModel->getTagByName($name);
-        if ($existingTag) {
-            return false;
-        }
-        $tag = new Tags();
-        $tag->name = $name;
-        $tag->addNewRec();
-        if ($tag) {
-            return $tag;
-        } else {
-            return false;
-        }
+  function createTag($name)
+{
+    $tagModel = new Tags();
+    $existingTag = $tagModel->getTagByName($name);
+    if ($existingTag) {
+        return $existingTag->id; // return existing tag ID
     }
+
+    $tag = new Tags();
+    $tag->name = $name;
+    $tagId = $tag->addNewRec(); // addNewRec() returns the new ID
+
+    if ($tagId) {
+        return $tagId; // return the ID, not the object
+    } else {
+        return false;
+    }
+}
 
     protected function addNewRec()
     {

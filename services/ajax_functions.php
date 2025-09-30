@@ -237,9 +237,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if (is_numeric($tag)) {
                         $tagIdToUse = $tag;
                     } else {
-                        $tagIdToUse = $tagsModel->createTag($tag); // must return new tag ID
+                        $tagIdToUse = $tagsModel->createTag($tag); 
                     }
-
                     $projectTagsModel->createProjectTags($project_id, $tagIdToUse);
                 }
             }
