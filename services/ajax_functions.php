@@ -230,13 +230,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             // Handle Tags
             if (!empty($_POST['tags'])) {
-                $tags_ids = $_POST['tags'];
-                $tagsModel = new ProjectTags();
-                $successCount = 0;
+                $tagsModel = new Tags();
+                $projectTagsModel = new ProjectTags();
 
-                foreach ($tags_ids as $tag) {
-                    $added = $tagsModel->createProjectTags($project_id, $tag);
-                    if ($added) $successCount++;
+                foreach ($_POST['tags'] as $tag) {
+                    if (is_numeric($tag)) {
+                        $tagIdToUse = $tag;
+                    } else {
+                        $tagIdToUse = $tagsModel->createTag($tag); // must return new tag ID
+                    }
+
+                    $projectTagsModel->createProjectTags($project_id, $tagIdToUse);
                 }
             }
 

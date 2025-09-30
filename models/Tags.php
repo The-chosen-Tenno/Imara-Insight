@@ -37,7 +37,7 @@ class Tags extends BaseModel
             "INSERT INTO " . $this->getTableName() . "(name) values(:name)",
             $param
         );
-        return  $result;
+         return $this->pm->lastInsertId();
     }
 
     protected function updateRec() {}
