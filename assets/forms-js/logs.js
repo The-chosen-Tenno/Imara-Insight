@@ -91,11 +91,7 @@ $(document).ready(function () {
     $('.add-sub-assignee-btn').on('click', function () {
         var projectId = $(this).data('id');
         $('#add-sub-assignee-modal').data('project-id', projectId);
-
-        // clear old options
         $('#multiSelect').empty();
-
-        // fetch users not already in the project
         $.ajax({
             url: $('#add-sub-assignee-form').attr('action'),
             type: 'GET',
@@ -222,7 +218,6 @@ $(document).ready(function () {
     });
 
     $('#add-project').on('shown.bs.modal', function () {
-        // Initialize sub-assignees select2 (multiple)
         $('#createSubAssigneeSelect').select2({
             placeholder: "Select sub-assignees",
             width: '100%',
@@ -231,15 +226,13 @@ $(document).ready(function () {
             dropdownParent: $('#add-project')
         });
 
-        // Initialize main assignee select2 (single)
         $('#CreateUserID').select2({
             placeholder: "Select assignee",
             width: '100%',
-            allowClear: true, // optional, allows deselect
+            allowClear: true,
             dropdownParent: $('#add-project')
         });
 
-        // Fetch all users for sub-assignee select
         $.ajax({
             url: $('#create-form').attr('action'),
             type: 'GET',
@@ -249,19 +242,16 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
-                    // Populate sub-assignees
                     $('#createSubAssigneeSelect').empty();
                     res.data.forEach(user => {
                         $('#createSubAssigneeSelect').append(`<option value="${user.id}">${user.full_name}</option>`);
                     });
-                    $('#createSubAssigneeSelect').trigger('change'); // refresh select2
-
-                    // Populate main assignee
+                    $('#createSubAssigneeSelect').trigger('change');
                     $('#CreateUserID').empty();
                     res.data.forEach(user => {
                         $('#CreateUserID').append(`<option value="${user.id}">${user.full_name}</option>`);
                     });
-                    $('#CreateUserID').trigger('change'); // refresh select2
+                    $('#CreateUserID').trigger('change'); 
                 } else {
                     showAlert(res.message, 'danger', 'alert-container');
                 }
