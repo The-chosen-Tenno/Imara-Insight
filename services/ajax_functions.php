@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if (is_numeric($tag)) {
                         $tagIdToUse = $tag;
                     } else {
-                        $tagIdToUse = $tagsModel->createTag($tag); 
+                        $tagIdToUse = $tagsModel->createTag($tag);
                     }
                     $projectTagsModel->createProjectTags($project_id, $tagIdToUse);
                 }
@@ -284,44 +284,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-
-// Get project by ID
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['action']) && $_GET['action'] == 'get_project') {
-    try {
-        $project_id = $_GET['project_id'];
-        $logsModel = new Logs();
-        $project = $logsModel->getProjectById($project_id);
-        if ($project) {
-            echo json_encode(['success' => true, 'message' => "Project retrieved successfully!", 'data' => $project]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Error selecting project ID']);
-        }
-    } catch (PDOException $e) {
-        // Handle DB errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-
-// Get user by ID
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user_by_id') {
-    try {
-        $user_id = $_GET['user_id'];
-        $userModel = new User();
-        $user = $userModel->getUserById($user_id);
-        if ($user) {
-            echo json_encode(['success' => true, 'message' => "User retrieved successfully!", 'data' => $user]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Error selecting user ID']);
-        }
-    } catch (PDOException $e) {
-        // Handle DB errors
-        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
-    }
-    exit;
-}
-
-
 // Update project
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project') {
     try {
@@ -330,6 +292,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $projectName = $_POST['project_name'];
         $description = $_POST['description'];
         $project_status = $_POST['status'];
+
+        // Handle Tags
+        if (!empty($_POST['tags_add'])) {
+            $tagsModel = new Tags();
+            $projectTagsModel = new ProjectTags();
+
+            foreach ($_POST['tags_add'] as $tag) {
+                if (is_numeric($tag)) {
+                    $tagIdToUse = $tag;
+                } else {
+                    $tagIdToUse = $tagsModel->createTag($tag);
+                }
+                $projectTagsModel->createProjectTags($project_id, $tagIdToUse);
+            }
+        }
+
+        if (!empty($_POST['tags_remove'])) {
+            $projectTagsModel = new ProjectTags();
+
+            foreach ($_POST['tags_remove'] as $tagIdToRemove) {
+                $projectTagsModel->removeProjectTag($project_id, $tagIdToRemove);
+            }
+        }
+
 
         $logsModel = new Logs();
         $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $description, $project_status);
@@ -397,6 +383,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo json_encode(['success' => false, 'message' => 'Failed to update project']);
         }
     } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// Get project by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['action']) && $_GET['action'] == 'get_project') {
+    try {
+        $project_id = $_GET['project_id'];
+        $logsModel = new Logs();
+        $project = $logsModel->getProjectById($project_id);
+        if ($project) {
+            echo json_encode(['success' => true, 'message' => "Project retrieved successfully!", 'data' => $project]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error selecting project ID']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// Get user by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'], $_GET['action']) && $_GET['action'] == 'get_user_by_id') {
+    try {
+        $user_id = $_GET['user_id'];
+        $userModel = new User();
+        $user = $userModel->getUserById($user_id);
+        if ($user) {
+            echo json_encode(['success' => true, 'message' => "User retrieved successfully!", 'data' => $user]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error selecting user ID']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;

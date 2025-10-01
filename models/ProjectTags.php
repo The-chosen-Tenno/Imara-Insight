@@ -29,6 +29,25 @@ class ProjectTags extends BaseModel
         }
     }
 
+    function updateProjectTags($project_id, $tag_id)
+    {
+        $projectTagsModel = new ProjectTags();
+        $existingProjectTags = $projectTagsModel->getProjectTagsByProjectIDAndTagID($project_id, $tag_id);
+
+        if ($existingProjectTags) {
+            $existingProjectTags->project_id = $project_id;
+            $existingProjectTags->tag_id = $tag_id;
+
+            if ($existingProjectTags->updateRec()) {
+                return $existingProjectTags;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     protected function addNewRec()
     {
         $param = [
@@ -41,8 +60,23 @@ class ProjectTags extends BaseModel
         );
         return  $result;
     }
-    
-    protected function updateRec() {}
+
+    protected function updateRec()
+    {
+        $param = [
+            ':project_id' => $this->project_id,
+            ':tag_id'     => $this->tag_id
+        ];
+
+        $result = $this->pm->run(
+            "UPDATE " . $this->getTableName() . " 
+         SET tag_id = :tag_id 
+         WHERE project_id = :project_id",
+            $param
+        );
+
+        return $result;
+    }
 
     public function getProjectTagsByProjectIDAndTagID($project_id, $tag_id)
     {
@@ -50,50 +84,41 @@ class ProjectTags extends BaseModel
         $query = "SELECT * FROM " . $this->getTableName() . " WHERE (project_id = :project_id AND tag_id = :tag_id)";
         return $this->pm->run($query, $param);
     }
-public function getAllTagByProjectId($project_id)
-{
-    $param = [':project_id' => $project_id];
-    $query = "SELECT tag_id FROM " . $this->getTableName() . " WHERE project_id = :project_id";
-    $result = $this->pm->run($query, $param);
+    public function getAllTagByProjectId($project_id)
+    {
+        $param = [':project_id' => $project_id];
+        $query = "SELECT tag_id FROM " . $this->getTableName() . " WHERE project_id = :project_id";
+        $result = $this->pm->run($query, $param);
 
-    if (!$result || !is_array($result)) return [];
-    $ids = [];
-    foreach ($result as $row) {
-        if (isset($row['tag_id'])) {
-            $ids[] = (int)$row['tag_id'];
+        if (!$result || !is_array($result)) return [];
+        $ids = [];
+        foreach ($result as $row) {
+            if (isset($row['tag_id'])) {
+                $ids[] = (int)$row['tag_id'];
+            }
         }
+
+        return $ids;
     }
 
-    return $ids;
-}
-public function removeFromProject($project_id, array $user_ids)
-{
-    $project_id = (int) $project_id;
-    // normalize + de-dupe
-    $user_ids = array_values(array_unique(array_map('intval', $user_ids)));
+    public function removeProjectTag($project_id, $tag_id)
+    {
+        $param = [
+            ':project_id' => $project_id,
+            ':tag_id'     => $tag_id
+        ];
 
-    if ($project_id <= 0 || empty($user_ids)) return false;
+        $result = $this->pm->run(
+            "DELETE FROM " . $this->getTableName() . " 
+         WHERE project_id = :project_id AND tag_id = :tag_id",
+            $param
+        );
 
-    // Build named placeholders :uid0, :uid1, ...
-    $params = [':project_id' => $project_id];
-    $ph = [];
-    foreach ($user_ids as $i => $uid) {
-        $key = ':uid' . $i;
-        $ph[] = $key;
-        $params[$key] = $uid;
+        return $result;
     }
-
-    $query = "DELETE FROM " . $this->getTableName() . "
-              WHERE project_id = :project_id
-              AND sub_assignee_id IN (" . implode(',', $ph) . ")";
-    $result = $this->pm->run($query, $params);
-    return $result !== false;
-}
-
     public function getByUserId($userId)
     {
         $param = array(':user_id' => $userId);
         return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE sub_assignee_id = :user_id", $param);
     }
-
 }

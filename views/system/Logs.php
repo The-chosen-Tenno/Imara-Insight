@@ -234,6 +234,14 @@ if (!isset($permission)) {
                             </select>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Add Tags</label>
+                        <select id="addTagsEdit" name="tags_add[]" multiple="multiple" style="width:100%;"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Remove Tags</label>
+                        <select id="removeTagsEdit" name="tags_remove[]" multiple="multiple" style="width:100%;"></select>
+                    </div>
                     <div class="col mb-3">
                         <label class="form-label" for="ProjectTypeEdit">Project Type</label>
                         <select class="form-select" id="ProjectTypeEdit" name="project_type" required>
