@@ -330,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Update project user and upload images (user)
+// Update project (user)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_project_user') {
     try {
         $project_id = $_POST['project_id'];
@@ -338,6 +338,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $projectName = $_POST['project_name'];
         $description = $_POST['description'];
         $project_status = $_POST['status'];
+
+        if (!empty($_POST['tags_add'])) {
+            $tagsModel = new Tags();
+            $projectTagsModel = new ProjectTags();
+
+            foreach ($_POST['tags_add'] as $tag) {
+                if (is_numeric($tag)) {
+                    $tagIdToUse = $tag;
+                } else {
+                    $tagIdToUse = $tagsModel->createTag($tag);
+                }
+                $projectTagsModel->createProjectTags($project_id, $tagIdToUse);
+            }
+        }
+
+        if (!empty($_POST['tags_remove'])) {
+            $projectTagsModel = new ProjectTags();
+
+            foreach ($_POST['tags_remove'] as $tagIdToRemove) {
+                $projectTagsModel->removeProjectTag($project_id, $tagIdToRemove);
+            }
+        }
 
         $logsModel = new Logs();
         $updated = $logsModel->updateProject($project_id, $user_id, $projectName, $description, $project_status);
