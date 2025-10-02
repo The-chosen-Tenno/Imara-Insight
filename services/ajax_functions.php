@@ -657,5 +657,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_all_tags') {
     exit;
 }
 
+//  Get All Tags To Remove
+
+if (isset($_GET['action']) && $_GET['action'] === 'get_all_tags_to_remove') {
+    $project_id = intval($_GET['project_id']); // use GET, not $_POST
+    $tags = (new ProjectTags())->getAllTagByProjectIdToRemove($project_id);
+    echo json_encode(['success' => true, 'data' => $tags]);
+    exit;
+}
 
 dd('Access denied..!');

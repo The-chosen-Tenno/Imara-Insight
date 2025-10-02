@@ -101,6 +101,21 @@ class ProjectTags extends BaseModel
         return $ids;
     }
 
+    public function getAllTagByProjectIdToRemove($project_id)
+{
+    $param = [':project_id' => $project_id];
+    $query = "
+        SELECT t.id AS id, t.name AS name
+        FROM project_tags pt
+        INNER JOIN tags t ON t.id = pt.tag_id
+        WHERE pt.project_id = :project_id
+    ";
+
+    $result = $this->pm->run($query, $param);
+
+    if (!$result || !is_array($result)) return [];
+    return $result; // array of {id, name}
+}
     public function removeProjectTag($project_id, $tag_id)
     {
         $param = [
