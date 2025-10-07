@@ -20,7 +20,7 @@ if ($permission !== 'admin') {
                     class="btn btn-primary float-end mb-5"
                     data-bs-toggle="modal"
                     data-bs-target="#createUser">
-                    Add New User
+                   <i class="bx bx-plus me-1"></i>  Add New User
                 </button>
             <?php } ?>
         </h4>

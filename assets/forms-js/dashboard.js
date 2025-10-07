@@ -27,7 +27,9 @@ $(document).ready(function () {
         $.ajax({
             url: $('#create-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_all_users' },
+            data: {
+                action: 'get_all_users'
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -39,14 +41,18 @@ $(document).ready(function () {
                     $('#createSubAssigneeSelect, #CreateUserID').trigger('change');
                 } else showAlert(res.message, 'danger', 'alert-container');
             },
-            error: function () { showAlert('Failed to fetch users.', 'danger', 'alert-container'); }
+            error: function () {
+                showAlert('Failed to fetch users.', 'danger', 'alert-container');
+            }
         });
 
         // Fetch all tags
         $.ajax({
             url: $('#create-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_all_tags' },
+            data: {
+                action: 'get_all_tags'
+            },
             dataType: 'json',
             success: function (res) {
                 if (res.success) {
@@ -55,7 +61,9 @@ $(document).ready(function () {
                     $('#addTags').trigger('change');
                 } else showAlert(res.message, 'danger', 'alert-container');
             },
-            error: function () { showAlert('Failed to fetch tags.', 'danger', 'alert-container'); }
+            error: function () {
+                showAlert('Failed to fetch tags.', 'danger', 'alert-container');
+            }
         });
 
         // Tags select2
@@ -66,10 +74,15 @@ $(document).ready(function () {
             closeOnSelect: false,
             dropdownParent: $('#add-project'),
             tags: true,
-            createTag: function (params) { return { id: params.term, text: params.term, newTag: true }; }
+            createTag: function (params) {
+                return {
+                    id: params.term,
+                    text: params.term,
+                    newTag: true
+                };
+            }
         });
     });
-
     // Create project
     $('#create-project').on('click', function () {
         var form = $('#create-form')[0];
@@ -89,7 +102,9 @@ $(document).ready(function () {
                     setTimeout(() => location.reload(), 1000);
                 }
             },
-            error: function () { showAlert('Failed to create project.', 'danger', 'create-alert-container'); }
+            error: function () {
+                showAlert('Failed to create project.', 'danger', 'create-alert-container');
+            }
         });
     });
 
@@ -99,7 +114,10 @@ $(document).ready(function () {
         $.ajax({
             url: $('#update-form').attr('action'),
             type: 'GET',
-            data: { project_id: id, action: 'get_project' },
+            data: {
+                project_id: id,
+                action: 'get_project'
+            },
             dataType: 'json',
             success: function (res) {
                 if (!res.success) return showAlert(res.message, 'danger', 'edit-alert-container');
@@ -114,11 +132,13 @@ $(document).ready(function () {
                 $.ajax({
                     url: $('#update-form').attr('action'),
                     type: 'GET',
-                    data: { action: 'get_all_tags' },
+                    data: {
+                        action: 'get_all_tags'
+                    },
                     dataType: 'json',
-                    success: function(tagRes) {
+                    success: function (tagRes) {
                         $('#addTagsEdit').empty();
-                        if(tagRes.success) {
+                        if (tagRes.success) {
                             tagRes.data.forEach(tag => $('#addTagsEdit').append(`<option value="${tag.id}">${tag.name}</option>`));
                             $('#addTagsEdit').val(res.data.tags || []).trigger('change');
                         }
@@ -129,7 +149,13 @@ $(document).ready(function () {
                             closeOnSelect: false,
                             dropdownParent: $('#edit-project-modal'),
                             tags: true,
-                            createTag: function(params) { return { id: params.term, text: params.term, newTag: true }; }
+                            createTag: function (params) {
+                                return {
+                                    id: params.term,
+                                    text: params.term,
+                                    newTag: true
+                                };
+                            }
                         });
                     }
                 });
@@ -138,13 +164,16 @@ $(document).ready(function () {
                 $.ajax({
                     url: $('#update-form').attr('action'),
                     type: 'GET',
-                    data: { action: 'get_all_tags_to_remove', project_id: id },
+                    data: {
+                        action: 'get_all_tags_to_remove',
+                        project_id: id
+                    },
                     dataType: 'json',
-                    success: function(tagRes) {
+                    success: function (tagRes) {
                         $('#removeTagsEdit').empty();
-                        if(tagRes.success && tagRes.data.length>0) {
+                        if (tagRes.success && tagRes.data.length > 0) {
                             tagRes.data.forEach(tag => $('#removeTagsEdit').append(`<option value="${tag.id}">${tag.name}</option>`));
-                            if(res.data.tags && res.data.tags.length>0) {
+                            if (res.data.tags && res.data.tags.length > 0) {
                                 const selectedIds = res.data.tags.map(id => parseInt(id));
                                 $('#removeTagsEdit').val(selectedIds);
                             }
@@ -162,7 +191,9 @@ $(document).ready(function () {
 
                 $('#edit-project-modal').modal('show');
             },
-            error: function () { showAlert('Failed to fetch project data.', 'danger', 'edit-alert-container'); }
+            error: function () {
+                showAlert('Failed to fetch project data.', 'danger', 'edit-alert-container');
+            }
         });
     });
 
@@ -177,9 +208,12 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             dataType: 'json',
-            success: function(res){
-                showAlert(res.message, res.success ? 'primary':'danger', 'edit-alert-container');
-                if(res.success) { $('#edit-project-modal').modal('hide'); setTimeout(()=>location.reload(),1000); }
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'edit-alert-container');
+                if (res.success) {
+                    $('#edit-project-modal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
+                }
             }
         });
     });
@@ -193,14 +227,23 @@ $(document).ready(function () {
         $.ajax({
             url: $('#add-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: { action: 'get_available_sub_assignees', project_id: projectId },
+            data: {
+                action: 'get_available_sub_assignees',
+                project_id: projectId
+            },
             dataType: 'json',
             success: function (res) {
-                if(res.success) {
+                if (res.success) {
                     res.data.forEach(user => $('#multiSelect').append(`<option value="${user.id}">${user.full_name}</option>`));
-                    $('#multiSelect').select2({ placeholder: "Select project members", width:'100%', allowClear:true, closeOnSelect:false, dropdownParent: $('#add-sub-assignee-modal') });
+                    $('#multiSelect').select2({
+                        placeholder: "Select project members",
+                        width: '100%',
+                        allowClear: true,
+                        closeOnSelect: false,
+                        dropdownParent: $('#add-sub-assignee-modal')
+                    });
                     $('#add-sub-assignee-modal').modal('show');
-                } else showAlert(res.message,'danger','subassignee-alert-container');
+                } else showAlert(res.message, 'danger', 'subassignee-alert-container');
             }
         });
     });
@@ -208,10 +251,10 @@ $(document).ready(function () {
     $('#add-sub-assignee').on('click', function () {
         var projectId = $('#add-sub-assignee-modal').data('project-id');
         var userIds = $('#multiSelect').val();
-        if(!userIds || userIds.length===0) return showAlert('Please select at least one sub-assignee.', 'danger','subassignee-alert-container');
+        if (!userIds || userIds.length === 0) return showAlert('Please select at least one sub-assignee.', 'danger', 'subassignee-alert-container');
 
         var formData = new FormData();
-        formData.append('action','add_sub_assignees');
+        formData.append('action', 'add_sub_assignees');
         formData.append('project_id', projectId);
         userIds.forEach(id => formData.append('user_id[]', id));
 
@@ -222,9 +265,12 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             dataType: 'json',
-            success: function(res){
-                showAlert(res.message,res.success?'primary':'danger','subassignee-alert-container');
-                if(res.success) { $('#add-sub-assignee-modal').modal('hide'); setTimeout(()=>location.reload(),1000); }
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'subassignee-alert-container');
+                if (res.success) {
+                    $('#add-sub-assignee-modal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
+                }
             }
         });
     });
@@ -238,14 +284,23 @@ $(document).ready(function () {
         $.ajax({
             url: $('#remove-sub-assignee-form').attr('action'),
             type: 'GET',
-            data: { action:'get_sub_assignees', project_id:projectId },
-            dataType:'json',
-            success:function(res){
-                if(res.success) {
+            data: {
+                action: 'get_sub_assignees',
+                project_id: projectId
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
                     res.data.forEach(user => $('#removeMultiSelect').append(`<option value="${user.id}">${user.full_name}</option>`));
-                    $('#removeMultiSelect').select2({ placeholder:"Select sub-assignees to remove", width:'100%', allowClear:true, closeOnSelect:false, dropdownParent: $('#remove-sub-assignee-modal') });
+                    $('#removeMultiSelect').select2({
+                        placeholder: "Select sub-assignees to remove",
+                        width: '100%',
+                        allowClear: true,
+                        closeOnSelect: false,
+                        dropdownParent: $('#remove-sub-assignee-modal')
+                    });
                     $('#remove-sub-assignee-modal').modal('show');
-                } else showAlert(res.message,'danger','remove-alert-container');
+                } else showAlert(res.message, 'danger', 'remove-alert-container');
             }
         });
     });
@@ -258,24 +313,29 @@ $(document).ready(function () {
             data: new FormData(form),
             contentType: false,
             processData: false,
-            dataType:'json',
-            success:function(res){
-                showAlert(res.message,res.success?'primary':'danger','remove-alert-container');
-                if(res.success){ $('#remove-sub-assignee-modal').modal('hide'); setTimeout(()=>location.reload(),1000); }
+            dataType: 'json',
+            success: function (res) {
+                showAlert(res.message, res.success ? 'primary' : 'danger', 'remove-alert-container');
+                if (res.success) {
+                    $('#remove-sub-assignee-modal').modal('hide');
+                    setTimeout(() => location.reload(), 1000);
+                }
             }
         });
     });
 
     // ---------- Project Images Preview ----------
     function setupImagePreview(inputId, containerId) {
-        $(inputId).on('change', function(){
+        $(inputId).on('change', function () {
             var files = this.files;
             var $container = $(containerId).empty();
-            $.each(files,function(index,file){
+            $.each(files, function (index, file) {
                 var $div = $('<div class="mb-3 d-flex align-items-center"></div>');
                 var $img = $('<img class="me-2" style="width:60px;height:60px;object-fit:cover;border-radius:4px;">');
                 var reader = new FileReader();
-                reader.onload = function(e){ $img.attr('src',e.target.result); };
+                reader.onload = function (e) {
+                    $img.attr('src', e.target.result);
+                };
                 reader.readAsDataURL(file);
                 var $info = $('<div class="flex-grow-1"></div>');
                 $info.append(`<div class="fw-semibold">${file.name}</div>`);
@@ -285,7 +345,7 @@ $(document).ready(function () {
             });
         });
     }
-    setupImagePreview('#project-images','#image-descriptions-container');
-    setupImagePreview('#edit-project-images','#edit-image-descriptions-container');
+    setupImagePreview('#project-images', '#image-descriptions-container');
+    setupImagePreview('#edit-project-images', '#edit-image-descriptions-container');
 
 });
