@@ -12,10 +12,9 @@ require_once('../../config.php');
             <div class="card" id="login-card">
                 <div class="card-body">
                     <!-- Logo -->
-                    <div class="app-brand justify-content-center">
-                        <a href="index.html" class="app-brand-link gap-2">
-                            <span class="app-brand-text demo text-body fw-bolder">Imara Insight</span>
-                        </a>
+                    <div class="app-brand d-flex flex-column align-items-center">
+                        <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" class="mb-2" style="width:70px; height:70px; display:block;">
+                        <span class="fw-bolder fs-4">Imara</span>
                     </div>
                     <!-- /Logo -->
 
