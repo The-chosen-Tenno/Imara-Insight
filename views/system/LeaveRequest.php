@@ -1,5 +1,15 @@
 <?php
 require_once('../layouts/header.php');
+include BASE_PATH . '/models/LeaveLimit.php';
+
+$leave_limit_details = new LeaveLimit();
+
+$leave_limit_data = $leave_limit_details->getAllRemainingLeave($userId);
+
+
+
+// print_r($leave_limit_data);
+// die();
 
 if (!isset($permission)) dd('Access Denied...!');
 ?>
@@ -19,9 +29,11 @@ if (!isset($permission)) dd('Access Denied...!');
                             <label for="reason_type" class="form-label d-block text-center">Leave Type</label>
                             <select id="reason_type" name="reason_type" class="form-select" required>
                                 <option value="" disabled selected>-- Select Leave Type --</option>
-                                <option value="sick">Sick Leave</option>
-                                <option value="personal">Personal Leave</option>
-                                <option value="vacation">Vacation</option>
+                                <option value="annual">
+                                    Annual Leave - <?= $leave_limit_data[0]['annual_balance'] ?> days available
+                                </option>
+                                <option value="casual">Casual Leave</option>
+                                <option value="medical">Medical</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -31,18 +43,19 @@ if (!isset($permission)) dd('Access Denied...!');
                             <input type="text" id="leave_note" name="leave_note" class="form-control" placeholder="Leave Note">
                         </div>
 
-                        <!-- Leave Date + Duration side by side -->
-                        <div class="col-md-6 mb-3">
-                            <label for="date_off" class="form-label d-block text-center">Leave Date</label>
-                            <input type="date" id="date_off" name="date_off" class="form-control" required />
-                        </div>
-
                         <div class="col-md-6 mb-3">
                             <label for="leave_duration" class="form-label d-block text-center">Duration</label>
                             <select id="leave_duration" name="leave_duration" class="form-select" required>
                                 <option value="full" selected>Full Day</option>
+                                <option value="multi">Multi Days</option>
                                 <option value="half">Half Day</option>
+                                <option value="short">Short Leave</option>
                             </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3" id="date_off_div">
+                            <label for="date_off" class="form-label d-block text-center">Leave Date</label>
+                            <input type="date" id="date_off" name="date_off" class="form-control" required />
                         </div>
 
                         <!-- Half Day Options -->
@@ -56,6 +69,20 @@ if (!isset($permission)) dd('Access Denied...!');
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="half_day" id="second_half" value="second">
                                     <label class="form-check-label" for="second_half">Afternoon</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3" id="multi_day_off" style="display:none;">
+                            <label class="form-label text-center d-block mb-2">Select Date Range</label>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start_date" class="form-label d-block text-center">Start Date</label>
+                                    <input type="date" id="start_date" name="start_date" class="form-control" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="end_date" class="form-label d-block text-center">End Date</label>
+                                    <input type="date" id="end_date" name="end_date" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -76,6 +103,7 @@ if (!isset($permission)) dd('Access Denied...!');
                     </div>
                 </form>
 
+
                 <!-- Success Message -->
                 <div id="leave-success-message" style="display:none; text-align:center; padding:20px;">
                     <h3 class="text-success">Success!</h3>
@@ -84,6 +112,17 @@ if (!isset($permission)) dd('Access Denied...!');
                     <button id="request-again" class="btn btn-outline-primary mt-3">Request Again</button>
                 </div>
             </div>
+        </div>
+        <?php
+        $leave_data = $leave_limit_data[0] ?? [];
+        $total_leave =
+            ($leave_data['annual_balance'] ?? 0) +
+            ($leave_data['casual_balance'] ?? 0) +
+            ($leave_data['medical_balance'] ?? 0);
+        $div_class = $total_leave < 10 ? 'text-center mb-4 mt-3 text-danger' : 'text-center mb-4 mt-3';
+        ?>
+        <div class="<?= $div_class ?>" id="leave-limit-show">
+            <b>Leave Requests Remaining:</b> <?= $total_leave ?>
         </div>
     </div>
 </div>

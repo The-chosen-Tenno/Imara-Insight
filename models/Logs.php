@@ -87,6 +87,11 @@ class Logs extends BaseModel
         $param = array(':user_id' => $userId);
         return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id ORDER BY id DESC", $param);
     }
+    public function getByAllProjectId($userId)
+    {
+        $param = array(':user_id' => $userId);
+        return $this->pm->run("SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id ORDER BY id DESC", $param);
+    }
     public function getAllByDesc()
     {
         return $this->pm->run("SELECT * FROM " . $this->getTableName() . " ORDER BY id DESC");

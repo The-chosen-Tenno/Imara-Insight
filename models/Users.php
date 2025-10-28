@@ -52,11 +52,13 @@ class User extends BaseModel
         $user->role = $role;
         $user->email = $email;
         $user->status = 'confirmed';
-        $user->addNewRec();
-        if ($user) {
+        $addResult = $user->addNewRec();
+        if ($addResult !== false) {
+            $userId = $userModel->getLastInsertedUserId();
+            require_once 'LeaveLimit.php';
+            $leaveLimit = new LeaveLimit();
+            $leaveLimit->createLeaveForUser($userId);
             return $user;
-        } else {
-            return false;
         }
     }
 
@@ -144,14 +146,20 @@ class User extends BaseModel
         return $this->pm->run($sql, $param);
     }
 
-
     function acceptUser($id)
     {
         $user = new User();
         $user->id = $id;
         $user->status = 'confirmed';
         $result = $user->updateStatus();
-        return $result !== false;
+        if ($result !== false) {
+            require_once 'LeaveLimit.php';
+            $leaveLimit = new LeaveLimit();
+            $leaveLimit->createLeaveForUser($id);
+            return true;
+        }
+
+        return false;
     }
 
     function declineUser($id)

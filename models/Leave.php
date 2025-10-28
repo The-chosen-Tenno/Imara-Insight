@@ -1,5 +1,6 @@
 <?php
 require_once 'BaseModel.php';
+require_once 'LeaveLimit.php';
 
 class Leave extends BaseModel
 {
@@ -8,9 +9,12 @@ class Leave extends BaseModel
     public $leave_duration;
     public $half_day;
     public $date_off;
+    public $start_date;
+    public $end_date;
     public $description;
     public $user_id;
     public $status;
+    public $id;
 
 
     function getTableName()
@@ -18,21 +22,23 @@ class Leave extends BaseModel
         return 'leave_requests';
     }
 
-    function createLeaveReq($reason_type, $leave_note, $leave_duration, $half_day, $date_off, $description, $user_id)
+    function createLeaveReq($reason_type, $leave_note, $leave_duration, $half_day, $date_off, $start_date, $end_date, $description, $user_id)
     {
         $leaveModel = new Leave();
-        $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
-        if ($existingLeave) {
-            return false;
-        }
+        $checkDate = ($leave_duration === 'multi-days') ? $start_date : $date_off;
+        // $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $checkDate);
+        // if ($existingLeave) {
+        //     return false;
+        // }
 
         $leave = new Leave();
         $leave->reason_type = $reason_type;
         $leave->leave_note = $leave_note;
         $leave->leave_duration = $leave_duration;
-        // Only use half_day if leave_duration is half
         $leave->half_day = ($leave_duration === 'half') ? $half_day : null;
         $leave->date_off = $date_off;
+        $leave->start_date = $start_date;
+        $leave->end_date = $end_date;
         $leave->description = $description;
         $leave->user_id = $user_id;
         $leave->addNewRec();
@@ -48,14 +54,16 @@ class Leave extends BaseModel
             ':leave_duration' => $this->leave_duration,
             ':half_day'       => $this->half_day,
             ':date_off'       => $this->date_off,
+            ':start_date'       => $this->start_date,
+            ':end_date'       => $this->end_date,
             ':description'    => $this->description,
             ':user_id'        => $this->user_id,
         ];
 
         $query = "INSERT INTO " . $this->getTableName() . "
-        (reason_type, leave_note, leave_duration, half_day, date_off, description, user_id)
+        (reason_type, leave_note, leave_duration, half_day, date_off, start_date, end_date, description, user_id)
         VALUES
-        (:reason_type, :leave_note, :leave_duration, :half_day, :date_off, :description, :user_id)";
+        (:reason_type, :leave_note, :leave_duration, :half_day, :date_off, :start_date, :end_date, :description, :user_id)";
 
         return $this->pm->run($query, $param);
     }
@@ -64,10 +72,11 @@ class Leave extends BaseModel
 
     protected function updateRec() {}
 
-    function approveLeave($id)
+    function approveLeave($id, $user_id)
     {
         $leave = new Leave();
         $leave->id = $id;
+        $leave->user_id = $user_id;
         $leave->status = 'approved';
         $result = $leave->updateStatus();
         return $result !== false;
@@ -89,16 +98,38 @@ class Leave extends BaseModel
             ':status' => $this->status
         ];
 
-        return $this->pm->run(
+        $result = $this->pm->run(
             "UPDATE " . $this->getTableName() . " SET status = :status WHERE id = :id",
             $param
         );
+
+        if ($result &&  $this->status === 'approved') {
+            $leave = $this->getLeaveByID($this->id);
+            $leaveLimits = new LeaveLimit();
+            if ($leave['leave_duration'] === 'full') {
+                $leaveLimits->useLeaveDays($this->user_id, 1, $leave['reason_type']);
+            } elseif ($leave['leave_duration'] === 'multi-days') {
+                $numDays = $leaveLimits->calculateDays($leave['start_date'], $leave['end_date'], $leave['reason_type']);
+                $leaveLimits->useLeaveDays(2,2,4);
+            } elseif ($leave['leave_duration'] === 'half') {
+                $leaveLimits->trackHalfDay(1, $leave['reason_type']);
+            }
+        }
     }
 
-    public function getLeaveByDateAndUserID($user_id, $date_off)
+    public function getLeavebyID($id) {}
+
+    public function getLeaveByDateAndUserID($user_id, $checkDate)
     {
-        $param = [':user_id' => $user_id, ':date_off' => $date_off];
-        $query = "SELECT * FROM " . $this->getTableName() . " WHERE (user_id = :user_id AND date_off = :date_off)";
+        $param = [
+            ':user_id' => $user_id,
+            ':dateCheck1' => $checkDate,
+            ':dateCheck2' => $checkDate
+        ];
+        $query = "SELECT * FROM " . $this->getTableName() . " 
+              WHERE user_id = :user_id 
+              AND (date_off = :dateCheck1 OR start_date = :dateCheck2)";
+
         return $this->pm->run($query, $param);
     }
 

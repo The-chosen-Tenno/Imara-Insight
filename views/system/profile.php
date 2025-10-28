@@ -3,7 +3,8 @@ require_once('../layouts/header.php');
 include BASE_PATH . '/models/Users.php';
 
 $userDetails = new User();
-$loginUserDetails = $userDetails->getUserById($userId);
+$profileUserId = $_GET['id'] ?? $userId;
+$loginUserDetails = $userDetails->getUserById($profileUserId);
 
 if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 ?>
@@ -30,9 +31,16 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                     <dt class="col-sm-3 fw-semibold">Email:</dt>
                                     <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['email']) ?></dd>
                                 </dl>
-                                <button class="btn btn-sm btn-primary d-flex align-items-center edit-user-btn" data-bs-toggle="modal" data-bs-target="#edit-user-modal" data-id="<?= ($loginUserDetails['id']) ?>">
-                                    <i class='bx bx-cog me-2'></i> Edit My Profile
-                                </button>
+                                <?php
+                                if ((isset($_GET['id']) && $_GET['id'] == $userId) || (!isset($_GET['id']) && isset($userId))):
+                                ?>
+                                    <button class="btn btn-sm btn-primary d-flex align-items-center edit-user-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#edit-user-modal"
+                                        data-id="<?= $loginUserDetails['id'] ?>">
+                                        <i class='bx bx-cog me-2'></i> Edit My Profile
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="col-sm-4 text-center">

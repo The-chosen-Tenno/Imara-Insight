@@ -40,24 +40,33 @@ if ($permission !== 'admin') {
                                         <dt class="col-sm-3">Full Name:</dt>
                                         <dd class="col-sm-9"><?= htmlspecialchars($full_name[$pending['user_id']]) ?></dd>
 
-                                        <dt class="col-sm-3">Date Off:</dt>
-                                        <dd class="col-sm-9"><?= htmlspecialchars($pending['date_off']) ?></dd>
-
                                         <dt class="col-sm-3">Leave Duration:</dt>
                                         <dd class="col-sm-9">
-                                            <?= $pending['leave_duration'] === 'half' ? 'Half Day' : 'Full Day' ?>
+                                            <?php
+                                            $labels = [
+                                                'half'  => 'Half Day',
+                                                'full'  => 'Full Day',
+                                                'multi' => 'Multiple Days',
+                                                'short' => 'Short Day'
+                                            ];
+                                            echo $labels[$pending['leave_duration']] ?? 'Unknown';
+                                            ?>
                                         </dd>
 
-                                        <?php if ($pending['leave_duration'] === 'half') : ?>
-                                            <dt class="col-sm-3">Half Day:</dt>
-                                            <dd class="col-sm-9">
-                                                <?= $pending['half_day'] === 'first' ? 'First Half' : 'Second Half' ?>
-                                            </dd>
-                                        <?php endif; ?>
+                                        <dt class="col-sm-3">Date Off:</dt>
+                                        <dd class="col-sm-9">
+                                            <?php if ($pending['leave_duration'] === 'multi') : ?>
+                                                <?= '<strong>Start:</strong> ' . $pending['start_date'] . ' &nbsp; | &nbsp; <strong>End:</strong> ' . $pending['end_date'] ?>
+                                            <?php elseif ($pending['leave_duration'] === 'half'): ?>
+                                                <?= '<strong>' . ($pending['half_day'] === 'first' ? 'First Half' : 'Second Half') . '</strong>' ?>
+                                            <?php else : ?>
+                                                <?= '<strong>' . ($pending['date_off']) . '</strong>' ?>
+                                            <?php endif; ?>
+                                        </dd>
 
                                         <dt class="col-sm-3">Reason:</dt>
                                         <dd class="col-sm-9">
-                                            <?= htmlspecialchars($pending['reason_type']) ?> - 
+                                            <?= htmlspecialchars($pending['reason_type']) ?> -
                                             <?= htmlspecialchars($pending['leave_note']) ?>
                                         </dd>
 
@@ -65,11 +74,13 @@ if ($permission !== 'admin') {
                                         <dd class="col-sm-9"><?= htmlspecialchars($pending['description']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
-                                        <button
-                                            class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
-                                            data-id="<?= htmlspecialchars($pending['id']) ?>"
-                                            <i class='bx bx-check me-2'></i>Approve
-                                        </button>
+<button
+    class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
+    data-id="<?= htmlspecialchars($pending['id']) ?>"
+    data-user-id="<?= htmlspecialchars($pending['user_id']) ?>"
+>
+    <i class='bx bx-check me-2'></i>Approve
+</button>
                                         <button class="btn btn-sm btn-danger d-flex align-items-center deny-leave-btn"
                                             data-id="<?= htmlspecialchars($pending['id']) ?>"
                                             <i class='bx bx-x me-2'></i>Deny

@@ -44,10 +44,12 @@ CREATE TABLE project_images (
 CREATE TABLE leave_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    reason_type VARCHAR(255) NOT NULL,
+    reason_type ENUM('annual', 'casual', 'medical') NOT NULL,
     leave_note VARCHAR(255) DEFAULT NULL,
-    date_off DATE NOT NULL,
-    leave_duration ENUM('full','half') NOT NULL DEFAULT 'full',
+    date_off DATE NULL,
+    start_date DATE NULL,
+    end_date DATE NULL,
+    leave_duration ENUM('full','half','multi','short') NOT NULL DEFAULT 'full',
     half_day ENUM('first','second') DEFAULT NULL,
     description TEXT NOT NULL,
     status ENUM('approved','denied','pending') DEFAULT 'pending',
@@ -79,18 +81,32 @@ CREATE TABLE project_tags (
 );
 
 
+--new table
+CREATE TABLE leave_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
 
---updates
+    annual_balance INT NOT NULL DEFAULT 7,
+    annual_extra INT NOT NULL DEFAULT 0,
+    annual_status ENUM('available','exhausted','overused') DEFAULT 'available',
+
+    casual_balance INT NOT NULL DEFAULT 7,
+    casual_extra INT NOT NULL DEFAULT 0,
+    casual_status ENUM('available','exhausted','overused') DEFAULT 'available',
+
+    medical_balance INT NOT NULL DEFAULT 7,
+    medical_extra INT NOT NULL DEFAULT 0,
+    medical_status ENUM('available','exhausted','overused') DEFAULT 'available',
+
+    half_day_count INT NOT NULL DEFAULT 0,
+
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- new alt
 ALTER TABLE leave_requests
-ADD COLUMN leave_duration ENUM('full','half') NOT NULL DEFAULT 'full' AFTER date_off;
-
--- 2. Add the updated_at timestamp column to track edits
-ALTER TABLE leave_requests
-ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER uploaded_at;
-
-ALTER TABLE projects
-ADD COLUMN description TEXT DEFAULT NULL AFTER project_name;
-
-ALTER TABLE leave_requests
-ADD COLUMN leave_note VARCHAR(255) DEFAULT NULL;
-
+MODIFY date_off DATE NULL,
+ADD COLUMN start_date DATE NULL,
+ADD COLUMN end_date DATE NULL;

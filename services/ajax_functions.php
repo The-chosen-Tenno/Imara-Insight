@@ -467,13 +467,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $reason_type = $_POST['reason_type'];
         $leave_note = $_POST['leave_note'] ?? null;
-        $leave_duration = $_POST['leave_duration'] ?? 'full'; // New: full/half
-        $half_day = $_POST['half_day'] ?? null; // only relevant if leave_duration = half
-        $date_off = $_POST['date_off'];
+        $leave_duration = $_POST['leave_duration'] ?? 'full';
+        $half_day = $_POST['half_day'] ?? null;
+        $date_off = $_POST['date_off'] ?? null;
+        $start_date = $_POST['start_date'] ?? null;
+        $end_date = $_POST['end_date'] ?? null;
         $description = $_POST['description'];
         $user_id = $_POST['user_id'];
 
-        // If leave_duration is full, ignore half_day
+
         if ($leave_duration === 'full') {
             $half_day = null;
         }
@@ -485,6 +487,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $leave_duration,
             $half_day,
             $date_off,
+            $start_date,
+            $end_date,
             $description,
             $user_id
         );
@@ -504,8 +508,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
     try {
         $id = $_POST['id'];
+        $user_id = $_POST['user_id'];
         $leaveModel = new Leave();
-        $requested = $leaveModel->approveLeave($id);
+        $requested = $leaveModel->approveLeave($id, $user_id);
         if ($requested) {
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
