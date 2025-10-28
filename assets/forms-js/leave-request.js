@@ -67,13 +67,13 @@ $(document).ready(function () {
 
     $(document).on('click', '.approve-leave-btn', async function () {
         var id = $(this).data('id');
-        var user_id = $(this).data('userId');   
+        var user_id = $(this).data('userId');
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
             data: {
                 id: id,
-                user_id: user_id,  
+                user_id: user_id,
                 action: 'approve_leave',
             },
             dataType: 'json',
@@ -81,11 +81,11 @@ $(document).ready(function () {
                 console.log(response);
                 showAlert(response.message, response.success ? 'primary' : 'danger');
 
-                // if (response.success) {
-                //     setTimeout(function () {
-                //         location.reload();
-                //     }, 1000);
-                // }
+                if (response.success) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                }
             },
             error: function (error) {
                 console.error('Error Accepting the Account:', error);

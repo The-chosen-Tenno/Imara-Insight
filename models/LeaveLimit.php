@@ -42,22 +42,18 @@ class LeaveLimit extends BaseModel
 
     public function useLeaveDays($user_id, $leave_day_count, $reason_type)
     {
-        // $reason_type_balance = $reason_type . '_balance';
-        $reason_type_balance = 'annual_balance';
+        $reason_type_balance = $reason_type . '_balance';
 
         if ($leave_day_count == 1) {
-            $leave_details = $this->getAllRemainingLeave($user_id);
+            $all_leave_details  = $this->getAllRemainingLeave($user_id);
+            $leave_details = $all_leave_details[0];
 
-            // Check if the user has enough leave balance
             if (isset($leave_details[$reason_type_balance]) && $leave_details[$reason_type_balance] > 0) {
-                // Deduct 1 day from the appropriate balance
-                // $leave_details[$reason_type_balance] -= 1;
-                // Here you would probably update the database
                 $this->updateLeaveBalance(1, $user_id, $reason_type_balance);
 
-                return true; // Successfully used leave
+                return true;
             } else {
-                return false; // Not enough balance
+                return false;
             }
         }
     }

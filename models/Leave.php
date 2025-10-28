@@ -72,13 +72,31 @@ class Leave extends BaseModel
 
     protected function updateRec() {}
 
-    function approveLeave($id, $user_id)
+    function approveLeave($id)
     {
         $leave = new Leave();
         $leave->id = $id;
-        $leave->user_id = $user_id;
         $leave->status = 'approved';
         $result = $leave->updateStatus();
+
+        if ($result !== false && $leave->status === 'approved') {
+            $AllleaveData = $this->getLeaveByID($id);
+            $leaveData = $AllleaveData;
+            $leaveLimits = new LeaveLimit();
+
+            if ($leaveData['leave_duration'] === 'full') {
+                $leaveLimits->useLeaveDays($leaveData['user_id'], 1, $leaveData['reason_type']);
+            } elseif ($leaveData['leave_duration'] === 'multi-days') {
+                $numDays = $leaveLimits->calculateDays(
+                    $leaveData['start_date'],
+                    $leaveData['end_date'],
+                    $leaveData['reason_type']
+                );
+                $leaveLimits->useLeaveDays($leaveData['user_id'], $numDays, $leaveData['reason_type']);
+            } elseif ($leaveData['leave_duration'] === 'half') {
+                $leaveLimits->trackHalfDay($leaveData['user_id'], $leaveData['reason_type']);
+            }
+        }
         return $result !== false;
     }
 
@@ -102,22 +120,17 @@ class Leave extends BaseModel
             "UPDATE " . $this->getTableName() . " SET status = :status WHERE id = :id",
             $param
         );
-
-        if ($result &&  $this->status === 'approved') {
-            $leave = $this->getLeaveByID($this->id);
-            $leaveLimits = new LeaveLimit();
-            if ($leave['leave_duration'] === 'full') {
-                $leaveLimits->useLeaveDays($this->user_id, 1, $leave['reason_type']);
-            } elseif ($leave['leave_duration'] === 'multi-days') {
-                $numDays = $leaveLimits->calculateDays($leave['start_date'], $leave['end_date'], $leave['reason_type']);
-                $leaveLimits->useLeaveDays(2,2,4);
-            } elseif ($leave['leave_duration'] === 'half') {
-                $leaveLimits->trackHalfDay(1, $leave['reason_type']);
-            }
-        }
     }
 
-    public function getLeavebyID($id) {}
+    public function getLeavebyID($id)
+    {
+        $param = [':id' => $id];
+        return $this->pm->run(
+            "SELECT * FROM " . $this->getTableName() . " WHERE id = :id",
+            $param,
+            true
+        );
+    }
 
     public function getLeaveByDateAndUserID($user_id, $checkDate)
     {
