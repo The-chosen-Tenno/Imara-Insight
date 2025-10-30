@@ -44,18 +44,47 @@ class LeaveLimit extends BaseModel
     {
         $reason_type_balance = $reason_type . '_balance';
 
-        if ($leave_day_count == 1) {
+        if ($leave_day_count >= 1) {
             $all_leave_details  = $this->getAllRemainingLeave($user_id);
             $leave_details = $all_leave_details[0];
 
-            if (isset($leave_details[$reason_type_balance]) && $leave_details[$reason_type_balance] > 0) {
-                $this->updateLeaveBalance(1, $user_id, $reason_type_balance);
+            if ($leave_day_count <= $leave_details[$reason_type_balance]) {
 
+                $this->updateLeaveBalance($leave_day_count, $user_id, $reason_type_balance);
+                return true;
+            } elseif ($leave_day_count > $leave_details[$reason_type_balance]) {
+
+                $reason_type_extra = $reason_type . '_extra';
+                $extra_leave_count = $leave_day_count - $leave_details[$reason_type_balance];
+                $already_extra_leave = $leave_details[$reason_type_extra];
+                $new_leave_count = $already_extra_leave + $extra_leave_count;
+                $this->updateExtraLeaveBalance($new_leave_count, $user_id, $reason_type_balance, $reason_type_extra, $reason_type);
                 return true;
             } else {
+
                 return false;
             }
         }
+
+        return false;
+    }
+
+    public function updateExtraLeaveBalance($new_leave_count, $user_id, $reason_type_balance, $reason_type_extra, $reason_type)
+    {
+        $reason_type_status = $reason_type . '_status';
+
+        $params = [
+            ':new_leave_count' => $new_leave_count,
+            ':user_id' => $user_id
+        ];
+
+        $sql = "UPDATE " . $this->getTableName() . " SET 
+            $reason_type_balance = 0,
+            $reason_type_extra = :new_leave_count,
+            $reason_type_status = 'overused'
+            WHERE user_id = :user_id";
+
+        return $this->pm->run($sql, $params);
     }
 
     public function updateLeaveBalance($day_count, $user_id, $reason_type_balance)
@@ -72,9 +101,39 @@ class LeaveLimit extends BaseModel
         return $this->pm->run($sql, $params);
     }
 
-    public function calculateDays() {}
+    public function calculateDays($start_date, $end_date)
+    { {
 
-    public function trackHalfDay() {}
+            $start = new DateTime($start_date);
+            $end = new DateTime($end_date);
+            $diff = $start->diff($end);
+
+            return $diff->days;
+        }
+    }
+
+    public function trackHalfDay($user_id)
+    {
+        $params = [
+            ':user_id' => $user_id
+        ];
+
+        $sql = $this->pm->run("SELECT half_day_count FROM " . $this->getTableName() . " WHERE user_id = :user_id", $params);
+
+        if ($sql[0]['half_day_count'] == 1) {
+
+            $this->pm->run("UPDATE " . $this->getTableName() . " SET 
+            half_day_count = 0
+            WHERE user_id = :user_id", $params);
+
+            return 1;
+        } else {
+            $this->pm->run("UPDATE " . $this->getTableName() . " SET 
+            half_day_count = 1
+            WHERE user_id = :user_id", $params);
+            return 0;
+        }
+    }
 
     // protected function getLeaveStatusByIdAndType($user_id, $reason_type)
     // {

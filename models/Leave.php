@@ -85,16 +85,23 @@ class Leave extends BaseModel
             $leaveLimits = new LeaveLimit();
 
             if ($leaveData['leave_duration'] === 'full') {
+                
                 $leaveLimits->useLeaveDays($leaveData['user_id'], 1, $leaveData['reason_type']);
-            } elseif ($leaveData['leave_duration'] === 'multi-days') {
+            } elseif ($leaveData['leave_duration'] === 'multi') {
+
                 $numDays = $leaveLimits->calculateDays(
                     $leaveData['start_date'],
-                    $leaveData['end_date'],
-                    $leaveData['reason_type']
+                    $leaveData['end_date']
                 );
                 $leaveLimits->useLeaveDays($leaveData['user_id'], $numDays, $leaveData['reason_type']);
+
             } elseif ($leaveData['leave_duration'] === 'half') {
-                $leaveLimits->trackHalfDay($leaveData['user_id'], $leaveData['reason_type']);
+
+                $numHalfDays = $leaveLimits->trackHalfDay($leaveData['user_id']);
+                if ($numHalfDays == 1) {
+                    $leaveLimits->useLeaveDays($leaveData['user_id'], $numHalfDays, $leaveData['reason_type']);
+                } else {
+                }
             }
         }
         return $result !== false;

@@ -137,7 +137,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                     <div class="row">
                         <div class="col mb-3">
                             <label class="form-label">Profile Image</label>
-                            <input type="file" name="Photo" id="profileImage" class="form-control" />
+                            <input type="file" name="Photo" id="profileImage" class="form-control" accept="image/*" />
                             <!-- Preview -->
                             <img id="profileImagePreview" src="" alt="Profile Preview" style="max-width:100px; margin-top:10px; display:none;">
                         </div>

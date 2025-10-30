@@ -82,7 +82,6 @@ class User extends BaseModel
         $user->user_name = $user_name;
         $user->email = $email;
 
-        // If no new photo is provided, we pass null so updateRec won't touch the photo column
         $user->photo = $photoPath !== null ? $photoPath : null;
 
         $result = $user->updateRec();
