@@ -82,6 +82,12 @@ class User extends BaseModel
         $user->user_name = $user_name;
         $user->email = $email;
 
+        if (isset($photoPath) && isset($oldUser['photo'])) {
+            if (file_exists(__DIR__ . '/../' . $oldUser['photo'])) {
+                unlink(__DIR__ . '/../' . $oldUser['photo']);
+            }
+        }
+
         $user->photo = $photoPath !== null ? $photoPath : null;
 
         $result = $user->updateRec();
