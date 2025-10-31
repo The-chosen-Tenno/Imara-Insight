@@ -117,7 +117,7 @@ class User extends BaseModel
             ':password'    => $this->password,
             ':role'        => $this->role,
             ':status'      => $this->status,
-            ':user_status' => $this->user_status ?? 'active', // default active
+            ':user_status' => $this->user_status ?? 'active',
         ];
         return $this->pm->run(
             "INSERT INTO " . $this->getTableName() . " 

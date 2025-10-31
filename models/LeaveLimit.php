@@ -33,7 +33,7 @@ class LeaveLimit extends BaseModel
     {
         $param = [':user_id' => $user_id];
         $sql = "SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id";
-        return $this->pm->run($sql, $param);
+        return  $this->pm->run($sql, $param);
     }
 
     protected function addNewRec() {}
@@ -112,24 +112,25 @@ class LeaveLimit extends BaseModel
         }
     }
 
-    public function trackHalfDay($user_id)
+    public function trackHalfDay($user_id, $reason_type)
     {
+        $reason_type = $reason_type . '_half_day_count';
         $params = [
             ':user_id' => $user_id
         ];
 
-        $sql = $this->pm->run("SELECT half_day_count FROM " . $this->getTableName() . " WHERE user_id = :user_id", $params);
+        $sql = $this->pm->run("SELECT $reason_type FROM " . $this->getTableName() . " WHERE user_id = :user_id", $params);
 
-        if ($sql[0]['half_day_count'] == 1) {
+        if ($sql[0][$reason_type] == 1) {
 
             $this->pm->run("UPDATE " . $this->getTableName() . " SET 
-            half_day_count = 0
+            $reason_type = 0
             WHERE user_id = :user_id", $params);
 
             return 1;
         } else {
             $this->pm->run("UPDATE " . $this->getTableName() . " SET 
-            half_day_count = 1
+            $reason_type = 1
             WHERE user_id = :user_id", $params);
             return 0;
         }

@@ -88,17 +88,18 @@ CREATE TABLE leave_limits (
 
     annual_balance INT NOT NULL DEFAULT 7,
     annual_extra INT NOT NULL DEFAULT 0,
+    annual_half_day_count INT NOT NULL DEFAULT 0,
     annual_status ENUM('available','exhausted','overused') DEFAULT 'available',
 
     casual_balance INT NOT NULL DEFAULT 7,
     casual_extra INT NOT NULL DEFAULT 0,
+    casual_half_day_count INT NOT NULL DEFAULT 0,
     casual_status ENUM('available','exhausted','overused') DEFAULT 'available',
 
     medical_balance INT NOT NULL DEFAULT 7,
     medical_extra INT NOT NULL DEFAULT 0,
+    medical_half_day_count INT NOT NULL DEFAULT 0,
     medical_status ENUM('available','exhausted','overused') DEFAULT 'available',
-
-    half_day_count INT NOT NULL DEFAULT 0,
 
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 

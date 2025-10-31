@@ -25,20 +25,27 @@ class Leave extends BaseModel
     function createLeaveReq($reason_type, $leave_note, $leave_duration, $half_day, $date_off, $start_date, $end_date, $description, $user_id)
     {
         $leaveModel = new Leave();
-        $checkDate = ($leave_duration === 'multi-days') ? $start_date : $date_off;
-        // $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $checkDate);
-        // if ($existingLeave) {
-        //     return false;
-        // }
+        if ($leave_duration === 'multi') {
+            $existingLeave = $leaveModel->getLeaveByDateAndUserIDMultiDays($user_id, $start_date, $end_date);
+            if ($existingLeave) {
+                return false;
+            }
+        } else{
+            $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
+            if ($existingLeave) {
+                return false;
+            }
+        }
+
 
         $leave = new Leave();
         $leave->reason_type = $reason_type;
         $leave->leave_note = $leave_note;
         $leave->leave_duration = $leave_duration;
         $leave->half_day = ($leave_duration === 'half') ? $half_day : null;
-        $leave->date_off = $date_off;
-        $leave->start_date = $start_date;
-        $leave->end_date = $end_date;
+        $leave->date_off = ($leave_duration === 'full') ? $date_off : null;
+        $leave->start_date = ($leave_duration === 'multi') ? $start_date : null;
+        $leave->end_date = ($leave_duration === 'multi') ? $end_date : null;
         $leave->description = $description;
         $leave->user_id = $user_id;
         $leave->addNewRec();
@@ -85,7 +92,7 @@ class Leave extends BaseModel
             $leaveLimits = new LeaveLimit();
 
             if ($leaveData['leave_duration'] === 'full') {
-                
+
                 $leaveLimits->useLeaveDays($leaveData['user_id'], 1, $leaveData['reason_type']);
             } elseif ($leaveData['leave_duration'] === 'multi') {
 
@@ -94,10 +101,9 @@ class Leave extends BaseModel
                     $leaveData['end_date']
                 );
                 $leaveLimits->useLeaveDays($leaveData['user_id'], $numDays, $leaveData['reason_type']);
-
             } elseif ($leaveData['leave_duration'] === 'half') {
 
-                $numHalfDays = $leaveLimits->trackHalfDay($leaveData['user_id']);
+                $numHalfDays = $leaveLimits->trackHalfDay($leaveData['user_id'], $leaveData['reason_type']);
                 if ($numHalfDays == 1) {
                     $leaveLimits->useLeaveDays($leaveData['user_id'], $numHalfDays, $leaveData['reason_type']);
                 } else {
@@ -139,18 +145,35 @@ class Leave extends BaseModel
         );
     }
 
-    public function getLeaveByDateAndUserID($user_id, $checkDate)
+    public function getLeaveByDateAndUserID($user_id, $date_off)
     {
         $param = [
             ':user_id' => $user_id,
-            ':dateCheck1' => $checkDate,
-            ':dateCheck2' => $checkDate
+            ':date_off' => $date_off,
+
         ];
         $query = "SELECT * FROM " . $this->getTableName() . " 
               WHERE user_id = :user_id 
-              AND (date_off = :dateCheck1 OR start_date = :dateCheck2)";
+              AND date_off = :date_off";
 
         return $this->pm->run($query, $param);
+    }
+
+    public function getLeaveByDateAndUserIDMultiDays($user_id, $start_date, $end_date)
+    {
+        $param = [
+            ':user_id' => $user_id,
+            ':target_start' => $start_date,
+            ':target_end' => $end_date
+        ];
+
+        $query = "SELECT * FROM " . $this->getTableName() . " 
+              WHERE user_id = :user_id
+              AND start_date <= :target_end
+              AND end_date >= :target_start";
+
+        $result = $this->pm->run($query, $param);
+        return $result;
     }
 
     public function getUserByUsernameOrEmail($user_name, $email)

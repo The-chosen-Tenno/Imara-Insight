@@ -1,10 +1,15 @@
 <?php
 require_once('../layouts/header.php');
 include BASE_PATH . '/models/Users.php';
+include BASE_PATH . '/models/Logs.php';
 
 $userDetails = new User();
 $profileUserId = $_GET['id'] ?? $userId;
 $loginUserDetails = $userDetails->getUserById($profileUserId);
+
+$project = new Logs();
+$ProjectDetails = $project->getByUserId($profileUserId);
+
 
 if (!isset($userId) && empty($userId)) dd('Access Denied...!');
 ?>
@@ -25,8 +30,8 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                     <dt class="col-sm-3 fw-semibold">Fullname:</dt>
                                     <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['full_name']) ?></dd>
 
-                                    <dt class="col-sm-3 fw-semibold">User ID:</dt>
-                                    <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['id']) ?></dd>
+                                    <!-- <dt class="col-sm-3 fw-semibold">User ID:</dt>
+                                    <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['id']) ?></dd> -->
 
                                     <dt class="col-sm-3 fw-semibold">Email:</dt>
                                     <dd class="col-sm-9"><?= htmlspecialchars($loginUserDetails['email']) ?></dd>
@@ -66,36 +71,72 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                 </div>
             </div>
 
-            <!-- Project Summary Card -->
+
+            <?php
+            $counts = [
+                'finished' => 0,
+                'in_progress' => 0,
+                'cancelled' => 0,
+                'idle' => 0
+            ];
+
+            foreach ($ProjectDetails as $project) {
+                $status = strtolower($project['status']);
+                if (isset($counts[$status])) {
+                    $counts[$status]++;
+                }
+            }
+            $totalProjects = array_sum($counts);
+            ?>
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h4 class="card-title text-primary fw-bold mb-3">
                             Project Summary
                         </h4>
-                        <div class="row text-center g-3">
-                            <div class="col-6 col-md-3">
-                                <div class="p-2">
-                                    <h6 class="text-muted mb-1">Total Projects</h6>
-                                    <h5 class="fw-bold mb-0">--</h5>
+                        <div class="row text-center g-3 justify-content-center">
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-light rounded shadow-sm">
+                                    <h6 class="text-muted mb-1">
+                                        <i class="bi bi-kanban-fill"></i> Total Projects
+                                    </h6>
+                                    <h5 class="fw-bold display-6 mb-0"><?= $totalProjects ?></h5>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2">
-                                    <h6 class="text-muted mb-1">In Progress</h6>
-                                    <h5 class="fw-bold text-info mb-0">--</h5>
+
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-info bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-info mb-1">
+                                        <i class="bi bi-hourglass-split"></i> In Progress
+                                    </h6>
+                                    <h5 class="fw-bold text-info display-6 mb-0"><?= $counts['in_progress'] ?></h5>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2">
-                                    <h6 class="text-muted mb-1">Completed</h6>
-                                    <h5 class="fw-bold text-success mb-0">--</h5>
+
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-secondary bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-secondary mb-1">
+                                        <i class="bi bi-pause-circle-fill"></i> Idle
+                                    </h6>
+                                    <h5 class="fw-bold text-secondary display-6 mb-0"><?= $counts['idle'] ?></h5>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2">
-                                    <h6 class="text-muted mb-1">Cancelled</h6>
-                                    <h5 class="fw-bold text-danger mb-0">--</h5>
+
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-success bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-success mb-1">
+                                        <i class="bi bi-check-circle-fill"></i> Completed
+                                    </h6>
+                                    <h5 class="fw-bold text-success display-6 mb-0"><?= $counts['finished'] ?></h5>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-danger bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-danger mb-1">
+                                        <i class="bi bi-x-circle-fill"></i> Cancelled
+                                    </h6>
+                                    <h5 class="fw-bold text-danger display-6 mb-0"><?= $counts['cancelled'] ?></h5>
                                 </div>
                             </div>
                         </div>
