@@ -5,6 +5,7 @@ include BASE_PATH . '/models/Users.php';
 include BASE_PATH . '/models/Sub-Assignees.php';
 include BASE_PATH . '/models/Tags.php';
 include BASE_PATH . '/models/ProjectTags.php';
+include BASE_PATH . '/models/Leave.php';
 
 // Fetch data
 $projectLogs = new Logs();
@@ -16,6 +17,11 @@ $user_data = $userDetails->getAll();
 
 $sub_assignee_details = new SubAssignee();
 $subAssignedProjects = $sub_assignee_details->getByUserId($userId);
+
+$leave_details = new Leave();
+$AllLeave = $leave_details->getAllLeaveByUserId($userId);
+
+// print_r($AllLeave);
 
 $project_tags = new ProjectTags();
 $tag = new Tags();
@@ -65,68 +71,68 @@ foreach ($all_tag as $tags) {
                         $sub_assignee_data = $sub_assignee_details->getAllByProjectId($LD['id']);
                         $tag_for_project = $project_tags->getAllTagByProjectId($LD['id']);
                     ?>
-                    <tr>
-                        <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
+                        <tr>
+                            <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($LD['project_name'] ?? '') ?></td>
 
-                        <!-- Tags -->
-                        <td class="text-start">
-                            <?php if (!empty($tag_for_project)): ?>
-                                <?php foreach ($tag_for_project as $tag_id): ?>
-                                    <span class="badge rounded-pill bg-label-primary me-1 mb-1">
-                                        <?= htmlspecialchars($tag_names[$tag_id] ?? 'Unknown') ?>
-                                    </span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-muted">None</span>
-                            <?php endif; ?>
-                        </td>
+                            <!-- Tags -->
+                            <td class="text-start">
+                                <?php if (!empty($tag_for_project)): ?>
+                                    <?php foreach ($tag_for_project as $tag_id): ?>
+                                        <span class="badge rounded-pill bg-label-primary me-1 mb-1">
+                                            <?= htmlspecialchars($tag_names[$tag_id] ?? 'Unknown') ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <span class="text-muted">None</span>
+                                <?php endif; ?>
+                            </td>
 
-                        <!-- Sub-Assignees -->
-                        <td class="text-start">
-                            <?php if (!empty($sub_assignee_data)):
-                                foreach ($sub_assignee_data as $sub_id): ?>
-                                    <span class="badge rounded-pill bg-secondary me-1 mb-1">
-                                        <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
-                                    </span>
-                                <?php endforeach;
-                            else: ?>
-                                <span class="text-muted">None</span>
-                            <?php endif; ?>
-                        </td>
+                            <!-- Sub-Assignees -->
+                            <td class="text-start">
+                                <?php if (!empty($sub_assignee_data)):
+                                    foreach ($sub_assignee_data as $sub_id): ?>
+                                        <span class="badge rounded-pill bg-secondary me-1 mb-1">
+                                            <?= htmlspecialchars($user_names[$sub_id] ?? 'Unknown') ?>
+                                        </span>
+                                    <?php endforeach;
+                                else: ?>
+                                    <span class="text-muted">None</span>
+                                <?php endif; ?>
+                            </td>
 
-                        <!-- Status -->
-                        <td>
-                            <?php
-                            $statusClass = match ($LD['status']) {
-                                'finished' => 'bg-success',
-                                'in_progress' => 'bg-primary',
-                                'idle' => 'bg-dark text-white',
-                                'cancelled' => 'bg-danger',
-                                default => 'bg-secondary'
-                            };
-                            ?>
-                            <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
-                                <?= htmlspecialchars(str_replace('_', ' ', $LD['status'])) ?>
-                            </span>
-                        </td>
+                            <!-- Status -->
+                            <td>
+                                <?php
+                                $statusClass = match ($LD['status']) {
+                                    'finished' => 'bg-success',
+                                    'in_progress' => 'bg-primary',
+                                    'idle' => 'bg-dark text-white',
+                                    'cancelled' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                ?>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
+                                    <?= htmlspecialchars(str_replace('_', ' ', $LD['status'])) ?>
+                                </span>
+                            </td>
 
-                        <!-- Photos -->
-                        <td>
-                            <a href="../ProjectDetails.php?id=<?= (int)$LD['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
-                        </td>
+                            <!-- Photos -->
+                            <td>
+                                <a href="../ProjectDetails.php?id=<?= (int)$LD['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
+                            </td>
 
-                        <!-- Last Update -->
-                        <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
+                            <!-- Last Update -->
+                            <td class="text-muted"><?= date('Y-m-d H:i', strtotime($LD['last_updated'])) ?></td>
 
-                        <!-- Action -->
-                        <td>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a class="text-warning me-1 edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-edit-alt"></i></a>
-                                <a class="text-success me-1 add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-user-plus"></i></a>
-                                <a class="text-danger remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-user-minus"></i></a>
-                            </div>
-                        </td>
-                    </tr>
+                            <!-- Action -->
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a class="text-warning me-1 edit-project-btn" data-bs-toggle="modal" data-bs-target="#edit-project-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-edit-alt"></i></a>
+                                    <a class="text-success me-1 add-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#add-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-user-plus"></i></a>
+                                    <a class="text-danger remove-sub-assignee-btn" data-bs-toggle="modal" data-bs-target="#remove-sub-assignee-modal" data-id="<?= (int)$LD['id'] ?>"><i class="bx bx-user-minus"></i></a>
+                                </div>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -157,25 +163,25 @@ foreach ($all_tag as $tags) {
                         $sub_assignees = $sub_assignee_details->getAllByProjectId($project['id']);
                         $tag_for_project = $project_tags->getAllTagByProjectId($project['id']);
                     ?>
-                    <tr>
-                        <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
+                        <tr>
+                            <td class="fw-semibold text-start ps-3"><?= htmlspecialchars($project['project_name'] ?? '') ?></td>
 
-                        <!-- Tags -->
-                        <td class="text-start">
-                            <?php if (!empty($tag_for_project)): ?>
-                                <?php foreach ($tag_for_project as $tag_id): ?>
-                                    <span class="badge rounded-pill bg-label-primary me-1 mb-1">
-                                        <?= htmlspecialchars($tag_names[$tag_id] ?? 'Unknown') ?>
-                                    </span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-muted">None</span>
-                            <?php endif; ?>
-                        </td>
+                            <!-- Tags -->
+                            <td class="text-start">
+                                <?php if (!empty($tag_for_project)): ?>
+                                    <?php foreach ($tag_for_project as $tag_id): ?>
+                                        <span class="badge rounded-pill bg-label-primary me-1 mb-1">
+                                            <?= htmlspecialchars($tag_names[$tag_id] ?? 'Unknown') ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <span class="text-muted">None</span>
+                                <?php endif; ?>
+                            </td>
 
-                        <!-- Other Sub-Assignees -->
-                        <td class="text-start">
-                            <?php
+                            <!-- Other Sub-Assignees -->
+                            <td class="text-start">
+                                <?php
                                 $otherSubs = array_filter($sub_assignees, fn($id) => $id != $project['user_id']);
                                 if (!empty($otherSubs)):
                                     foreach ($otherSubs as $sub_id): ?>
@@ -186,39 +192,39 @@ foreach ($all_tag as $tags) {
                                 else: ?>
                                     <span class="text-muted">None</span>
                                 <?php endif; ?>
-                        </td>
+                            </td>
 
-                        <!-- Main Assignee -->
-                        <td>
-                            <span class="badge bg-info d-block mb-1">
-                                <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
-                            </span>
-                        </td>
+                            <!-- Main Assignee -->
+                            <td>
+                                <span class="badge bg-info d-block mb-1">
+                                    <?= htmlspecialchars($user_names[$project['user_id']] ?? 'Unknown') ?>
+                                </span>
+                            </td>
 
-                        <!-- Status -->
-                        <td>
-                            <?php
-                            $statusClass = match ($project['status']) {
-                                'finished' => 'bg-success',
-                                'in_progress' => 'bg-primary',
-                                'idle' => 'bg-dark text-white',
-                                'cancelled' => 'bg-danger',
-                                default => 'bg-secondary'
-                            };
-                            ?>
-                            <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
-                                <?= htmlspecialchars(str_replace('_', ' ', $project['status'])) ?>
-                            </span>
-                        </td>
+                            <!-- Status -->
+                            <td>
+                                <?php
+                                $statusClass = match ($project['status']) {
+                                    'finished' => 'bg-success',
+                                    'in_progress' => 'bg-primary',
+                                    'idle' => 'bg-dark text-white',
+                                    'cancelled' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                ?>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
+                                    <?= htmlspecialchars(str_replace('_', ' ', $project['status'])) ?>
+                                </span>
+                            </td>
 
-                        <!-- Photos -->
-                        <td>
-                            <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
-                        </td>
+                            <!-- Photos -->
+                            <td>
+                                <a href="../ProjectDetails.php?id=<?= (int)$project['id'] ?>" class="btn btn-outline-info btn-sm rounded-pill" target="_blank">Show</a>
+                            </td>
 
-                        <!-- Last Update -->
-                        <td class="text-muted"><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
-                    </tr>
+                            <!-- Last Update -->
+                            <td class="text-muted"><?= date('Y-m-d H:i', strtotime($project['last_updated'])) ?></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -226,7 +232,66 @@ foreach ($all_tag as $tags) {
     </div>
 </div>
 
+<!-- Leave Requests  -->
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">My Leave Requests</h4>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle text-center projectTable">
+                <thead class="table-dark text-uppercase small">
+                    <tr>
+                        <th class="text-start ps-3">Date</th>
+                        <th>Leave Type</th>
+                        <th>Duration</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Approval</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($AllLeave as $total_leave):
+                    ?>
+                        <tr>
+                            <td class="ps-4 fw-medium text-primary">
+                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['uploaded_at'] ?? ''))) ?>
+                            </td>
+                            <td class="text-start">
+                                <div class="text-capitalize d-inline-flex align-items-center px-3 py-1 rounded-3 badge rounded-pill bg-label-dark text-dark fw-medium">
+                                    <?= htmlspecialchars($total_leave['reason_type']) ?>
+                                </div>
+                            </td>
 
+                            <td class="text-start">
+                                <div class="text-capitalize d-inline-flex align-items-center px-3 py-1 rounded-3 badge rounded-pill bg-label-secondary text-secondary fw-medium">
+                                    <?= htmlspecialchars($total_leave['leave_duration']) ?> Day
+                                </div>
+                            </td>
+                            <td class="ps-4 fw-medium text-primary">
+                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['date_off'] ?? 'start_date'))) ?>
+                            </td>
+                            <td class="ps-4 fw-medium text-primary">
+                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['end_date'] ?? ''))) ?>
+                            </td>
+                            <td>
+                                <?php
+                                $statusClass = match ($total_leave['status']) {
+                                    'approved' => 'bg-success',
+                                    'pending' => 'bg-dark text-white',
+                                    'denied' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                                ?>
+                                <span class="badge <?= $statusClass ?> text-capitalize px-3 py-2">
+                                    <?= htmlspecialchars(str_replace('_', ' ', $total_leave['status'])) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <!-- ADD PROJECT MODAL -->
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">

@@ -47,7 +47,6 @@ class LeaveLimit extends BaseModel
         if ($leave_day_count >= 1) {
             $all_leave_details  = $this->getAllRemainingLeave($user_id);
             $leave_details = $all_leave_details[0];
-
             if ($leave_day_count <= $leave_details[$reason_type_balance]) {
 
                 $this->updateLeaveBalance($leave_day_count, $user_id, $reason_type_balance);

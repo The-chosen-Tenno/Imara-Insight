@@ -197,6 +197,16 @@ class Leave extends BaseModel
         );
     }
 
+        public function getAllLeaveByUserId($UserId)
+    {
+        $param = [':UserId' => $UserId];
+        return $this->pm->run(
+            "SELECT * FROM " . $this->getTableName() . " WHERE user_id = :UserId",
+            $param,
+            false
+        );
+    }
+
     public function getLeavebyStatus($status = 'pending')
     {
         $query = "SELECT * FROM " . $this->getTableName() . " WHERE status = :status";

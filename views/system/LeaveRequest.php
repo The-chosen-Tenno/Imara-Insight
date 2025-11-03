@@ -30,10 +30,14 @@ if (!isset($permission)) dd('Access Denied...!');
                             <select id="reason_type" name="reason_type" class="form-select" required>
                                 <option value="" disabled selected>-- Select Leave Type --</option>
                                 <option value="annual">
-                                    Annual Leave - <?= $leave_limit_data[0]['annual_balance'] ?> days available
+                                    Annual - <?= $leave_limit_data[0]['annual_balance'] ?> days available
                                 </option>
-                                <option value="casual">Casual Leave</option>
-                                <option value="medical">Medical</option>
+                                <option value="casual">
+                                    Casual - <?= $leave_limit_data[0]['casual_balance'] ?> days available
+                                </option>
+                                <option value="medical">
+                                    Medical - <?= $leave_limit_data[0]['medical_balance'] ?> days available
+                                </option>
                                 <option value="other">Other</option>
                             </select>
                         </div>

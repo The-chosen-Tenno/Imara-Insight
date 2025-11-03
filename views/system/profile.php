@@ -105,11 +105,11 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                             </div>
 
                             <div class="col-6 col-md">
-                                <div class="p-3 bg-info bg-opacity-10 rounded shadow-sm">
-                                    <h6 class="text-info mb-1">
+                                <div class="p-3 bg-success bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-success mb-1">
                                         <i class="bi bi-hourglass-split"></i> In Progress
                                     </h6>
-                                    <h5 class="fw-bold text-info display-6 mb-0"><?= $counts['in_progress'] ?></h5>
+                                    <h5 class="fw-bold text-success display-6 mb-0"><?= $counts['in_progress'] ?></h5>
                                 </div>
                             </div>
 
@@ -123,11 +123,11 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                             </div>
 
                             <div class="col-6 col-md">
-                                <div class="p-3 bg-success bg-opacity-10 rounded shadow-sm">
-                                    <h6 class="text-success mb-1">
+                                <div class="p-3 bg-info bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-info mb-1">
                                         <i class="bi bi-check-circle-fill"></i> Completed
                                     </h6>
-                                    <h5 class="fw-bold text-success display-6 mb-0"><?= $counts['finished'] ?></h5>
+                                    <h5 class="fw-bold text-info display-6 mb-0"><?= $counts['finished'] ?></h5>
                                 </div>
                             </div>
 
