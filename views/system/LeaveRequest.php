@@ -37,8 +37,8 @@ if (!isset($permission)) dd('Access Denied...!');
                                 </option>
                                 <option value="medical">
                                     Medical - <?= $leave_limit_data[0]['medical_balance'] ?> days available
-                                </option>
-                                <option value="other">Other</option>
+                                    <!-- </option>
+                                <option value="other">Other</option> -->
                             </select>
                         </div>
 
@@ -123,11 +123,32 @@ if (!isset($permission)) dd('Access Denied...!');
             ($leave_data['annual_balance'] ?? 0) +
             ($leave_data['casual_balance'] ?? 0) +
             ($leave_data['medical_balance'] ?? 0);
-        $div_class = $total_leave < 10 ? 'text-center mb-4 mt-3 text-danger' : 'text-center mb-4 mt-3';
+
+        $extra_leave = 0;
+
+        if (($leave_data['annual_status'] ?? '') === 'overused') {
+            $extra_leave += ($leave_data['annual_extra'] ?? 0);
+        }
+        if (($leave_data['casual_status'] ?? '') === 'overused') {
+            $extra_leave += ($leave_data['casual_extra'] ?? 0);
+        }
+        if (($leave_data['medical_status'] ?? '') === 'overused') {
+            $extra_leave += ($leave_data['medical_extra'] ?? 0);
+        }
+        $div_class = $total_leave < 10
+            ? 'text-center mb-4 mt-3 text-warning'
+            : 'text-center mb-4 mt-3';
         ?>
-        <div class="<?= $div_class ?>" id="leave-limit-show">
-            <b>Leave Requests Remaining:</b> <?= $total_leave ?>
-        </div>
+        <?php if ($total_leave > 0 || $extra_leave > 0): ?>
+            <div class="<?= htmlspecialchars($div_class) ?>" id="leave-limit-show">
+                <?php if ($total_leave > 0): ?>
+                    <b>Leave Requests Remaining:</b> <?= $total_leave ?><br>
+                <?php endif; ?>
+                <?php if ($extra_leave > 0): ?>
+                    <span class="text-danger"><b>Extra Leave Taken:</b> <?= $extra_leave ?></span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

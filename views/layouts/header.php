@@ -94,7 +94,7 @@ $currentFilename = basename($currentUrl);
                         <i class="bx bx-home-alt me-2"></i> Dashboard
                     </a>
                     <a href="<?= url('views/system/logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bxs-coin-stack me-2"></i> Logs
+                        <i class="bx bxs-coin-stack me-2"></i>Project Logs
                     </a>
                     <a href="<?= url('views/system/leaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "leaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-calendar-x me-2"></i> Request Leave
@@ -152,8 +152,6 @@ $currentFilename = basename($currentUrl);
                                     </li>
                                 </ul>
                             </div>
-
-                            <!-- /User Dropdown -->
                         </ul>
                     </div>
                 </nav>
