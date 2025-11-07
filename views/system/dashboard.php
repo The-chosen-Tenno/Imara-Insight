@@ -267,10 +267,11 @@ foreach ($all_tag as $tags) {
                                 </div>
                             </td>
                             <td class="ps-4 fw-medium text-primary">
-                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['date_off'] ?? 'start_date'))) ?>
+                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['date_off'] ?: $total_leave['start_date'] ?? ''))) ?>
+
                             </td>
                             <td class="ps-4 fw-medium text-primary">
-                                <?= htmlspecialchars(date('Y-m-d', strtotime($total_leave['end_date'] ?? ''))) ?>
+                                <?= !empty($total_leave['end_date']) ? htmlspecialchars(date('Y-m-d', strtotime($total_leave['end_date']))) : '' ?>
                             </td>
                             <td>
                                 <?php
