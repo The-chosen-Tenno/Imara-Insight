@@ -93,11 +93,11 @@ $currentFilename = basename($currentUrl);
                     <a href="<?= url('views/system/dashboard.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "dashboard.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bx-home-alt me-2"></i> Dashboard
                     </a>
-                    <a href="<?= url('views/system/logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                    <a href="<?= url('views/system/Logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-coin-stack me-2"></i>Project Logs
                     </a>
-                    
-                    <a href="<?= url('views/system/leaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+
+                    <a href="<?= url('views/system/LeaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-calendar-x me-2"></i> Request Leave
                     </a>
                     <a href="<?= url('views/system/users.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "users.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
