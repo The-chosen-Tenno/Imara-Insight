@@ -229,7 +229,7 @@ $(document).ready(function () {
         if(!users || users.length===0) return showAlert('Select at least one user', 'danger', 'remove-alert-container');
 
         var fd = new FormData();
-        fd.append('action', 'remove_sub_assignees');
+        fd.append('action', 'remove_sub_assignee');
         fd.append('project_id', projectId);
         users.forEach(u => fd.append('user_id[]', u));
 
