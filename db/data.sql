@@ -1,24 +1,11 @@
-CREATE ACCOUNT THAN UPDATE 
+Create an account using admin@gmail.com, then
 
-    UPDATE Users
-    SET Role = 'Admin'
-    WHERE Email = 'your@example.com';
-AFTER DONE DISABLE create-account.php
-
-
+UPDATE users
+SET role = 'admin',
+    status = 'confirmed'
+WHERE email = 'admin@gmail.com';
 
 
-
--- Insert dummy data into the Users table
-INSERT INTO users (full_name, user_name, email, password , role, photo)
-VALUES
-('admin', 'admin1', 'admin@example.com', SHA2('admin123', 256), 'admin'),
-('user', 'user1', 'user@example.com', SHA2('user123', 256), 'user')
-
-INSERT INTO projects (user_id, project_name, status)
-VALUES
-(1, 'Website Redesign', 'in_progress'),
-(2, 'Mobile App Launch', 'idle')
 
 
 

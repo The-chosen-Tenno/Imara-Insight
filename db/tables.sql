@@ -1,4 +1,5 @@
 CREATE DATABASE imara_tracker;
+
 USE imara_tracker;
 
 CREATE TABLE users (
@@ -13,10 +14,6 @@ CREATE TABLE users (
     photo VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
---  new colomn 
-ALTER TABLE users
-ADD COLUMN user_status ENUM('active', 'inactive') NOT NULL DEFAULT 'active' AFTER role;
-
 
 CREATE TABLE projects (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -105,9 +102,3 @@ CREATE TABLE leave_limits (
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
--- new alt
-ALTER TABLE leave_requests
-MODIFY date_off DATE NULL,
-ADD COLUMN start_date DATE NULL,
-ADD COLUMN end_date DATE NULL;
