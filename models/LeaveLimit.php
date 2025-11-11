@@ -43,20 +43,26 @@ class LeaveLimit extends BaseModel
     public function useLeaveDays($user_id, $leave_day_count, $reason_type)
     {
         $reason_type_balance = $reason_type . '_balance';
+        $reason_type_status = $reason_type . '_status';
 
         if ($leave_day_count >= 1) {
+
             $all_leave_details  = $this->getAllRemainingLeave($user_id);
             $leave_details = $all_leave_details[0];
+
             if ($leave_day_count <= $leave_details[$reason_type_balance]) {
 
-                $this->updateLeaveBalance($leave_day_count, $user_id, $reason_type_balance);
+                $status = ($leave_day_count === $leave_details[$reason_type_balance]) ? 'exhausted' : 'available';
+                $this->updateLeaveBalance($leave_day_count, $user_id, $reason_type_balance, $reason_type_status, $status);
                 return true;
+
             } elseif ($leave_day_count > $leave_details[$reason_type_balance]) {
 
                 $reason_type_extra = $reason_type . '_extra';
                 $extra_leave_count = $leave_day_count - $leave_details[$reason_type_balance];
                 $already_extra_leave = $leave_details[$reason_type_extra];
                 $new_leave_count = $already_extra_leave + $extra_leave_count;
+                
                 $this->updateExtraLeaveBalance($new_leave_count, $user_id, $reason_type_balance, $reason_type_extra, $reason_type);
                 return true;
             } else {
@@ -86,15 +92,16 @@ class LeaveLimit extends BaseModel
         return $this->pm->run($sql, $params);
     }
 
-    public function updateLeaveBalance($day_count, $user_id, $reason_type_balance)
+    public function updateLeaveBalance($day_count, $user_id, $reason_type_balance, $reason_type_status, $status)
     {
         $sql = "UPDATE " . $this->getTableName() . " 
-            SET $reason_type_balance = $reason_type_balance - :day_count
+            SET $reason_type_balance = $reason_type_balance - :day_count, $reason_type_status = :status
             WHERE user_id = :user_id";
 
         $params = [
             ':day_count' => $day_count,
-            ':user_id' => $user_id
+            ':user_id' => $user_id,
+            ':status' => $status
         ];
 
         return $this->pm->run($sql, $params);
@@ -142,15 +149,15 @@ class LeaveLimit extends BaseModel
     //     return $this->pm->run($sql, $param);
     // }
 
-    // public function getUserById($id)
-    // {
-    //     $param = [':id' => $id];
-    //     return $this->pm->run(
-    //         "SELECT * FROM " . $this->getTableName() . " WHERE id = :id",
-    //         $param,
-    //         true
-    //     );
-    // }
+    public function getUserById($user_id)
+    {
+        $param = [':user_id' => $user_id];
+        return $this->pm->run(
+            "SELECT * FROM " . $this->getTableName() . " WHERE user_id = :user_id",
+            $param,
+            true
+        );
+    }
 
     public function getLastInsertedUserId()
     {

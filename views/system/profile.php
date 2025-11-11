@@ -2,6 +2,7 @@
 require_once('../layouts/header.php');
 include BASE_PATH . '/models/Users.php';
 include BASE_PATH . '/models/Logs.php';
+include BASE_PATH . '/models/LeaveLimit.php';
 
 $userDetails = new User();
 $profileUserId = $_GET['id'] ?? $userId;
@@ -9,6 +10,9 @@ $loginUserDetails = $userDetails->getUserById($profileUserId);
 
 $project = new Logs();
 $ProjectDetails = $project->getByUserId($profileUserId);
+
+$leaveLimit = new LeaveLimit();
+$leaveLimitDetails = $leaveLimit->getUserById($profileUserId);
 
 
 if (!isset($userId) && empty($userId)) dd('Access Denied...!');
@@ -143,9 +147,84 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                     </div>
                 </div>
             </div>
+            <!-- Leave summary card -->
+            <?php
+            $defaultLeave = 7;
+            $result = [
+                'annual_taken'  => $defaultLeave - $leaveLimitDetails['annual_balance'],
+                'casual_taken'  => $defaultLeave - $leaveLimitDetails['casual_balance'],
+                'medical_taken' => $defaultLeave - $leaveLimitDetails['medical_balance'],
+            ];
+            $totalLeaveTook = [
+                'annual_total' => $result['annual_taken'] + $leaveLimitDetails['annual_extra'],
+                'casual_total' => $result['casual_taken'] + $leaveLimitDetails['casual_extra'],
+                'medical_total' => $result['medical_taken'] + $leaveLimitDetails['medical_extra']
+            ];
+            $statusColours = [
+                'available' => 'secondary',
+                'exhausted' => 'warning',
+                'overused'  => 'danger'
+            ];
+            $divColourAnnual  = $statusColours[$leaveLimitDetails['annual_status']] ?? 'secondary';
+            $divColourCasual  = $statusColours[$leaveLimitDetails['casual_status']] ?? 'secondary';
+            $divColourMedical = $statusColours[$leaveLimitDetails['medical_status']] ?? 'secondary';
+
+            ?>
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary fw-bold mb-3">
+                            Leave Summary
+                        </h4>
+                        <div class="row text-center g-3 justify-content-center">
+                            <!-- Annual Leave -->
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-<?= $divColourAnnual ?> bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-<?= $divColourAnnual ?> mb-1">
+                                        <i class="bi bi-calendar-check-fill"></i> Annual
+                                    </h6>
+                                    <div class="fw-bold">Used: <span class="text-dark"><?= $totalLeaveTook['annual_total'] ?? 0 ?></span></div>
+                                    <div class="small text-muted"><?= $leaveLimitDetails['annual_status'] ?? 'normal' ?></div>
+                                </div>
+                            </div>
+                            <!-- Casual Leave -->
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-<?= $divColourCasual ?> bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-<?= $divColourCasual ?> mb-1">
+                                        <i class="bi bi-sun-fill"></i> Casual
+                                    </h6>
+                                    <div class="fw-bold">Used: <span class="text-dark"><?= $totalLeaveTook['casual_total'] ?? 0 ?></span></div>
+                                    <div class="small text-muted"><?= $leaveLimitDetails['casual_status'] ?? 'normal' ?></div>
+                                </div>
+                            </div>
+                            <!-- Medical Leave -->
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-<?= $divColourMedical ?> bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-<?= $divColourMedical ?> mb-1">
+                                        <i class="bi bi-heart-pulse-fill"></i> Medical
+                                    </h6>
+                                    <div class="fw-bold">Used: <span class="text-dark"><?= $totalLeaveTook['medical_total'] ?? 0 ?></span></div>
+                                    <div class="small text-muted"><?= $leaveLimitDetails['medical_status'] ?? 'normal' ?></div>
+                                </div>
+                            </div>
+                            <!-- Short Leave -->
+                            <div class="col-6 col-md">
+                                <div class="p-3 bg-secondary bg-opacity-10 rounded shadow-sm">
+                                    <h6 class="text-secondary mb-1">
+                                        <i class="bi bi-clock-fill"></i> Short
+                                    </h6>
+                                    <div class="fw-bold">Used: <span class="text-dark"><?= $short_used ?? 0 ?></span></div>
+                                    <div class="small text-muted">No fixed limit</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- model -->

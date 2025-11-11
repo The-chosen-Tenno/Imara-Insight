@@ -79,17 +79,7 @@ $currentFilename = basename($currentUrl);
                         <span class="fw-bold fs-5 text-capitalize">Imara-Insight</span>
                     </a>
                 </div>
-
                 <div class="d-flex flex-column gap-1">
-                    <?php if ($permission === "admin") : ?>
-                        <a href="<?= url('views/system/Authorization.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Authorization.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                            <i class="bx bx-user-check me-2"></i> Authorization
-                        </a>
-                        <a href="<?= url('views/system/LeaveApprove.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveApprove.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                            <i class="bx bx-calendar-check me-2"></i> Leave Approvals
-                        </a>
-                    <?php endif; ?>
-
                     <a href="<?= url('views/system/dashboard.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "dashboard.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bx-home-alt me-2"></i> Dashboard
                     </a>
@@ -100,9 +90,19 @@ $currentFilename = basename($currentUrl);
                     <a href="<?= url('views/system/LeaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-calendar-x me-2"></i> Request Leave
                     </a>
+                    <?php if ($permission === "admin") : ?>
+                        <a href="<?= url('views/system/LeaveApprove.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveApprove.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                            <i class="bx bx-calendar-check me-2"></i> Leave Approvals
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= url('views/system/users.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "users.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bx-user me-2"></i> Employees
                     </a>
+                    <?php if ($permission === "admin") : ?>
+                        <a href="<?= url('views/system/Register.php') ?>" class="d-flex align-items-center p-2 rounded <?= $Register === "Register.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                            <i class="bx bx-user-check me-2"></i> Register
+                        </a>
+                    <?php endif; ?>
                 </div>
             </aside>
             <!-- /Sidebar -->
