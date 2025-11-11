@@ -4,6 +4,11 @@ $(document).ready(function () {
         $('#' + containerId).html(`<div class="alert alert-${type}">${message}</div>`);
     }
 
+    $('#add-short-leave').on('show.bs.modal', function () {
+        const leaveTime = new Date();
+        $('#leave-time').html('Are you sure you want to take a short leave at <br>' + '<strong>' + leaveTime.toLocaleString() + '</strong>');
+    });
+
     // ---------- Add Project Modal ----------
     $('#add-project').on('shown.bs.modal', function () {
         // Sub-assignees select
@@ -214,6 +219,32 @@ $(document).ready(function () {
                     $('#edit-project-modal').modal('hide');
                     setTimeout(() => location.reload(), 1000);
                 }
+            }
+        });
+    });
+
+    $('#short-leave-form').on('submit', function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#short-alert-container').html('<div class="text-success">Short leave recorded successfully!</div>');
+                    setTimeout(() => {
+                        $('#add-short-leave').modal('hide');
+                        $('#short-alert-container').html('');
+                    }, 1500);
+                    $('#add-short-leave form')[0].reset();
+                } else {
+                    $('#alert-container').html('<div class="alert alert-danger">' + response.message + '</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#alert-container').html('<div class="alert alert-danger">An error occurred. Please try again.</div>');
             }
         });
     });

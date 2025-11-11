@@ -46,11 +46,19 @@ foreach ($all_tag as $tags) {
 
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
+
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">My Projects</h4>
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-project">
-                <i class="bx bx-plus me-1"></i> Add Project
-            </button>
+            <div>
+                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#add-project">
+                    <i class="bx bx-plus me-1"></i> Add Project
+                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#add-short-leave">
+                        <i class="bx bx-hourglass me-1"></i>Short Leave
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="table-responsive">
@@ -436,6 +444,7 @@ foreach ($all_tag as $tags) {
     </div>
 </div>
 
+<!-- ADD SUB ASSIGNEE MODAL -->
 <div class="modal fade" id="add-sub-assignee-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -465,6 +474,7 @@ foreach ($all_tag as $tags) {
     </div>
 </div>
 
+<!-- REMOVE SUB ASSIGNEE MODAL -->
 <div class="modal fade" id="remove-sub-assignee-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -488,6 +498,44 @@ foreach ($all_tag as $tags) {
         </div>
     </div>
 </div>
+
+<!-- ADD SHORT LEAVE MODAL -->
+<div class="modal fade" id="add-short-leave" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="short-leave-form" action="<?= url('services/ajax_functions.php') ?>" method="POST">
+                <input type="hidden" name="user_id" value= <?= $userId ?>>
+                <input type="hidden" name="action" value="short_leave">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Short Leave</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                  <p id="leave-time"><br></p>
+
+                    <div class="mb-3">
+                        <label for="leave_duration" class="form-label">Duration (hours)</label>
+                        <input type="number" class="form-control" id="leave_duration" name="duration" min="1" max="2" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="leave_reason" class="form-label">Reason (optional)</label>
+                        <textarea class="form-control" id="reason" name="reason" rows="2" placeholder="Optional reason"></textarea>
+                    </div>
+                     <div class="mb-3 mt-3" id="short-alert-container"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning ms-2" id="confirmed-short-leave">Confirm Leave</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/dashboard.js') ?>"></script>

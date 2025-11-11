@@ -213,7 +213,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                     <h6 class="text-secondary mb-1">
                                         <i class="bi bi-clock-fill"></i> Short
                                     </h6>
-                                    <div class="fw-bold">Used: <span class="text-dark"><?= $short_used ?? 0 ?></span></div>
+                                    <div class="fw-bold">Used: <span class="text-dark"><?= $leaveLimitDetails['total_short_leave'] ?? 0 ?></span></div>
                                     <div class="small text-muted">No fixed limit</div>
                                 </div>
                             </div>

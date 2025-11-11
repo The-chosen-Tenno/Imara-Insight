@@ -55,6 +55,20 @@ CREATE TABLE leave_requests (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+Create TABLE short_leave (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    duration INT NOT NULL DEFAULT 1,
+    reason VARCHAR(256) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) on DELETE CASCADE
+);
+
+ALTER Table leave_limits
+ADD COLUMN total_short_leave INT NOT NULL DEFAULT 0,
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+
 CREATE TABLE project_sub_assignees (
     id INT AUTO_INCREMENT PRIMARY KEY,
     project_id INT NOT NULL,

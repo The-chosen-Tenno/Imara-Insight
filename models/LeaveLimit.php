@@ -40,6 +40,30 @@ class LeaveLimit extends BaseModel
 
     protected function updateRec() {}
 
+    public function addShortLeave($user_id, $leave_duration, $leave_note)
+    {
+        $params = [
+            ':user_id' => $user_id,
+            ':leave_duration' => $leave_duration,
+            ':leave_note' => $leave_note
+        ];
+        $sql = $this->pm->run(
+            "INSERT INTO short_leave (user_id, duration, reason) 
+         VALUES (:user_id, :leave_duration, :leave_note)",
+            $params
+        );
+        if (isset($sql)) {
+            $this->pm->run(
+                "UPDATE " . $this->getTableName() . " SET 
+             total_short_leave = total_short_leave + 1
+             WHERE user_id = :user_id",
+                [':user_id' => $user_id]
+            );
+            return true;
+        } else {
+            return false;
+        }
+    }
     public function useLeaveDays($user_id, $leave_day_count, $reason_type)
     {
         $reason_type_balance = $reason_type . '_balance';
@@ -55,14 +79,13 @@ class LeaveLimit extends BaseModel
                 $status = ($leave_day_count === $leave_details[$reason_type_balance]) ? 'exhausted' : 'available';
                 $this->updateLeaveBalance($leave_day_count, $user_id, $reason_type_balance, $reason_type_status, $status);
                 return true;
-
             } elseif ($leave_day_count > $leave_details[$reason_type_balance]) {
 
                 $reason_type_extra = $reason_type . '_extra';
                 $extra_leave_count = $leave_day_count - $leave_details[$reason_type_balance];
                 $already_extra_leave = $leave_details[$reason_type_extra];
                 $new_leave_count = $already_extra_leave + $extra_leave_count;
-                
+
                 $this->updateExtraLeaveBalance($new_leave_count, $user_id, $reason_type_balance, $reason_type_extra, $reason_type);
                 return true;
             } else {

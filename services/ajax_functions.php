@@ -504,6 +504,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
+// New Short Leave
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'short_leave') {
+    try {
+        $user_id = $_POST['user_id'];
+        $duration = $_POST['duration'];
+        $reason = $_POST['reason'] ?? null;
+
+        $leaveLimitModal = new LeaveLimit();
+        $created = $leaveLimitModal->addShortLeave($user_id, $duration, $reason);
+        if ($created) {
+            echo json_encode(['success' => true, 'message' => "Short Applied successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to apply short leave. try again later']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
 // approve leave request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve_leave') {
     try {
