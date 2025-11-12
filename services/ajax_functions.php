@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $project_name = $_POST['project_name'];
         $description = $_POST['description'];
         $project_type = $_POST['type'] ?? 'coding';
-        $project_status = $_POST['status'] ?? 'idle';
+        $project_status = $_POST['status'] ?? 'started';
 
         $logsModel = new Logs();
         $projectCreated = $logsModel->createProject($user_id, $project_name, $description, $project_type, $project_status);

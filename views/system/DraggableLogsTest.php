@@ -62,15 +62,17 @@ if (!isset($permission)) {
             <div class="d-flex gap-3">
                 <?php
                 $columns = [
-                    'idle' => 'idle',
+                    'started' => 'Started',
                     'in_progress' => 'In Progress',
                     'finished' => 'Finished',
+                    'idle' => 'Idle',
                     'cancelled' => 'Cancelled'
                 ];
                 $divColor = [
-                    'idle' => 'secondary',
+                    'started' => 'secondary',
                     'in_progress' => 'primary',
                     'finished' => 'success',
+                    'idle' => 'warning',
                     'cancelled' => 'danger'
                 ];
 

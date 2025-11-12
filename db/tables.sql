@@ -64,9 +64,8 @@ Create TABLE short_leave (
     FOREIGN KEY (user_id) REFERENCES users(id) on DELETE CASCADE
 );
 
-ALTER Table leave_limits
-ADD COLUMN total_short_leave INT NOT NULL DEFAULT 0,
-ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ALTER TABLE projects 
+MODIFY COLUMN status ENUM('finished', 'idle', 'in_progress', 'cancelled', 'started') NOT NULL;
 
 
 CREATE TABLE project_sub_assignees (
