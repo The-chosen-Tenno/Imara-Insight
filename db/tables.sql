@@ -115,3 +115,10 @@ CREATE TABLE leave_limits (
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    project_id INT NULL,
+    leave_id INT NULL,
+) 

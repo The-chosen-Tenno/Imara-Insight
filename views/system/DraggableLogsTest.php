@@ -38,7 +38,7 @@ if (!isset($permission)) {
                 </button>
             <?php } ?>
         </div>
-        <div class="columns-wrapper">
+        <div class="columns-wrapper" data-permission="<?= $permission ?>" id="app">
             <?php
             $columns = [
                 'started' => ['label' => 'Started', 'color' => '#6c757d', 'count' => 0],

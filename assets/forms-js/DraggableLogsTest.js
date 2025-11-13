@@ -1,32 +1,35 @@
 $(document).ready(function () {
-
-    $('.dropzone').sortable({
-        connectWith: '.dropzone',
-        handle: '.drag-handle',
-        placeholder: 'sortable-placeholder',
-        forcePlaceholderSize: true,
-        tolerance: 'pointer',
-        update: function (event, ui) {
-            let cardId = ui.item.data('id');
-            var form = $('#update-form')[0];
-            let newColumn = ui.item.closest('.column-container').attr('id');
-            $.ajax({
-                url: $(form).attr('action'),
-                method: 'POST',
-                data: {
-                    project_id: cardId,
-                    new_status: newColumn,
-                    action: 'project_status_update'
-                },
-                success: function (response) {
-                    console.log('Updated project', cardId, 'to', newColumn);
-                },
-                error: function (err) {
-                    console.error('Error updating project status:', err);
-                }
-            });
-        }
-    }).disableSelection();
+    const permission = $('#app').data('permission');
+    console.log(permission);
+    if (permission == 'admin') {
+        $('.dropzone').sortable({
+            connectWith: '.dropzone',
+            handle: '.drag-handle',
+            placeholder: 'sortable-placeholder',
+            forcePlaceholderSize: true,
+            tolerance: 'pointer',
+            update: function (event, ui) {
+                let cardId = ui.item.data('id');
+                var form = $('#update-form')[0];
+                let newColumn = ui.item.closest('.column-container').attr('id');
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: 'POST',
+                    data: {
+                        project_id: cardId,
+                        new_status: newColumn,
+                        action: 'project_status_update'
+                    },
+                    success: function (response) {
+                        console.log('Updated project', cardId, 'to', newColumn);
+                    },
+                    error: function (err) {
+                        console.error('Error updating project status:', err);
+                    }
+                });
+            }
+        }).disableSelection();
+    }
 
     function showAlert(message, type = 'primary', containerId = 'alert-container') {
         $('#' + containerId).html(`<div class="alert alert-${type}">${message}</div>`);
