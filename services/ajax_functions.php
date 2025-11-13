@@ -410,6 +410,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
+// Update Projet Status (testing stage)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'project_status_update')  {
+    try {
+        $project_id = $_POST['project_id'];
+        $status = $_POST['new_status'];
+
+        $logsModel = new Logs();
+        $updated = $logsModel->updateProjectStatus($project_id, $status);
+        if ($updated) {
+            echo json_encode(['success' => true, 'message' => "Project Status updated successfully!"]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Project Status update failed!']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
 // Get project by ID
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['project_id'], $_GET['action']) && $_GET['action'] == 'get_project') {
     try {

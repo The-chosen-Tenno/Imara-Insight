@@ -76,6 +76,19 @@ class Logs extends BaseModel
         return $project ?: false;
     }
 
+    public function updateProjectStatus($project_id, $status)
+    {
+        $sql = "UPDATE " . $this->getTableName() . " 
+            SET status = :status
+            WHERE id = :project_id";
+
+        $params = [
+            ':project_id' => $project_id,
+            ':status' => $status
+        ];
+        return $this->pm->run($sql, $params);
+    }
+
     public function getProjectById($project_id)
     {
         $param = array(':project_id' => $project_id);

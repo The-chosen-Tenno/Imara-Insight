@@ -26,28 +26,8 @@ if (!isset($permission)) {
     exit;
 };
 ?>
-<style>
-    .dropzone {
-        border: 2px dashed #aaa;
-        padding: 10px;
-        min-height: 150px;
-        /* background: #f8f9fa; */
-        display: flex;
-        flex-direction: column;
-        /* stack boxes vertically inside the dropzone */
-        gap: 10px;
-        /* space between boxes */
-    }
+<link rel="stylesheet" href="../../assets/css/kanban-style-logs.css">
 
-    .box {
-        border: 1px solid #ccc;
-        padding: 10px;
-        /* background: #fff; */
-        border-radius: 5px;
-        cursor: grab;
-        text-align: center;
-    }
-</style>
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -58,95 +38,83 @@ if (!isset($permission)) {
                 </button>
             <?php } ?>
         </div>
-        <div class="table-responsive">
-            <div class="d-flex gap-3">
-                <?php
-                $columns = [
-                    'started' => 'Started',
-                    'in_progress' => 'In Progress',
-                    'finished' => 'Finished',
-                    'idle' => 'Idle',
-                    'cancelled' => 'Cancelled'
-                ];
-                $divColor = [
-                    'started' => 'secondary',
-                    'in_progress' => 'primary',
-                    'finished' => 'success',
-                    'idle' => 'warning',
-                    'cancelled' => 'danger'
-                ];
+        <div class="columns-wrapper">
+            <?php
+            $columns = [
+                'started' => ['label' => 'Started', 'color' => '#6c757d', 'count' => 0],
+                'in_progress' => ['label' => 'In Progress', 'color' => '#0d6efd', 'count' => 0],
+                'finished' => ['label' => 'Finished', 'color' => '#198754', 'count' => 0],
+                'idle' => ['label' => 'Idle', 'color' => '#ffc107', 'count' => 0],
+                'cancelled' => ['label' => 'Cancelled', 'color' => '#dc3545', 'count' => 0]
+            ];
 
-                foreach ($columns as $col_id => $col_name):
-                ?>
-                    <div id="<?= $col_id ?>" class="flex-fill">
-                        <div class="text-center fw-bold mb-2 box bg-label-<?= $divColor[$col_id] ?> border rounded p-2"><?= $col_name ?></div>
-                        <div class="dropzone d-flex flex-column gap-2 border p-3 overflow-auto" style="height: 80vh">
-                            <?php
-                            foreach ($logs_data as $LD) {
-                                if ($LD['status'] === $col_id) {
+            // $columns['started']['count']++;
+            // $columns['in_progress']['count']++;
+            // $columns['finished']['count']++;
+            // $columns['started']['count']++;
+            // $columns['idle']['count']++;
 
-                                    $user_names = [];
-                                    foreach ($user_data as $user) {
-                                        $user_names[$user['id']] = $user['user_name'];
-                                    }
-
-                                    $sub_assignee_id = $sub_assignee_details->getAllByProjectId($LD['id']);
-                                    $sub_assignee_list = [];
-                                    foreach ($sub_assignee_id as $sub_id) {
-                                        if (isset($user_names[$sub_id])) {
-                                            $sub_assignee_list[] = $user_names[$sub_id];
-                                        }
-                                    }
-
-                                    $tag_ids = $project_tags->getAllTagByProjectId($LD['id']);
-                                    $tag_names = [];
-                                    foreach ($tag_ids as $tag_id) {
-                                        foreach ($all_tag as $tag) {
-                                            if ($tag['id'] == $tag_id) {
-                                                $tag_names[] = $tag['name'];
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    $sub_assignee_list = implode(', ', $sub_assignee_list);
-                                    $tags_list = '';
-                                    foreach ($tag_names as $tag) {
-                                        $tags_list .= '<span class="badge rounded-pill bg-label-dark">' . htmlspecialchars($tag) . '</span> ';
-                                    }
-                                    echo <<<BOX
-                                    <div class="box bg-label-{$divColor[$col_id]} border rounded p-2 mb-1" data-id="{$LD['id']}" style=" min-width:180px; cursor: grab;" >
-                                        <div class="text-dark">
-                                            <div class="fw-bold mb-1" style="font-size:0.95rem;">
-                                                {$LD['project_name']}
-                                            </div>
-                                            <div class="mb-1" style="font-size:0.85rem;">
-                                                <span class="fw-semibold">Assignee:</span>
-                                                <span class="text-muted">{$user_names[$LD['user_id']]}</span>
-                                            </div>
-
-                                            <div class="mb-1" style="font-size:0.85rem;">
-                                                <span class="fw-semibold">Sub-Assignees:</span>
-                                                <span class="text-muted">{$sub_assignee_list}</span>
-                                            </div>
-
-                                            <div style="font-size:0.85rem;">
-                                                <span class="fw-semibold">Tags:</span>
-                                                {$tags_list}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    BOX;
-                                }
-                            }
-                            ?>
-                        </div>
+            foreach ($columns as $col_id => $col):
+            ?>
+                <div id="<?= $col_id ?>" class="column-container ">
+                    <div class="column-header" style="background: <?= $col['color'] ?>;">
+                        <?= $col['label'] ?>
+                        <!-- <span class="badge rounded bg-light text-dark ms-2"> <?= $col['count'] ?></span> -->
                     </div>
-                <?php endforeach; ?>
-            </div>
+                    <div class="dropzone border shadow bg-light bg- p-2";">
+                        <?php
+                        foreach ($logs_data as $LD) {
+                            if ($LD['status'] === $col_id) {
+
+                                $user_names = [];
+                                foreach ($user_data as $user) {
+                                    $user_names[$user['id']] = $user['user_name'];
+                                }
+
+                                $sub_assignee_id = $sub_assignee_details->getAllByProjectId($LD['id']);
+                                $sub_assignee_list = [];
+                                foreach ($sub_assignee_id as $sub_id) {
+                                    if (isset($user_names[$sub_id])) $sub_assignee_list[] = $user_names[$sub_id];
+                                }
+
+                                $tag_ids = $project_tags->getAllTagByProjectId($LD['id']);
+                                $tag_names = [];
+                                foreach ($tag_ids as $tag_id) {
+                                    foreach ($all_tag as $tag) {
+                                        if ($tag['id'] == $tag_id) {
+                                            $tag_names[] = $tag['name'];
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $sub_assignee_list = implode(', ', $sub_assignee_list);
+                                $tags_list = '';
+                                foreach ($tag_names as $tag) {
+                                    $tags_list .= '<span class="badge">' . htmlspecialchars($tag) . '</span>';
+                                }
+
+                                echo <<<BOX
+                                <div class="box" data-id="{$LD['id']}">
+                                    <div class="drag-handle">{$LD['project_name']}</div>
+                                    <div class="text-dark">
+                                        <div><strong>Assignee:</strong> {$user_names[$LD['user_id']]}</div>
+                                        <div><strong>Sub-Assignees:</strong> {$sub_assignee_list}</div>
+                                        <div><strong>Tags:</strong> {$tags_list}</div>
+                                    </div>
+                                </div>
+                                BOX;
+                            }
+                        }
+                        ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
-
 </div>
+
+
 
 <div class="modal fade" id="add-project" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -331,4 +299,4 @@ if (!isset($permission)) {
 </div>
 
 <?php require_once('../layouts/footer.php'); ?>
-<script src="<?= asset('assets/forms-js/logs.js') ?>"></script>
+<script src="<?= asset('assets/forms-js/DraggableLogsTest.js') ?>"></script>

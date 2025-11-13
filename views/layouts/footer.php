@@ -10,6 +10,10 @@
 <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
 <script src="<?= asset('assets/vendor/libs/jquery/jquery.js') ?>"></script>
+<script
+    src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
+    integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
+    crossorigin="anonymous"></script>
 <script src="<?= asset('assets/vendor/libs/popper/popper.js') ?>"></script>
 <script src="<?= asset('assets/vendor/js/bootstrap.js') ?>"></script>
 <script src="<?= asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') ?>"></script>
@@ -46,12 +50,12 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    $('.projectTable').DataTable({
-        "order": [],
-        pageLength: 10,
+    $(document).ready(function() {
+        $('.projectTable').DataTable({
+            "order": [],
+            pageLength: 10,
+        });
     });
-});
 </script>
 </body>
 

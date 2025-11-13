@@ -1,0 +1,104 @@
+.columns-wrapper {
+    display: flex;
+    gap: 1px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+    padding-bottom: 15px;
+}
+
+.column-container {
+    flex: 1 1 0;
+    min-width: calc((100% / 5) - 1px);
+    display: flex;
+    flex-direction: column;
+    background: #f0f4f8;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.column-header {
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.dropzone {
+    flex: 1 1 auto;
+    min-height: 150px;
+    max-height: 70vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 5px;
+    border-radius: 20px;
+}
+
+.dropzone::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropzone::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Drag handle */
+.drag-handle {
+    font-weight: 600;
+    cursor: grab;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+.box .badge {
+    font-size: 0.7rem;
+    margin: 2px 2px 2px 0;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 50px;
+    padding: 3px 6px;
+}
+
+.text-dark div {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+@media(max-width:1200px) {
+    .column-container {
+        min-width: 200px;
+    }
+}
+.sortable-placeholder {
+    background: #dfe3eb;
+    border: 2px dashed #bbb;
+    height: 60px; /* approximate card height */
+    margin-bottom: 12px;
+    border-radius: 10px;
+}
+.dropzone-style {
+    border-radius: 60px;
+}
