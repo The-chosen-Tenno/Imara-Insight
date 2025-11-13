@@ -86,6 +86,9 @@ $currentFilename = basename($currentUrl);
                     <a href="<?= url('views/system/Logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-coin-stack me-2"></i>Project Logs
                     </a>
+                    <a href="<?= url('views/system/DraggableLogsTest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "DraggableLogsTest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
+                        <i class="bx bxs-coin-stack me-2"></i>Project Logs (New)
+                    </a>
 
                     <a href="<?= url('views/system/LeaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
                         <i class="bx bxs-calendar-x me-2"></i> Request Leave
