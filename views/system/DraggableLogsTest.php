@@ -41,7 +41,7 @@ if (!isset($permission)) {
         <div class="columns-wrapper" data-permission="<?= $permission ?>" id="app">
             <?php
             $columns = [
-                'started' => ['label' => 'Started', 'color' => '#6c757d', 'count' => 0],
+                'started' => ['label' => 'Started', 'color' => '#22f0f0', 'count' => 0],
                 'in_progress' => ['label' => 'In Progress', 'color' => '#0d6efd', 'count' => 0],
                 'finished' => ['label' => 'Finished', 'color' => '#198754', 'count' => 0],
                 'idle' => ['label' => 'Idle', 'color' => '#ffc107', 'count' => 0],

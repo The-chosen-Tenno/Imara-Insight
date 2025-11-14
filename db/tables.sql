@@ -118,7 +118,6 @@ CREATE TABLE leave_limits (
 
 CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NULL,
-    project_id INT NULL,
-    leave_id INT NULL,
-) 
+    notifi_details VARCHAR(255),
+    status ENUM('unread', 'read') NOT NULL DEFAULT 'unread'
+);

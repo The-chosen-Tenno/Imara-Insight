@@ -65,6 +65,10 @@ $currentFilename = basename($currentUrl);
 
     <script src="<?= asset('assets/vendor/js/helpers.js') ?>"></script>
     <script src="<?= asset('assets/js/config.js') ?>"></script>
+    <!-- Json -->
+    <?php
+    $styleMap = json_decode(file_get_contents(('../../assets/json/color_pattern.json')), true);
+    ?>
 </head>
 
 <body>
@@ -80,32 +84,35 @@ $currentFilename = basename($currentUrl);
                     </a>
                 </div>
                 <div class="d-flex flex-column gap-1">
-                    <a href="<?= url('views/system/dashboard.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "dashboard.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bx-home-alt me-2"></i> Dashboard
-                    </a>
-                    <a href="<?= url('views/system/Logs.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "Logs.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bxs-coin-stack me-2"></i>Project Logs
-                    </a>
-                    <a href="<?= url('views/system/DraggableLogsTest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "DraggableLogsTest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bxs-coin-stack me-2"></i>Project Logs (New)
-                    </a>
-
-                    <a href="<?= url('views/system/LeaveRequest.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveRequest.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bxs-calendar-x me-2"></i> Request Leave
-                    </a>
-                    <?php if ($permission === "admin") : ?>
-                        <a href="<?= url('views/system/LeaveApprove.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "LeaveApprove.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                            <i class="bx bx-calendar-check me-2"></i> Leave Approvals
+                    <?php
+                    $menuItems = [
+                        ['label' => 'Dashboard', 'url' => 'views/system/dashboard.php', 'icon' => 'bx bx-home-alt', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Project Logs', 'url' => 'views/system/Logs.php', 'icon' => 'bx bxs-coin-stack', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Project Logs (New)', 'url' => 'views/system/DraggableLogsTest.php', 'icon' => 'bx bxs-coin-stack', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Request Leave', 'url' => 'views/system/LeaveRequest.php', 'icon' => 'bx bxs-calendar-x', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Leave Approvals', 'url' => 'views/system/LeaveApprove.php', 'icon' => 'bx bx-calendar-check', 'permission' => 'admin', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Employees', 'url' => 'views/system/users.php', 'icon' => 'bx bx-user', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                        ['label' => 'Register', 'url' => 'views/system/Register.php', 'icon' => 'bx bx-user-check', 'permission' => 'admin', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
+                    ];
+                    foreach ($menuItems as $item) {
+                        if (isset($item['permission']) && $item['permission'] !== $permission) continue;
+                        $active = basename($item['url']) === $currentFilename;
+                        $classes = 'd-flex align-items-center p-2 rounded ' . ($active ? 'fw-bold' : 'text-dark');
+                        $bgStyle = ($active && isset($item['bg'])) ? $styleMap[$item['bg']] : '';
+                        $colorStyle = ($active && isset($item['color'])) ? $styleMap[$item['color']] : '';
+                        $hoverColor = $styleMap['imara-purple'];
+                    ?>
+                        <a href="<?= url($item['url']) ?>"
+                            class="<?= $classes ?>"
+                            style="<?= $bgStyle ?>"
+                            onmouseover="this.querySelector('span').style.cssText='<?= $hoverColor ?>'; this.querySelector('i').style.cssText='<?= $hoverColor ?>';"
+                            onmouseout="this.querySelector('span').style.cssText='<?= $colorStyle ?>'; this.querySelector('i').style.cssText='<?= $colorStyle ?>';">
+                            <i class="<?= $item['icon'] ?> me-2" style="<?= $colorStyle ?>"></i>
+                            <span style="<?= $colorStyle ?>"><?= $item['label'] ?></span>
                         </a>
-                    <?php endif; ?>
-                    <a href="<?= url('views/system/users.php') ?>" class="d-flex align-items-center p-2 rounded <?= $currentFilename === "users.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                        <i class="bx bx-user me-2"></i> Employees
-                    </a>
-                    <?php if ($permission === "admin") : ?>
-                        <a href="<?= url('views/system/Register.php') ?>" class="d-flex align-items-center p-2 rounded <?= $Register === "Register.php" ? 'bg-light fw-bold text-primary' : 'text-dark hover-bg-light' ?>">
-                            <i class="bx bx-user-check me-2"></i> Register
-                        </a>
-                    <?php endif; ?>
+                    <?php
+                    }
+                    ?>
                 </div>
             </aside>
             <!-- /Sidebar -->
@@ -122,7 +129,36 @@ $currentFilename = basename($currentUrl);
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-                            <!-- User Dropdown -->
+                            <div class="dropdown ms-auto">
+                                <!-- <a href="#" class="d-flex align-items-center " data-bs-toggle="dropdown">
+                                    <i class="bx bx-bell me-2" style="font-size: 24px; <?= $styleMap['imara-yellow'] ?>"></i> -->
+                                    <!-- <i class="bx bx-bell me-2 bx-tada" style="font-size: 24px; color: #740378;"></i> -->
+                                <!-- </a> -->
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="<?= url('views/system/profile.php') ?>">
+                                            <div>
+                                                <div class="fw-semibold"><?= $username ?></div>
+                                                <small class="text-muted text-capitalize"><?= $permission ?></small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" href="../personalportfolio.php?id=<?= $userId ?>" target="_blank">
+                                            <i class="bx bx-briefcase me-2"></i> Portfolio
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="bx bx-power-off me-2"></i> Logout
+                                            <form id="logout-form" action="<?= url('services/logout.php') ?>" method="POST" class="d-none"></form>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                             <!-- User Dropdown -->
                             <div class="dropdown ms-auto">
                                 <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown">

@@ -53,14 +53,21 @@ body {
 }
 
 @keyframes modalFade {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Modal Image */
 #modalImageView {
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* Buttons */
@@ -89,10 +96,20 @@ body {
 }
 
 /* Smooth Hover for Navigation Buttons */
-#prevImage, #nextImage {
-    background-color: rgba(0,0,0,0.05);
+#prevImage,
+#nextImage {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-#prevImage:hover, #nextImage:hover {
-    background-color: rgba(0,0,0,0.15);
+#prevImage:hover,
+#nextImage:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.imara-yellow {
+    color: #FF9A02 !important;
+}
+
+.imara-purple {
+    color: #740378 !important;
 }

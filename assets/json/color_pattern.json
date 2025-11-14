@@ -1,0 +1,10 @@
+{
+    "imara-yellow": "color: #FF9A02;",
+    "imara-purple": "color: #740378;",
+    "imara-yellow-light": "color: rgba(255, 154, 2, 0.5);",
+    "imara-purple-light": "color: rgba(116, 3, 120, 0.5);",
+    "bg-imara-yellow": "background-color: #FF9A02;",
+    "bg-imara-purple": "background-color: #740378;",
+    "bg-imara-yellow-light": "background-color: rgba(255, 154, 2, 0.5);",
+    "bg-imara-purple-light": "background-color: rgba(116, 3, 120, 0.3);"
+}
