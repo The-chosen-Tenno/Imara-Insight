@@ -26,8 +26,8 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                 <div class="card shadow-sm border-0">
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-8">
-                            <div class="card-body">
-                                <h2 class="card-title text-primary fw-bold mb-3">
+                            <div class="card-body" style="<?= $styleMap['imara-purple'] ?>">
+                                <h2 class="card-title fw-bold mb-3" style="<?= $styleMap['imara-purple'] ?>">
                                     <?= htmlspecialchars($loginUserDetails['user_name']) ?>
                                 </h2>
                                 <dl class="row mb-4">
@@ -46,7 +46,8 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                     <button class="btn btn-sm btn-primary d-flex align-items-center edit-user-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#edit-user-modal"
-                                        data-id="<?= $loginUserDetails['id'] ?>">
+                                        data-id="<?= $loginUserDetails['id'] ?>"
+                                        style="<?= $styleMap['imara-button-purple'] ?>">
                                         <i class='bx bx-cog me-2'></i> Edit My Profile
                                     </button>
                                 <?php endif; ?>
@@ -59,8 +60,8 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                   height: 180px;
                   border-radius: 50%;
                   overflow: hidden;
-                  border: 2px solid #0d6efd;
-                  background: #f8f9fa;
+                  border: 2px solid #740378;
+                  background: #740378;
                   display: flex;
                   align-items: center;
                   justify-content: center;
@@ -95,7 +96,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h4 class="card-title text-primary fw-bold mb-3">
+                        <h4 class="card-title fw-bold mb-3" style="<?= $styleMap['imara-purple'] ?>">
                             Project Summary
                         </h4>
                         <div class="row text-center g-3 justify-content-center">
@@ -173,7 +174,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h4 class="card-title text-primary fw-bold mb-3">
+                        <h4 class="card-title fw-bold mb-3" style="<?= $styleMap['imara-purple'] ?>">
                             Leave Summary
                         </h4>
                         <div class="row text-center g-3 justify-content-center">

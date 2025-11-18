@@ -1,6 +1,5 @@
 $(document).ready(function () {
     const permission = $('#app').data('permission');
-    console.log(permission);
     if (permission == 'admin') {
         $('.dropzone').sortable({
             connectWith: '.dropzone',

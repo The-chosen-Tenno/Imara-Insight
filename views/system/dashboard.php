@@ -50,7 +50,8 @@ foreach ($all_tag as $tags) {
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">My Projects</h4>
             <div>
-                <button type="button" class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#add-project">
+                <button type="button" class="btn  btn-sm me-2" data-bs-toggle="modal" data-bs-target="#add-project"
+                    style="<?= $styleMap['imara-button-purple'] ?>">
                     <i class="bx bx-plus me-1"></i> Add Project
                 </button>
                 <div class="btn-group">
@@ -504,7 +505,7 @@ foreach ($all_tag as $tags) {
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form id="short-leave-form" action="<?= url('services/ajax_functions.php') ?>" method="POST">
-                <input type="hidden" name="user_id" value= <?= $userId ?>>
+                <input type="hidden" name="user_id" value=<?= $userId ?>>
                 <input type="hidden" name="action" value="short_leave">
 
                 <div class="modal-header">
@@ -513,7 +514,7 @@ foreach ($all_tag as $tags) {
                 </div>
 
                 <div class="modal-body">
-                  <p id="leave-time"><br></p>
+                    <p id="leave-time"><br></p>
 
                     <div class="mb-3">
                         <label for="leave_duration" class="form-label">Duration (hours)</label>
@@ -524,7 +525,7 @@ foreach ($all_tag as $tags) {
                         <label for="leave_reason" class="form-label">Reason (optional)</label>
                         <textarea class="form-control" id="reason" name="reason" rows="2" placeholder="Optional reason"></textarea>
                     </div>
-                     <div class="mb-3 mt-3" id="short-alert-container"></div>
+                    <div class="mb-3 mt-3" id="short-alert-container"></div>
                 </div>
 
                 <div class="modal-footer">

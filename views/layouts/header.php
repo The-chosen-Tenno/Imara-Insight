@@ -71,19 +71,22 @@ $currentFilename = basename($currentUrl);
     ?>
 </head>
 
-<body>
+<body data-menu-collapsible="true">
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Sidebar -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme p-3">
+            <aside id="layout-menu" class="layout-menu menu-vertical   menu bg-menu-theme p-3">
                 <div class="app-brand mb-4 text-center">
                     <a href="<?= url('/views/system/dashboard.php') ?>" class="d-flex flex-column align-items-center text-decoration-none">
                         <img src="<?= asset('assets/img/favicon/favicon.png') ?>" alt="icon" width="50" height="50" class="mb-2">
                         <span class="fw-bold fs-5 text-capitalize">Imara-Insight</span>
                     </a>
+                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto" style="<?= $styleMap['bg-imara-purple'] ?>">
+                        <i class="bx bx-chevron-left d-block d-xl-none align-middle"></i>
+                    </a>
                 </div>
-                <div class="d-flex flex-column gap-1">
+                <div class="d-flex flex-column gap-1 menu-inner">
                     <?php
                     $menuItems = [
                         ['label' => 'Dashboard', 'url' => 'views/system/dashboard.php', 'icon' => 'bx bx-home-alt', 'bg' => 'bg-imara-yellow-light', 'color' => 'imara-purple'],
@@ -116,7 +119,6 @@ $currentFilename = basename($currentUrl);
                 </div>
             </aside>
             <!-- /Sidebar -->
-
             <!-- Layout page -->
             <div class="layout-page">
                 <!-- Navbar -->
@@ -125,15 +127,66 @@ $currentFilename = basename($currentUrl);
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
-                    </div>
 
+                    </div>
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <div class="dropdown ms-auto">
-                                <!-- <a href="#" class="d-flex align-items-center " data-bs-toggle="dropdown">
-                                    <i class="bx bx-bell me-2" style="font-size: 24px; <?= $styleMap['imara-yellow'] ?>"></i> -->
-                                    <!-- <i class="bx bx-bell me-2 bx-tada" style="font-size: 24px; color: #740378;"></i> -->
-                                <!-- </a> -->
+                                <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                        <span class="position-relative">
+                                            <i class="bx bx-bell" style="font-size: 24px; <?= $styleMap['imara-yellow'] ?>"></i>
+                                            <!-- <i class="bx bx-bell bx-tada" style="font-size: 24px; <?= $styleMap['imara-purple'] ?>"></i> -->
+                                            <span class="badge rounded-pill bg-danger badge-dot badge-notifications border"></span>
+                                        </span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end p-0">
+                                        <li class="dropdown-menu-header border-bottom">
+                                            <div class="dropdown-header d-flex align-items-center py-3">
+                                                <h6 class="mb-0 me-auto">Notification</h6>
+                                                <div class="d-flex align-items-center h6 mb-0">
+                                                    <span class="badge bg-label-primary me-2">8 New</span>
+                                                    <a href="javascript:void(0)" class="dropdown-notifications-all p-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Mark all as read" data-bs-original-title="Mark all as read"><i class="icon-base bx bx-envelope-open text-heading"></i></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="dropdown-notifications-list scrollable-container ps">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                                    <div class="d-flex">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            <div class="avatar">
+                                                                <img src="../../assets/img/avatars/1.png" alt="" class="rounded-circle">
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="small mb-0">Congratulation Lettie 🎉</h6>
+                                                            <small class="mb-1 d-block text-body">Won the monthly best seller gold badge</small>
+                                                            <small class="text-body-secondary">1h ago</small>
+                                                        </div>
+                                                        <div class="flex-shrink-0 dropdown-notifications-actions">
+                                                            <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
+                                                            <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="icon-base bx bx-x"></span></a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                                            </div>
+                                        </li>
+                                        <li class="border-top">
+                                            <div class="d-grid p-4">
+                                                <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);">
+                                                    <small class="align-middle">View all notifications</small>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center" href="<?= url('views/system/profile.php') ?>">

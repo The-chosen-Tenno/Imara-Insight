@@ -23,7 +23,8 @@ $project_details = new Logs();
                     type="button"
                     class="btn btn-primary float-end mb-5"
                     data-bs-toggle="modal"
-                    data-bs-target="#createUser">
+                    data-bs-target="#createUser"
+                    style="<?= $styleMap['imara-button-purple'] ?>">
                    <i class="bx bx-plus me-1"></i>  Add New User
                 </button>
             <?php } ?>

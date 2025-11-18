@@ -33,8 +33,8 @@ if (!isset($permission)) {
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Project Logs</h4>
             <?php if ($permission == 'admin') { ?>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-project">
-                    <i class="bx bx-plus me-1"></i> Add Project
+                <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#add-project" style="<?= $styleMap['imara-button-purple'] ?>">
+                    <i class="bx bx-plus me-1"></i>Add Project
                 </button>
             <?php } ?>
         </div>

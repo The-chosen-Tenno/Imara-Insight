@@ -103,7 +103,7 @@ if (!isset($permission)) dd('Access Denied...!');
 
                     <!-- Submit -->
                     <div class="mt-4 text-center">
-                        <button type="submit" class="btn btn-primary sub-leave-req">Submit Request</button>
+                        <button type="submit" class="btn  sub-leave-req" style="<?= $styleMap['imara-button-purple'] ?>">Submit Request</button>
                     </div>
                 </form>
 
