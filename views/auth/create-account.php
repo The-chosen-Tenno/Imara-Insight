@@ -66,7 +66,8 @@ require_once('../../config.php');
                 <div id="password-error" style="color:red; font-size:0.9em;"></div>
               </div>
             </div>
-            <button id="create-user-btn" class="btn btn-primary d-grid w-100">Sign up</button>
+            <button id="create-user-btn" class="btn d-grid w-100"
+              style="<?= $styleMap['imara-button-purple'] ?>">Sign up</button>
           </form>
 
           <p class="text-center">

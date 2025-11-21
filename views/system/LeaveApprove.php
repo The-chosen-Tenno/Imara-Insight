@@ -74,13 +74,12 @@ if ($permission !== 'admin') {
                                         <dd class="col-sm-9"><?= htmlspecialchars($pending['description']) ?></dd>
                                     </dl>
                                     <div class="d-flex gap-2">
-<button
-    class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
-    data-id="<?= htmlspecialchars($pending['id']) ?>"
-    data-user-id="<?= htmlspecialchars($pending['user_id']) ?>"
->
-    <i class='bx bx-check me-2'></i>Approve
-</button>
+                                        <button
+                                            class="btn btn-sm btn-success d-flex align-items-center approve-leave-btn"
+                                            data-id="<?= htmlspecialchars($pending['id']) ?>"
+                                            data-user-id="<?= htmlspecialchars($pending['user_id']) ?>">
+                                            <i class='bx bx-check me-2'></i>Approve
+                                        </button>
                                         <button class="btn btn-sm btn-danger d-flex align-items-center deny-leave-btn"
                                             data-id="<?= htmlspecialchars($pending['id']) ?>"
                                             <i class='bx bx-x me-2'></i>Deny

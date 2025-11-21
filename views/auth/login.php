@@ -51,7 +51,7 @@ require_once('../../config.php');
 
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary d-grid w-100" type="submit" id="login">Sign in</button>
+                            <button class="btn  d-grid w-100" type="submit" id="login" style="<?= $styleMap['imara-button-purple'] ?>">Sign in</button>
                         </div>
                     </form>
 

@@ -43,7 +43,7 @@ if (!isset($userId) && empty($userId)) dd('Access Denied...!');
                                 <?php
                                 if ((isset($_GET['id']) && $_GET['id'] == $userId) || (!isset($_GET['id']) && isset($userId))):
                                 ?>
-                                    <button class="btn btn-sm btn-primary d-flex align-items-center edit-user-btn"
+                                    <button class="btn btn-sm d-flex align-items-center edit-user-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#edit-user-modal"
                                         data-id="<?= $loginUserDetails['id'] ?>"

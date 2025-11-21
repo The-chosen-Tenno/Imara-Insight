@@ -69,6 +69,9 @@ include __DIR__ . '/../../config.php';
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src=" <?= asset('assets/js/config.js') ?>"></script>
+        <?php
+    $styleMap = json_decode(file_get_contents(('../../assets/json/color_pattern.json')), true);
+    ?>
 </head>
 
 <body>
