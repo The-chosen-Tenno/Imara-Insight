@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    let projectIds = [];
     const permission = $('#app').data('permission');
     if (permission == 'admin') {
         $('.dropzone').sortable({
@@ -34,27 +35,65 @@ $(document).ready(function () {
         $('#' + containerId).html(`<div class="alert alert-${type}">${message}</div>`);
     }
 
-    $('#create-project').on('click', function () {
+    $('#filter-button').on('click', function () {
+        var panel = $('#filter-div');
+        if (panel.hasClass('d-none')) {
+            panel.removeClass('d-none').addClass('d-block');
+        } else {
+            panel.removeClass('d-block').addClass('d-none');
+        }
+    });
+
+    $('.filter-select').select2({
+        width: '100%',
+        allowClear: true,
+        closeOnSelect: false
+    });
+
+    $('.filter-input').on('change', function () {
+        var assignee = $('#assignee-filter').val();
+        var sub = $('#sub-assignee-filter').val();
+        var status = $('#status-filter').val();
+        var tags = $('#tags-filter').val();
+        var created_at = $('#created_at_filter').val();
+        var updated_at = $('#updated_at_filter').val();
+
+        if (
+            (!assignee || assignee.length === 0) &&
+            (!sub || sub.length === 0) &&
+            (!status || status.length === 0) &&
+            (!tags || tags.length === 0) &&
+            (!created_at || created_at === '') &&
+            (!updated_at || updated_at === '')
+        ) {
+            $('#app').html($('#app').data('original') || '');
+            return;
+        }
+
+        let projectIds = [];
         var form = $('#create-form')[0];
-        if (!form.checkValidity() || !form.reportValidity())
-            return showAlert('Form is not valid.', 'danger', 'create-alert-container');
 
         $.ajax({
             url: $(form).attr('action'),
-            type: 'POST',
-            data: new FormData(form),
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            success: function (res) {
-                showAlert(res.message, res.success ? 'primary' : 'danger', 'create-alert-container');
-                if (res.success) {
-                    $('#add-project').modal('hide');
-                    setTimeout(() => location.reload(), 1000);
-                }
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                action: 'filter_projects',
+                assignee: assignee,
+                sub: sub,
+                status: status,
+                tags: tags,
+                created_at: created_at,
+                updated_at: updated_at
             },
-            error: function () {
-                showAlert('Failed to create Project!', 'danger', 'create-alert-container');
+            success: function (response) {
+                if (response.success) {
+                    $.post('DraggableLogsTest.php', {
+                        projectIds: JSON.stringify(response.data)
+                    }, function (html) {
+                        // $('#app').html(html);
+                    });
+                }
             }
         });
     });

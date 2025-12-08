@@ -16,7 +16,6 @@ $sub_assignee_details = new SubAssignee();
 
 $project_tags = new ProjectTags();
 
-
 $tag = new Tags();
 $all_tag = $tag->getAllTags();
 
@@ -25,6 +24,7 @@ if (!isset($permission)) {
     header('Location: views/system/Authorization.php');
     exit;
 };
+
 ?>
 <link rel="stylesheet" href="../../assets/css/kanban-style-logs.css">
 
@@ -32,11 +32,81 @@ if (!isset($permission)) {
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Project Logs</h4>
-            <?php if ($permission == 'admin') { ?>
-                <button type="button" class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#add-project" style="<?= $styleMap['imara-button-purple'] ?>">
-                    <i class="bx bx-plus me-1"></i>Add Project
+            <div>
+
+                <div class="search-container">
+                    <input type="text" id="search" placeholder="Search">
+                    <button id="clear-btn">&times;</button>
+                </div>
+                <?php if ($permission == 'admin') { ?>
+                    <button type="button" class="btn btn-primary btn-sm fw-bold"
+                        data-bs-toggle="modal"
+                        data-bs-target="#add-project"
+                        style="<?= $styleMap['imara-button-purple'] ?>">
+                        <i class="bx bx-plus me-1"></i>Add Project
+                    </button>
+                <?php } ?>
+                <button type="button" class="btn btn-primary btn-sm fw-bold"
+                    id="filter-button"
+                    style="<?= $styleMap['imara-button-yellow'] ?>">
+                    <i class="bx bx-filter me-1"></i>Filter
                 </button>
-            <?php } ?>
+            </div>
+        </div>
+        <div class="mb-3" id="filter-div">
+            <div class="row g-2 align-items-end">
+
+                <div class="col-md-2">
+                    <label for="assignee-filter" class="form-label">Assignee</label>
+                    <select name="assignee" id="assignee-filter" class="form-select filter-input filter-select">
+                        <option value="">-- None --</option>
+                        <?php foreach ($user_data as $user_filter): ?>
+                            <option value="<?= $user_filter['id'] ?>"><?= $user_filter['user_name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="sub-assignee-filter" class="form-label">Sub Assignees</label>
+                    <select name="sub-assignee[]" id="sub-assignee-filter" class="form-select filter-input filter-select" multiple>
+                        <?php foreach ($user_data as $user_filter): ?>
+                            <option value="<?= $user_filter['id'] ?>"><?= $user_filter['user_name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="staus-filter" class="form-label">Status</label>
+                    <select name="Status" id="status-filter" class="form-select filter-input">
+                        <option value="">-- None --</option>
+                        <option value="started">Started</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="finished">Finished</option>
+                        <option value="idle">Idle</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="tags-filter" class="form-label">Tags</label>
+                    <select name="tags[]" id="tags-filter" class="form-select filter-input filter-select" multiple>
+                        <?php foreach ($all_tag as $tags_filter): ?>
+                            <option value="<?= $tags_filter['id'] ?>"><?= $tags_filter['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="created_at_filter" class="form-label">Created At</label>
+                    <input type="date" name="created_at" id="created_at_filter" class="form-control filter-input">
+                </div>
+
+                <div class="col-md-2">
+                    <label for="updated_at_filter" class="form-label">Updated At</label>
+                    <input type="date" name="updated_at" id="updated_at_filter" class="form-control filter-input">
+                </div>
+
+            </div>
         </div>
         <div class="columns-wrapper" data-permission="<?= $permission ?>" id="app">
             <?php
@@ -44,15 +114,12 @@ if (!isset($permission)) {
                 'started' => ['label' => 'Started', 'color' => '#22f0f0', 'count' => 0],
                 'in_progress' => ['label' => 'In Progress', 'color' => '#0d6efd', 'count' => 0],
                 'finished' => ['label' => 'Finished', 'color' => '#198754', 'count' => 0],
-                'idle' => ['label' => 'Idle', 'color' => '#ffc107', 'count' => 0],
+                'idle' => ['label' => 'Idle', 'color' => '#ffca2c', 'count' => 0],
                 'cancelled' => ['label' => 'Cancelled', 'color' => '#dc3545', 'count' => 0]
             ];
-
-            // $columns['started']['count']++;
-            // $columns['in_progress']['count']++;
-            // $columns['finished']['count']++;
-            // $columns['started']['count']++;
-            // $columns['idle']['count']++;
+            // // Decode filtered project IDs from POST
+            // $filteredProjectIds = $_POST['projectIds'] ?? null;
+            // if ($filteredProjectIds) $filteredProjectIds = json_decode($filteredProjectIds, true);
 
             foreach ($columns as $col_id => $col):
             ?>
@@ -61,10 +128,17 @@ if (!isset($permission)) {
                         <?= $col['label'] ?>
                         <!-- <span class="badge rounded bg-light text-dark ms-2"> <?= $col['count'] ?></span> -->
                     </div>
-                    <div class="dropzone border shadow bg-light bg- p-2";">
+                    <div class="dropzone border shadow bg-light bg- p-2" ;">
+                        <!-- <div id="myDiv">
+                            <?php
+                            $test = $_POST['projectIds'] ?? '';
+                            $decoded = json_decode($test, true);
+                            ?>
+                        </div> -->
                         <?php
                         foreach ($logs_data as $LD) {
                             if ($LD['status'] === $col_id) {
+                                // if ($filteredProjectIds && !in_array($LD['id'], $filteredProjectIds)) continue;
 
                                 $user_names = [];
                                 foreach ($user_data as $user) {
@@ -300,3 +374,31 @@ if (!isset($permission)) {
 
 <?php require_once('../layouts/footer.php'); ?>
 <script src="<?= asset('assets/forms-js/DraggableLogsTest.js') ?>"></script>
+<script>
+    $(document).ready(function() {
+        function filterLogs() {
+            var searchTerm = $('#search').val().toLowerCase();
+            $('.column-container .box').each(function() {
+                var projectName = $(this).find('.drag-handle').text().toLowerCase();
+                var assignee = $(this).find('div strong:contains("Assignee:")').parent().text().toLowerCase();
+                var subAssignees = $(this).find('div strong:contains("Sub-Assignees:")').parent().text().toLowerCase();
+                var tags = $(this).find('.badge').text().toLowerCase();
+
+                if (projectName.includes(searchTerm) || assignee.includes(searchTerm) || subAssignees.includes(searchTerm) || tags.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+        $('#search').on('keyup', function() {
+            filterLogs();
+            $('#clear-btn').toggle($(this).val().length > 0);
+        });
+        $('#clear-btn').on('click', function() {
+            $('#search').val('');
+            filterLogs();
+            $(this).hide();
+        });
+    });
+</script>

@@ -7,5 +7,6 @@
     "bg-imara-purple": "background-color: #740378;",
     "bg-imara-yellow-light": "background-color: rgba(255, 154, 2, 0.5);",
     "bg-imara-purple-light": "background-color: rgba(116, 3, 120, 0.5);",
-    "imara-button-purple": "background-color: #740378; border-color: #740378; color: white;"
+    "imara-button-purple": "background-color: #740378; border-color: #740378; color: white;",
+    "imara-button-yellow": "background-color: #FF9A02; border-color: #FF9A02; color: white;"
 }

@@ -411,7 +411,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Update Projet Status (testing stage)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'project_status_update')  {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'project_status_update') {
     try {
         $project_id = $_POST['project_id'];
         $status = $_POST['new_status'];
@@ -729,6 +729,30 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_all_tags_to_remove') {
     $project_id = intval($_GET['project_id']); // use GET, not $_POST
     $tags = (new ProjectTags())->getAllTagByProjectIdToRemove($project_id);
     echo json_encode(['success' => true, 'data' => $tags]);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] == 'filter_projects') {
+    try {
+        $assignee = $_GET['assignee'] ?? null;
+        $status = $_GET['status'] ?? null;
+        $created_at = $_GET['created_at'] ?? null;
+        $updated_at = $_GET['updated_at'] ?? null;
+
+        // $sub = $_GET['sub'] ?? null;
+        // $tags = $_GET['tags'] ?? null;
+
+        $logsModel = new Logs();
+        $project = $logsModel->filterProject($assignee, $status, $created_at, $updated_at);
+        if ($project) {
+            echo json_encode(['success' => true, 'message' => "Project retrieved successfully!", 'data' => $project]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error selecting project ID']);
+        }
+    } catch (PDOException $e) {
+        // Handle DB errors
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    }
     exit;
 }
 

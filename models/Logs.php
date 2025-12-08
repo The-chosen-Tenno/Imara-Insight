@@ -109,6 +109,46 @@ class Logs extends BaseModel
     {
         return $this->pm->run("SELECT * FROM " . $this->getTableName() . " ORDER BY id DESC");
     }
+
+    public function filterProject($assignee = null, $status = null, $created_at = null, $updated_at = null)
+    {
+        $filters = [
+            'user_id'    => $assignee,
+            'status'     => $status,
+            'created_at' => $created_at,
+            'updated_at' => $updated_at
+        ];
+
+        $sql = "SELECT id FROM " . $this->getTableName() . " WHERE 1=1";
+        $params = [];
+
+        foreach ($filters as $col => $val) {
+            if ($val !== null && $val !== '') {
+                if ($col === 'created_at' || $col === 'updated_at') {
+                    $sql .= " AND DATE($col) = :$col";
+                    $params[":$col"] = date('Y-m-d', strtotime($val));
+                } else {
+                    $sql .= " AND $col = :$col";
+                    $params[":$col"] = $val;
+                }
+            }
+        }
+        $sql .= " ORDER BY id DESC";
+        $result = $this->pm->run($sql, $params);
+        if (!$result || !is_array($result)) return [];
+
+        $ids = [];
+        foreach ($result as $row) {
+            if (isset($row['id'])) {
+                $ids[] = (int)$row['id'];
+            }
+        }
+
+        return $ids;
+    }
+
+
+
     public function deleteRec($id)
     {
         $param = array(':id' => $id);

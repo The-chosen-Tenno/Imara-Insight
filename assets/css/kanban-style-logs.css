@@ -92,13 +92,53 @@
         min-width: 200px;
     }
 }
+
 .sortable-placeholder {
     background: #dfe3eb;
     border: 2px dashed #bbb;
-    height: 60px; /* approximate card height */
+    height: 60px;
     margin-bottom: 12px;
     border-radius: 10px;
 }
+
 .dropzone-style {
     border-radius: 60px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+}
+
+#search {
+    width: 100%;
+    padding: 8px 35px 8px 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+#search:focus {
+    border-color: #740378;
+    box-shadow: 0 0 5px rgba(255, 154, 2, 0.5);
+    outline: none;
+}
+
+#clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #888;
+    cursor: pointer;
+    display: none;
+}
+
+#clear-btn:hover {
+    color: #0d6efd;
 }
