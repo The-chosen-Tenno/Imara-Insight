@@ -133,13 +133,12 @@ $currentFilename = basename($currentUrl);
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <div class="dropdown ms-auto">
                                 <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
-                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                    <!-- <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                                         <span class="position-relative">
                                             <i class="bx bx-bell" style="font-size: 24px; <?= $styleMap['imara-yellow'] ?>"></i>
-                                            <!-- <i class="bx bx-bell bx-tada" style="font-size: 24px; <?= $styleMap['imara-purple'] ?>"></i> -->
                                             <span class="badge rounded-pill bg-danger badge-dot badge-notifications border"></span>
                                         </span>
-                                    </a>
+                                    </a> -->
                                     <ul class="dropdown-menu dropdown-menu-end p-0">
                                         <li class="dropdown-menu-header border-bottom">
                                             <div class="dropdown-header d-flex align-items-center py-3">
