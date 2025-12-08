@@ -46,14 +46,14 @@ if (!isset($permission)) {
                         <i class="bx bx-plus me-1"></i>Add Project
                     </button>
                 <?php } ?>
-                <button type="button" class="btn btn-primary btn-sm fw-bold"
+                <!-- <button type="button" class="btn btn-primary btn-sm fw-bold"
                     id="filter-button"
                     style="<?= $styleMap['imara-button-yellow'] ?>">
                     <i class="bx bx-filter me-1"></i>Filter
-                </button>
+                </button> -->
             </div>
         </div>
-        <div class="mb-3" id="filter-div">
+        <!-- <div class="mb-3" id="filter-div">
             <div class="row g-2 align-items-end">
 
                 <div class="col-md-2">
@@ -107,7 +107,7 @@ if (!isset($permission)) {
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <div class="columns-wrapper" data-permission="<?= $permission ?>" id="app">
             <?php
             $columns = [
