@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $id = $_POST['user_id'];
         $userModel = new User();
         $accepted = $userModel->acceptUser($id); {
-            echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
+            echo json_encode(['success' => true, 'message' => 'User accepted successfully!']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $userModel = new User();
         $declined = $userModel->declineUser($id);
         if ($declined) {
-            echo json_encode(['success' => true, 'message' => "User accepted successfully!"]);
+            echo json_encode(['success' => true, 'message' => "User declined successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to accept user. May already be accepted!']);
         }

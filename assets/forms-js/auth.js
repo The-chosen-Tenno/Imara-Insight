@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.decline-user-btn', async function () {
         var user_id = $(this).data('id');
-        var url = $('#create-form').attr('action');
+        var url = $(this).data('url');
         $.ajax({
             url: url,
             type: 'POST',
