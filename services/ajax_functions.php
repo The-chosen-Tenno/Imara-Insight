@@ -484,13 +484,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($requested) {
             $userModel = new User();
             $user = $userModel->getUserById($user_id);
-            sendLeaveRequestEmail($user['email'], $user['user_name'], [
-                'leave_duration' => $leave_duration,
-                'date_off'       => $date_off,
-                'start_date'     => $start_date,
-                'end_date'       => $end_date,
-                'reason_type'    => $reason_type
-            ]);
+            try {
+                sendLeaveRequestEmail($user['email'], $user['user_name'], [
+                    'leave_duration' => $leave_duration,
+                    'date_off'       => $date_off,
+                    'start_date'     => $start_date,
+                    'end_date'       => $end_date,
+                    'reason_type'    => $reason_type
+                ]);
+            } catch (Exception $e) {
+                error_log("Leave request email failed: " . $e->getMessage());
+            }
 
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
