@@ -83,7 +83,10 @@ function sendLeaveRequestEmail($email, $user_name, $leave_details)
 
     $to_email = 'leaves@imarasoft.net';
     $to_name = 'admin';
-    sendMail($to_email, $to_name, $email, $user_name, $subject, $body);
+    $result = sendMail($to_email, $to_name, $email, $user_name, $subject, $body);
+    if (!$result['success']) {
+        error_log("Leave request email failed: " . $result['message']);
+    }
 }
 
 function sendApproveLeaveEmail($email, $user_name, $leave_details)
@@ -161,6 +164,7 @@ function sendApproveLeaveEmail($email, $user_name, $leave_details)
 function sendMail($ToEmail, $ToName, $fromEmail, $fromName, $subject, $body)
 {
     $mail = new PHPMailer(true);
+
     try {
         $mail->isSMTP();
         $mail->Host       = 'sandbox.smtp.mailtrap.io';
@@ -169,6 +173,8 @@ function sendMail($ToEmail, $ToName, $fromEmail, $fromName, $subject, $body)
         $mail->Password   = '49b9535e75f3e6';
         $mail->Port       = 2525;
 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
         $mail->setFrom($fromEmail, $fromName);
         $mail->addAddress($ToEmail, $ToName);
 
@@ -176,10 +182,14 @@ function sendMail($ToEmail, $ToName, $fromEmail, $fromName, $subject, $body)
         $mail->Subject = $subject;
         $mail->Body    = $body;
 
-        $mail->send();
-        return true;
+        if ($mail->send()) {
+            return ['success' => true, 'message' => 'Email sent successfully'];
+        } else {
+            return ['success' => false, 'message' => 'Email not sent: ' . $mail->ErrorInfo];
+        }
     } catch (Exception $e) {
-        error_log("Mailer Error: {$mail->ErrorInfo}");
-        return false;
+        // Log to server error log
+        error_log("PHPMailer Exception: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Mailer Exception: ' . $e->getMessage()];
     }
 }
