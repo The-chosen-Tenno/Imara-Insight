@@ -171,8 +171,6 @@ function sendMail($ToEmail, $ToName, $fromEmail, $fromName, $subject, $body)
 
         $mail->setFrom($fromEmail, $fromName);
         $mail->addAddress($ToEmail, $ToName);
-        // $mail->setFrom('xempforever@gmail.com', $fromName);
-        // $mail->addAddress('cursedtenno458@gmail.com', $ToName);
 
         $mail->isHTML(true);
         $mail->Subject = $subject;

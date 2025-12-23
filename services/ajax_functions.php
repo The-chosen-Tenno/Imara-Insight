@@ -484,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($requested) {
             $userModel = new User();
             $user = $userModel->getUserById($user_id);
-            sendLeaveRequestEmail($user['user_name'], $user['email'], [
+            sendLeaveRequestEmail($user['email'], $user['user_name'], [
                 'leave_duration' => $leave_duration,
                 'date_off'       => $date_off,
                 'start_date'     => $start_date,
@@ -533,7 +533,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $leaveDetails = $leaveModel->getLeavebyID($id);
             $userModel = new User();
             $user = $userModel->getUserById($user_id);
-            sendApproveLeaveEmail($user['user_name'], $user['email'], $leaveDetails);
+            sendApproveLeaveEmail($user['email'], $user['user_name'], $leaveDetails);
             echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
