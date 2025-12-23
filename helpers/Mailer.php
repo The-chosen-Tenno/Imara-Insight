@@ -115,6 +115,7 @@ function sendMail($toEmail, $toName, $fromEmail, $fromName, $subject, $body)
         $mail->Username   = 'e8be8f5dddf8d1';
         $mail->Password   = '49b9535e75f3e6';
         $mail->Port       = 2525;
+        $mail->SMTPDebug = 3;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
         $mail->setFrom($fromEmail, $fromName);
