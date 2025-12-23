@@ -320,7 +320,7 @@ foreach ($all_tag as $tags) {
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Project Description</label>
+                        <!-- <label class="form-label">Project Description</label> -->
                         <textarea class="form-control" name="description" rows="4" required placeholder="Provide details or additional info here..."></textarea>
                     </div>
 
