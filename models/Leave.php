@@ -30,7 +30,7 @@ class Leave extends BaseModel
             if ($existingLeave) {
                 return false;
             }
-        } else{
+        } else {
             $existingLeave = $leaveModel->getLeaveByDateAndUserID($user_id, $date_off);
             if ($existingLeave) {
                 return false;
@@ -197,7 +197,7 @@ class Leave extends BaseModel
         );
     }
 
-        public function getAllLeaveByUserId($UserId)
+    public function getAllLeaveByUserId($UserId)
     {
         $param = [':UserId' => $UserId];
         return $this->pm->run(

@@ -78,8 +78,8 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (response) {
-                console.log(response);
-                showAlert(response.message, response.success ? 'primary' : 'danger');
+                console.log('AJAX response:', response);
+
 
                 if (response.success) {
                     setTimeout(function () {
