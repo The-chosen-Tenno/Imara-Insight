@@ -41,7 +41,7 @@ $currentFilename = basename($currentUrl);
     <meta name="description" content="" />
     <meta name="domain" content="<?= current_domain() ?>" />
 
-    <link rel="icon" type="image/x-icon" href="<?= asset('assets/icon/favicon/favicon.png') ?>" />
+    <link rel="icon" type="image/x-icon" href="<?= asset('assets/img/favicon/favicon.png') ?>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
