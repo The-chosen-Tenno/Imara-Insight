@@ -533,20 +533,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $user_id = $_POST['user_id'];
         $leaveModel = new Leave();
         $requested = $leaveModel->approveLeave($id, $user_id);
+
         if ($requested) {
             $leaveDetails = $leaveModel->getLeavebyID($id);
             $userModel = new User();
             $user = $userModel->getUserById($user_id);
-            sendApproveLeaveEmail($user['email'], $user['user_name'], $leaveDetails);
-            echo json_encode(['success' => true, 'message' => "Leave requested successfully!"]);
+
+            $mailSent = sendApproveLeaveEmail($user['email'], $user['user_name'], $leaveDetails);
+
+            if ($mailSent) {
+                echo json_encode(['success' => true, 'message' => "Leave approved and email sent!"]);
+            } else {
+                echo json_encode(['success' => false, 'message' => "Leave approved but failed to send email!"]);
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to request leave. leave may already exist!']);
+            echo json_encode(['success' => false, 'message' => 'Failed to approve leave.']);
         }
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
     }
     exit;
 }
+
 
 // deny leave request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'deny_leave') {

@@ -88,7 +88,7 @@ $(document).ready(function () {
                 }
             },
             error: function (error) {
-                console.error('Error Accepting the Account:', error);
+                console.error('Error Approving the Leave:', error);
             }
         });
     });
