@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 function sendApproveLeaveEmail($email, $user_name, $leave_details)
 {
@@ -98,39 +98,26 @@ function sendLeaveRequestEmail($email, $user_name, $leave_details)
     $to_email = 'leaves@imarasoft.net';
     $to_name = 'Admin';
 
-    $result = sendMail($to_email, $to_name, $email, $user_name, $subject, $body);
-    if (!$result['success']) {
-        error_log("Leave request email failed: " . $result['message']);
-    }
+    sendMail($to_email, $to_name, $email, $user_name, $subject, $body);
 }
 
 function sendMail($toEmail, $toName, $fromEmail, $fromName, $subject, $body)
 {
     $mail = new PHPMailer(true);
 
-    try {
-        $mail->isSMTP();
-        $mail->Host       = 'sandbox.smtp.mailtrap.io';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'e8be8f5dddf8d1';
-        $mail->Password   = '49b9535e75f3e6';
-        $mail->Port       = 2525;
-        $mail->SMTPDebug = 3;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-        $mail->setFrom($fromEmail, $fromName);
-        $mail->addAddress($toEmail, $toName);
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $body;
+    $mail->isSMTP();
+    $mail->Host       = 'sandbox.smtp.mailtrap.io';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'e8be8f5dddf8d1';
+    $mail->Password   = '49b9535e75f3e6';
+    $mail->Port       = 2525;
+    $mail->SMTPDebug = 3;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-        if ($mail->send()) {
-            return ['success' => true, 'message' => 'Email sent successfully'];
-        } else {
-            return ['success' => false, 'message' => 'Email not sent: ' . $mail->ErrorInfo];
-        }
-    } catch (Exception $e) {
-        error_log("PHPMailer Exception: " . $e->getMessage());
-        return ['success' => false, 'message' => 'Mailer Exception: ' . $e->getMessage()];
-    }
+    $mail->setFrom($fromEmail, $fromName);
+    $mail->addAddress($toEmail, $toName);
+    $mail->isHTML(true);
+    $mail->Subject = $subject;
+    $mail->Body    = $body;
 }
