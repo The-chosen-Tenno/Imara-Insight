@@ -65,9 +65,11 @@ $(document).ready(function () {
         $('#leave-request-form').show();
     });
 
-    $(document).on('click', '.approve-leave-btn', async function () {
-        var id = $(this).data('id');
-        var user_id = $(this).data('userId');
+    $(document).on('click', '.approve-leave-btn', function () {
+        var btn = $(this);
+        var id = btn.data('id');
+        var user_id = btn.data('userId');
+
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
@@ -78,23 +80,24 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (response) {
-                console.log('AJAX response:', response);
-
-
                 if (response.success) {
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1000);
+                    btn.closest('.card').fadeOut(500, function () { $(this).remove(); });
+
+                    showAlert('Leave approved!', 'success');
+                } else {
+                    showAlert(response.message, 'danger');
                 }
             },
             error: function (error) {
-                console.error('Error Approving the Leave:', error);
+                console.error('Error approving leave:', error);
             }
         });
     });
 
-    $(document).on('click', '.deny-leave-btn', async function () {
-        var id = $(this).data('id');
+    $(document).on('click', '.deny-leave-btn', function () {
+        var btn = $(this);
+        var id = btn.data('id');
+
         $.ajax({
             url: "../../services/ajax_functions.php",
             type: 'POST',
@@ -104,18 +107,18 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function (response) {
-                console.log(response);
-                showAlert(response.message, response.success ? 'primary' : 'danger');
-
                 if (response.success) {
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1000);
+                    btn.closest('.card').fadeOut(500, function () { $(this).remove(); });
+
+                    showAlert('Leave denied!', 'danger');
+                } else {
+                    showAlert(response.message, 'danger');
                 }
             },
             error: function (error) {
-                console.error('Error declining the Account:', error);
+                console.error('Error denying leave:', error);
             }
         });
     });
+
 });
